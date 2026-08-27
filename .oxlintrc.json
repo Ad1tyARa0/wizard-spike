@@ -1,0 +1,70 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "react-hooks", "typescript", "import", "unicorn", "jsx-a11y"],
+  "ignorePatterns": [".claude/**", "design-system/**", "*.generated.d.ts"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "rules": {
+    "no-nested-ternary": "error",
+    "no-explicit-any": "error",
+    "no-unused-vars": [
+      "error",
+      { "args": "after-used", "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "no-undef": "error",
+    "no-console": "warn",
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-var": "error",
+
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-no-undef": "error",
+    "react/self-closing-comp": "warn",
+
+    "typescript/consistent-type-imports": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-unused-vars": [
+      "error",
+      { "args": "after-used", "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+
+    "import/no-duplicates": "error",
+    "import/no-default-export": "error",
+    "import/no-cycle": "warn",
+    "import/unambiguous": "off",
+
+    "jsx-a11y/autocomplete-valid": "off",
+    "jsx-a11y/prefer-tag-over-role": "off",
+
+    "unicorn/no-single-promise-in-promise-methods": "off",
+    "react/refs": "off"
+  },
+  "overrides": [
+    {
+      "files": ["app/routes/**", "app/root.tsx"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": [
+        "server.ts",
+        "app/entry.server.tsx",
+        "app/entry.client.tsx",
+        "app/routes.ts",
+        "scripts/**",
+        "vite.config.ts",
+        "react-router.config.ts",
+        ".graphqlrc.ts"
+      ],
+      "rules": {
+        "import/no-default-export": "off",
+        "no-console": "off"
+      }
+    }
+  ]
+}

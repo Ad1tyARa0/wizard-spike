@@ -1,8 +1,8 @@
-import {fileURLToPath} from 'node:url';
-import {defineConfig} from 'vite';
-import {hydrogen} from '@shopify/hydrogen/vite';
-import {oxygen} from '@shopify/mini-oxygen/vite';
-import {reactRouter} from '@react-router/dev/vite';
+import { reactRouter } from '@react-router/dev/vite';
+import { hydrogen } from '@shopify/hydrogen/vite';
+import { oxygen } from '@shopify/mini-oxygen/vite';
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [hydrogen(), oxygen(), reactRouter()],
@@ -32,6 +32,7 @@ export default defineConfig({
        * @see https://vitejs.dev/config/dep-optimization-options
        */
       include: [
+        'use-sync-external-store/with-selector.js',
         'react-router > set-cookie-parser',
         'react-router > cookie',
         'react-router',

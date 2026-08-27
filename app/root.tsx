@@ -1,37 +1,37 @@
-import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {
-  Outlet,
-  useRouteError,
-  isRouteErrorResponse,
-  type ShouldRevalidateFunction,
   Links,
   Meta,
+  Outlet,
   Scripts,
   ScrollRestoration,
+  type ShouldRevalidateFunction,
+  isRouteErrorResponse,
+  useRouteError,
   useRouteLoaderData,
 } from 'react-router';
-import type {Route} from './+types/root';
+import { Analytics, getShopAnalytics, useNonce } from '@shopify/hydrogen';
+import type { Route } from './+types/root';
 import favicon from '~/assets/favicon.svg';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import resetStyles from '~/styles/reset.css?url';
-import appStyles from '~/styles/app.css?url';
-import {PageLayout} from './components/PageLayout';
+import { FOOTER_QUERY, HEADER_QUERY } from '~/src/shared/api';
+import appStyles from '~/src/shared/styles/app.css?url';
+import resetStyles from '~/src/shared/styles/reset.css?url';
+import { PageLayout } from '~/src/widgets';
 
 export type RootLoader = typeof loader;
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
  */
-export const shouldRevalidate: ShouldRevalidateFunction = ({
-  formMethod,
-  currentUrl,
-  nextUrl,
-}) => {
+export const shouldRevalidate: ShouldRevalidateFunction = ({ formMethod, currentUrl, nextUrl }) => {
   // revalidate when a mutation is performed e.g add to cart, login...
-  if (formMethod && formMethod !== 'GET') return true;
+  if (formMethod && formMethod !== 'GET') {
+    return true;
+  }
 
   // revalidate when manually revalidating via useRevalidator
-  if (currentUrl.toString() === nextUrl.toString()) return true;
+  if (currentUrl.toString() === nextUrl.toString()) {
+    return true;
+  }
 
   // Defaulting to no revalidation for root loader data to improve performance.
   // When using this feature, you risk your UI getting out of sync with your server.
@@ -61,7 +61,7 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    { rel: 'icon', type: 'image/svg+xml', href: favicon },
   ];
 }
 
@@ -72,7 +72,7 @@ export async function loader(args: Route.LoaderArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env} = args.context;
+  const { storefront, env } = args.context;
 
   return {
     ...deferredData,
@@ -97,8 +97,8 @@ export async function loader(args: Route.LoaderArgs) {
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
-async function loadCriticalData({context}: Route.LoaderArgs) {
-  const {storefront} = context;
+async function loadCriticalData({ context }: Route.LoaderArgs) {
+  const { storefront } = context;
 
   const [header] = await Promise.all([
     storefront.query(HEADER_QUERY, {
@@ -110,7 +110,7 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header};
+  return { header };
 }
 
 /**
@@ -118,8 +118,8 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: Route.LoaderArgs) {
-  const {storefront, customerAccount, cart} = context;
+function loadDeferredData({ context }: Route.LoaderArgs) {
+  const { storefront, customerAccount, cart } = context;
 
   // defer the footer query (below the fold)
   const footer = storefront
@@ -141,7 +141,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
   };
 }
 
-export function Layout({children}: {children?: React.ReactNode}) {
+export function Layout({ children }: { children?: React.ReactNode }) {
   const nonce = useNonce();
 
   return (
@@ -149,8 +149,8 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={resetStyles}></link>
-        <link rel="stylesheet" href={appStyles}></link>
+        <link rel="stylesheet" href={resetStyles} />
+        <link rel="stylesheet" href={appStyles} />
         <Meta />
         <Links />
       </head>
@@ -171,11 +171,7 @@ export default function App() {
   }
 
   return (
-    <Analytics.Provider
-      cart={data.cart}
-      shop={data.shop}
-      consent={data.consent}
-    >
+    <Analytics.Provider cart={data.cart} shop={data.shop} consent={data.consent}>
       <PageLayout {...data}>
         <Outlet />
       </PageLayout>

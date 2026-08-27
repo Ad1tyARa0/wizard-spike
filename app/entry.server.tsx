@@ -1,11 +1,10 @@
-import {ServerRouter} from 'react-router';
-import {isbot} from 'isbot';
-import {renderToReadableStream} from 'react-dom/server';
-import {
-  createContentSecurityPolicy,
-  type HydrogenRouterContextProvider,
-} from '@shopify/hydrogen';
-import type {EntryContext} from 'react-router';
+import { renderToReadableStream } from 'react-dom/server';
+import { Provider } from 'react-redux';
+import { ServerRouter } from 'react-router';
+import type { EntryContext } from 'react-router';
+import { type HydrogenRouterContextProvider, createContentSecurityPolicy } from '@shopify/hydrogen';
+import { isbot } from 'isbot';
+import { makeStore } from '~/src/app/store';
 
 export default async function handleRequest(
   request: Request,
@@ -14,20 +13,24 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: HydrogenRouterContextProvider,
 ) {
-  const {nonce, header, NonceProvider} = createContentSecurityPolicy({
+  const { nonce, header, NonceProvider } = createContentSecurityPolicy({
     shop: {
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
   });
 
+  // Per-request Redux store: keeps SSR output identical to the client's
+  // initial state (ProductForm dispatches only on client events, so the
+  // server store never mutates during render) and prevents cross-request
+  // state leakage.
+  const store = makeStore();
+
   const body = await renderToReadableStream(
     <NonceProvider>
-      <ServerRouter
-        context={reactRouterContext}
-        url={request.url}
-        nonce={nonce}
-      />
+      <Provider store={store}>
+        <ServerRouter context={reactRouterContext} url={request.url} nonce={nonce} />
+      </Provider>
     </NonceProvider>,
     {
       nonce,

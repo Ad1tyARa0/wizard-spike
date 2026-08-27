@@ -1,0 +1,230 @@
+/*
+ * Cart drawer + toggle styles — Exaggerated Minimalism.
+ * Tokens: ./tokens.css | Source of truth: design-system/e-commerce-website/MASTER.md
+ */
+
+/* ---- Root ---- */
+.drawer-root {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-drawer);
+}
+
+/* ---- Backdrop (native button for keyboard/AT semantics) ---- */
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ---- Drawer ---- */
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(420px, 100vw);
+  background: var(--color-background);
+  border-left: var(--border-width) solid var(--color-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  border-bottom: var(--border-width) solid var(--color-primary);
+}
+
+.drawer__title {
+  font-family: var(--font-body);
+  font-weight: var(--weight-medium);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.drawer__count {
+  margin-left: var(--space-xs);
+}
+
+.drawer__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+.drawer__empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.drawer__empty-statement {
+  font-family: var(--font-display);
+  font-weight: var(--weight-black);
+  font-size: var(--type-display);
+  line-height: 0.95;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  max-width: 12ch;
+}
+
+.drawer__empty-sub {
+  font-size: var(--type-body);
+  color: var(--color-muted-foreground);
+}
+
+/* ---- Body / lines ---- */
+.drawer__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.drawer__lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drawer__line {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-bottom: var(--border-width) solid var(--color-primary);
+}
+
+.drawer__line-image {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius-none);
+  flex-shrink: 0;
+}
+
+.drawer__line-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.drawer__line-title {
+  font-weight: var(--weight-medium);
+  font-size: var(--type-body);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.drawer__line-title:hover {
+  text-decoration: underline;
+}
+
+.drawer__line-variant,
+.drawer__line-meta {
+  font-size: var(--type-label);
+  color: var(--color-muted-foreground);
+}
+
+/* ---- Footer ---- */
+.drawer__footer {
+  padding: var(--space-lg) var(--space-md);
+  border-top: var(--border-width) solid var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.drawer__subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: var(--weight-medium);
+  font-size: var(--type-body);
+}
+
+/* ---- Primary CTA (single accent) ---- */
+.drawer__cta {
+  display: inline-block;
+  text-align: center;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: var(--border-width) solid var(--color-accent);
+  border-radius: var(--radius-none);
+  cursor: pointer;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.drawer__cta:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ---- Header cart toggle ---- */
+.cart-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+.cart-toggle__count {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 var(--space-xs);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Accessibility: visible focus, reduced motion ---- */
+.drawer__close:focus-visible,
+.drawer__cta:focus-visible,
+.cart-toggle:focus-visible,
+.drawer__line-title:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer__cta {
+    transition: none;
+  }
+}

@@ -22,7 +22,7 @@ This integration uses the storefront API (SFAPI) [predictiveSearch](https://shop
 
 ### 1. Create the search route
 
-Create a new file at `/routes/search.tsx` (if not already created)
+Create a new file at `app/routes/search/route.tsx` (if not already created)
 
 ### 3. Add `predictiveSearch` query and fetcher
 
@@ -163,38 +163,33 @@ async function predictiveSearch({
   request,
   context,
 }: Pick<ActionFunctionArgs, 'request' | 'context'>) {
-  const {storefront} = context;
+  const { storefront } = context;
   const formData = await request.formData();
   const term = String(formData.get('q') || '');
 
   const limit = Number(formData.get('limit') || 10);
 
   // Predictively search articles, collections, pages, products, and queries (suggestions)
-  const {predictiveSearch: items, errors} = await storefront.query(
-    PREDICTIVE_SEARCH_QUERY,
-    {
-      variables: {
-        // customize search options as needed
-        limit,
-        limitScope: 'EACH',
-        term,
-      },
+  const { predictiveSearch: items, errors } = await storefront.query(PREDICTIVE_SEARCH_QUERY, {
+    variables: {
+      // customize search options as needed
+      limit,
+      limitScope: 'EACH',
+      term,
     },
-  );
+  });
 
   if (errors) {
-    throw new Error(
-      `Shopify API errors: ${errors.map(({message}) => message).join(', ')}`,
-    );
+    throw new Error(`Shopify API errors: ${errors.map(({ message }) => message).join(', ')}`);
   }
 
   if (!items) {
     throw new Error('No predictive search data returned');
   }
 
-  const total = Object.values(items).reduce((acc, {length}) => acc + length, 0);
+  const total = Object.values(items).reduce((acc, { length }) => acc + length, 0);
 
-  return {term, result: {items, total}, error: null};
+  return { term, result: { items, total }, error: null };
 }
 ```
 
@@ -212,7 +207,7 @@ the form if present in it's children prop.
  * Handles predictive search GET requests
  * requested by the SearchFormPredictive component
  */
-export async function loader({request, context}: LoaderFunctionArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const isPredictive = url.searchParams.has('predictive');
 
@@ -220,11 +215,11 @@ export async function loader({request, context}: LoaderFunctionArgs) {
     return {};
   }
 
-  const searchPromise = predictiveSearch({request, context});
+  const searchPromise = predictiveSearch({ request, context });
 
   searchPromise.catch((error: Error) => {
     console.error(error);
-    return {term: '', result: null, error: error.message};
+    return { term: '', result: null, error: error.message };
   });
 
   return await searchPromise;
