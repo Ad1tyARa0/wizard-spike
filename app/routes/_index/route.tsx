@@ -1,9 +1,11 @@
-import { Suspense } from 'react';
-import { Await, Link, useLoaderData } from 'react-router';
+import { Fragment, Suspense } from 'react';
+import { Await, Link, useLoaderData, useRouteLoaderData } from 'react-router';
 import { Image } from '@shopify/hydrogen';
 import type { FeaturedCollectionFragment, RecommendedProductsQuery } from 'storefrontapi.generated';
 import type { Route } from './+types/route';
-import { MockShopNotice, ProductItem } from '~/src/widgets';
+import { defaultTheme, resolveHeroContent } from '~/src/shared/config';
+import type { HeroContent, ThemeState } from '~/src/shared/config';
+import { Marquee, MockShopNotice, ProductItem } from '~/src/widgets';
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: 'Hydrogen | Home' }];
@@ -44,7 +46,7 @@ function loadDeferredData({ context }: Route.LoaderArgs) {
   const recommendedProducts = context.storefront
     .query(RECOMMENDED_PRODUCTS_QUERY)
     .catch((error: Error) => {
-      // Log query errors, but don't throw them so the page can still render
+      // Log query errors, don't throw them so the page can still render
       console.error(error);
       return null;
     });
@@ -56,24 +58,55 @@ function loadDeferredData({ context }: Route.LoaderArgs) {
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
+  // The theme (preset, layout flags, content) is resolved by the root loader
+  // from hydrogen.config.json (with the preview seam applied). The shop
+  // identity backs the hero when the config carries no copy.
+  const rootData = useRouteLoaderData('root') as
+    | { theme?: ThemeState; header?: { shop?: { name?: string; description?: string } } }
+    | undefined;
+  const theme = rootData?.theme ?? defaultTheme();
+  const shop = rootData?.header?.shop;
+  // Production-real hero: config copy ⊕ live shop data ⊕ generic fallback —
+  // the presets ship no brand copy.
+  const hero = resolveHeroContent(theme.content.hero, shop);
+
+  const sections = new Map<string, React.ReactNode>([
+    ['hero', <HeroSection key="hero" content={hero} />],
+    ['marquee', <Marquee key="marquee" content={theme.content.marquee} />],
+    [
+      'featuredCollection',
+      data.featuredCollection ? (
+        <FeaturedCollection key="featuredCollection" collection={data.featuredCollection} />
+      ) : null,
+    ],
+    [
+      'recommendedProducts',
+      <RecommendedProducts key="recommendedProducts" products={data.recommendedProducts} />,
+    ],
+  ]);
+
   return (
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
-      <section className="home__hero" aria-labelledby="home-statement">
-        <p className="eyebrow">New Collection</p>
-        <h1 className="home__hero-statement" id="home-statement">
-          Less, but better.
-        </h1>
-        <p className="home__hero-sub">
-          Considered goods for everyday life — honest design, nothing more.
-        </p>
-        <a className="home__hero-cta" href="/collections/all">
-          Shop the collection
-        </a>
-      </section>
-      {data.featuredCollection ? <FeaturedCollection collection={data.featuredCollection} /> : null}
-      <RecommendedProducts products={data.recommendedProducts} />
+      {theme.layout.homeSectionOrder.map((id) => (
+        <Fragment key={id}>{sections.get(id)}</Fragment>
+      ))}
     </div>
+  );
+}
+
+function HeroSection({ content }: { content: HeroContent }) {
+  return (
+    <section className="home__hero" aria-labelledby="home-statement">
+      {content.eyebrow && <p className="eyebrow">{content.eyebrow}</p>}
+      <h1 className="home__hero-statement" id="home-statement">
+        {content.statement}
+      </h1>
+      {content.sub && <p className="home__hero-sub">{content.sub}</p>}
+      <a className="home__hero-cta" href={content.ctaHref}>
+        {content.cta}
+      </a>
+    </section>
   );
 }
 

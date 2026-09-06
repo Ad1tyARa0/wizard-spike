@@ -1,8 +1,12 @@
 /**
  * FSD public API — shared/ui.
- * External modules may only import from this file, never from internals.
+ * Every UI primitive lives in its own kebab-case folder with a public
+ * index.ts (e.g. shared/ui/skeleton/, shared/ui/aside/); external modules
+ * import only from this top-level file.
  */
 export { Aside, useAside } from './aside';
 export { ClientOnly } from './client-only';
-export { ProductImage } from './product-image';
-export { ProductPrice } from './product-price';
+export { ProductImage, ProductPrice } from './product';
+export { Skeleton, SkeletonIcon, SkeletonRow } from './skeleton';
+export { StickerHover } from './sticker-hover';
+export { ThemeSwitcher } from './theme';

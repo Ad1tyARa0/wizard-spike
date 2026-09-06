@@ -104,6 +104,72 @@ grid, huge whitespace) > Single-accent merchandising band > Footer (minimal).
 - Product pages: giant title, price in tabular figures, one accent highlight
 - Cart/forms: keep accessibility (labels, 4.5:1 contrast, visible focus)
 
+### Product Card (updated 2026-08-28)
+
+**Portrait editorial composition** — crop product photos to **4:5 portrait**
+(`layout.cardAspectRatio: "portrait"`, config-driven; square is the fallback
+when the key is absent). Card anatomy, top to bottom:
+
+- Image: 4:5 crop, `object-fit: cover`, subtle 1.02 scale on hover
+  (disabled under reduced motion). The crop is forced over each photo's own
+  intrinsic ratio so every card in a row is the same height.
+- Meta row, pinned to the bottom of the card:
+  - **Name** (left): display family (`--font-display`), bold, sentence case
+    — the card's single statement
+  - **Price** (right): muted foreground (`--color-muted-foreground`),
+    tabular figures, nowrap
+
+**No card shadows.** Shadows are an anti-pattern here (see Anti-Patterns:
+"avoid; use borders for separation") — separation comes from the crop,
+whitespace, and hover states (scale + underline), never a drop shadow.
+
+Whitespace between cards stays exaggerated (`--space-xl` rows). Rationale:
+1:1 square crops chop portrait product shots and read as squashed; 4:5 is
+the standard premium e-commerce ratio. Validated via
+`product-card-wireframes.html` (Variant B), then refined in implementation
+(meta on one row, name/price baseline-aligned, price right-aligned).
+
+---
+
+### Header (updated 2026-08-31)
+
+**Exaggerated Minimalism bar** — one ultra-minimal sticky bar, three zones
+(`grid-template-areas`, swapped at the 768px breakpoint):
+
+- **Desktop (≥ 768px):** `[logo] · [centered nav] · [search] [cart]` — logo at
+  the extreme left, primary navigation centered, search + cart icon controls at
+  the extreme right (search immediately left of cart).
+- **Mobile (< 768px):** `[list] · [centered logo] · [search] [cart]` — list
+  (menu) icon at the extreme left, logo centered, search + cart at the extreme
+  right.
+- **No account link** in the header (account stays reachable via `/account`).
+- **Icons:** Phosphor **thin** (ultra-thin) weight, 44px touch targets; all
+  header icon controls render at the predefined **md** size (24px):
+  `List` (mobile menu), `MagnifyingGlass` (search), `ShoppingCart` (cart).
+  The playful preset keeps bold icons.
+- **Cart:** the cart control renders `ShoppingCart` at all times (no state
+  swap); its weight is ultra-thin when the cart is empty and flips to the
+  Phosphor **fill** weight once items are in the cart; the count badge is a
+  circle in the primary token color with on-primary text (black circle, white
+  number in the minimal preset).
+- **Loading:** while the header data loads or the client hydrates, the WHOLE
+  header renders as a skeleton (logo row, nav row, search + cart icon blocks)
+  composed from the reusable `shared/ui` skeleton primitives — never an
+  isolated per-control skeleton. Icon blocks are 36px, skeleton rows 32px (all
+  vertically centered), and the desktop nav row spans ~50% of the header width.
+- Spec: OpenSpec change `openspec/changes/redesign-minimal-header/`.
+
+### Icon size scale (predefined)
+
+| Token       | Value  | Usage                                    |
+| ----------- | ------ | ---------------------------------------- |
+| `--icon-sm` | `20px` | Dense / inline icon affordances          |
+| `--icon-md` | `24px` | Standard controls (header, drawer close) |
+| `--icon-lg` | `32px` | Statement / empty-state icons            |
+
+Icons are sized from this scale — never ad-hoc literals. The scale is part of
+the config-driven token set (`design.icon` overrides apply without code edits).
+
 ---
 
 ## Anti-Patterns (Do NOT Use)

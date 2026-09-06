@@ -1,93 +1,40 @@
 /**
- * Design tokens — Exaggerated Minimalism (TypeScript mirror).
- * Source of truth: design-system/e-commerce-website/MASTER.md
- * CSS twin: ./tokens.css
+ * Design tokens — TypeScript mirror of the RESOLVED theme token set.
  *
- * Keep in sync with tokens.css. Used for inline styles and JS-driven styling.
+ * The static exports below are the `minimal` preset's defaults (previously
+ * hard-coded here and in tokens.css — both now derive from the config
+ * segment's minimal preset, a single source of truth).
+ *
+ * `createTokens(theme)` returns the fully resolved, typed token set for the
+ * active theme (defaults ⊕ preset ⊕ overrides), for TypeScript consumers
+ * that need a token value at runtime.
+ *
+ * CSS twin: ./tokens.css (static minimal defaults; the root layout overlays
+ * the resolved runtime values as CSS custom properties on `<html>`).
  */
+import { MINIMAL_PRESET } from '~/src/shared/config';
+import type { ThemeState, TokenSet } from '~/src/shared/config';
 
-export const colors = {
-  primary: '#000000',
-  onPrimary: '#ffffff',
-  background: '#ffffff',
-  foreground: '#000000',
-  accent: '#d4af37',
-  onAccent: '#000000',
-  secondary: '#f5f5f4',
-  onSecondary: '#000000',
-  muted: '#a8a29e',
-  mutedForeground: '#57534e',
-  border: '#000000',
-  destructive: '#dc2626',
-  onDestructive: '#ffffff',
-  ring: '#d4af37',
-} as const;
+export const colors = MINIMAL_PRESET.tokens.colors;
+export const fonts = MINIMAL_PRESET.tokens.fonts;
+export const type = MINIMAL_PRESET.tokens.type;
+export const weights = MINIMAL_PRESET.tokens.weights;
+export const tracking = MINIMAL_PRESET.tokens.tracking;
+export const space = MINIMAL_PRESET.tokens.space;
+export const radius = MINIMAL_PRESET.tokens.radius;
+export const motion = MINIMAL_PRESET.tokens.motion;
+export const icon = MINIMAL_PRESET.tokens.icon;
+export const breakpoints = MINIMAL_PRESET.tokens.breakpoints;
+export const zIndex = MINIMAL_PRESET.tokens.zIndex;
+export const layout = MINIMAL_PRESET.tokens.layout;
 
-export const fonts = {
-  display: "'Montserrat Variable', system-ui, sans-serif",
-  editorial: "'Cormorant Variable', Georgia, serif",
-  body: "'Montserrat Variable', system-ui, sans-serif",
-} as const;
+/** The complete minimal token set (as resolved with no overrides). */
+export const tokens: TokenSet = MINIMAL_PRESET.tokens;
 
-export const type = {
-  giant: 'clamp(3rem, 10vw, 12rem)',
-  display: 'clamp(2.25rem, 5vw, 4.5rem)',
-  heading: 'clamp(1.5rem, 2.5vw, 2rem)',
-  body: '1rem',
-  bodyLg: '1.125rem',
-  label: '0.8125rem',
-} as const;
-
-export const weights = {
-  black: 900,
-  bold: 700,
-  medium: 500,
-  regular: 400,
-  light: 300,
-} as const;
-
-export const tracking = {
-  tight: '-0.05em',
-  label: '0.08em',
-} as const;
-
-export const space = {
-  xs: '4px',
-  sm: '8px',
-  md: '24px',
-  lg: '48px',
-  xl: '96px',
-  '2xl': '128px',
-  huge: '8rem',
-} as const;
-
-export const radius = {
-  none: '0',
-  sm: '2px',
-} as const;
-
-export const motion = {
-  durationFast: '150ms',
-  durationBase: '250ms',
-  easeOut: 'cubic-bezier(0.16, 1, 0.3, 1)',
-} as const;
-
-export const breakpoints = {
-  sm: '375px',
-  md: '768px',
-  lg: '1024px',
-  xl: '1440px',
-} as const;
-
-export const zIndex = {
-  base: 0,
-  sticky: 10,
-  overlay: 20,
-  drawer: 40,
-  modal: 100,
-} as const;
-
-export const layout = {
-  containerMax: '1440px',
-  headerHeight: '64px',
-} as const;
+/**
+ * Typed mirror of the resolved token set for the active theme.
+ * Pass the `theme` value from the root loader data.
+ */
+export function createTokens(theme: ThemeState): TokenSet {
+  return theme.tokens;
+}

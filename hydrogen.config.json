@@ -1,0 +1,26 @@
+{
+  "theme": "minimal",
+  "design": {},
+  "layout": {
+    "headerStyle": "slim",
+    "gridDensity": "comfortable",
+    "cardAspectRatio": "portrait",
+    "homeSectionOrder": ["hero", "featuredCollection", "recommendedProducts"]
+  },
+  "content": {
+    "nav": [],
+    "footer": [],
+    "hero": {
+      "eyebrow": "New Collection",
+      "statement": "Less, but better.",
+      "sub": "Considered goods for everyday life — honest design, nothing more.",
+      "cta": "Shop the collection",
+      "ctaHref": "/collections/all"
+    },
+    "marquee": {
+      "items": ["Gluten-free", "Vegan", "Crunchy", "No fake stuff", "Made for everyone", "Big flavor"],
+      "direction": "left",
+      "speed": "default"
+    }
+  }
+}

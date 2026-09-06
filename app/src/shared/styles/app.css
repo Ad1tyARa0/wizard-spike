@@ -7,6 +7,11 @@
 @import './drawer.css';
 @import '@fontsource-variable/montserrat';
 @import '@fontsource-variable/cormorant';
+/* Playful DTC preset fonts — all Google Fonts (redistributable). */
+@import '@fontsource/archivo-black';
+@import '@fontsource/anton';
+@import '@fontsource-variable/fredoka';
+@import '@fontsource-variable/manrope';
 
 :root {
   --aside-width: 400px;
@@ -206,7 +211,7 @@ aside {
   position: fixed;
   right: calc(-1 * var(--aside-width));
   top: 0;
-  transition: transform 200ms ease-in-out;
+  transition: transform var(--duration-base) var(--ease-out);
 }
 
 aside header {
@@ -267,7 +272,7 @@ aside li {
   position: fixed;
   right: 0;
   top: 0;
-  transition: opacity 400ms ease-in-out;
+  transition: opacity var(--duration-base) var(--ease-out);
   visibility: hidden;
   z-index: var(--z-overlay);
 }
@@ -326,26 +331,43 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /* ============================================================
- * Header — minimal bar, uppercase labels
+ * Header — Exaggerated Minimalism, three zones.
+ * Zone order (CSS grid-template-areas, swapped at the md breakpoint):
+ *   Desktop: [logo] · [centered nav] · [search] [cart]
+ *   Mobile : [list] · [centered logo] · [search] [cart]
  * ============================================================ */
 .header {
   align-items: center;
   background: var(--color-background);
-  display: flex;
+  display: grid;
+  grid-template-areas: 'list logo ctas';
+  grid-template-columns: 1fr auto 1fr;
   height: var(--header-height);
-  padding: 0 var(--space-lg);
+  /* Mobile: tight edge inset so the icon controls hug the screen edges and
+     the row doesn't read as centered. */
+  padding: 0 var(--space-sm);
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  /* Align with page content inset so the header reads as one surface
-     with the hero below it (no border, same horizontal rhythm). */
+  /* Equal 1fr side columns keep the center zone truly viewport-centered.
+     Align with page content inset so the header reads as one surface with
+     the hero below it (no border, same horizontal rhythm). */
   @media (min-width: 48em) {
+    grid-template-areas: 'logo nav ctas';
+    padding: 0 var(--space-lg);
+  }
+  @media (min-width: 64em) {
     padding: 0 var(--space-2xl);
   }
 }
 
-.header > a {
+.header-logo {
+  grid-area: logo;
+  justify-self: center;
   text-decoration: none;
+  @media (min-width: 48em) {
+    justify-self: start;
+  }
 }
 
 .header > a strong {
@@ -357,7 +379,16 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .header-menu-mobile-toggle {
-  @media (min-width: 48em) {
+  grid-area: list;
+  justify-self: start;
+}
+
+/* The toggle also carries .header-icon-button (display: inline-flex), which
+   is declared later in this file and — at equal specificity — would override
+   this hide on desktop. Scoping the hide under .header raises its
+   specificity so the cascade can't win. */
+@media (min-width: 48em) {
+  .header .header-menu-mobile-toggle {
     display: none;
   }
 }
@@ -370,11 +401,11 @@ button.reset:hover:not(:has(> *)) {
 
 .header-menu-desktop {
   display: none;
-  grid-gap: 1.5rem;
-  @media (min-width: 45em) {
+  @media (min-width: 48em) {
     display: flex;
+    grid-area: nav;
     grid-gap: 1.5rem;
-    margin-left: 3rem;
+    justify-self: center;
   }
 }
 
@@ -395,22 +426,110 @@ button.reset:hover:not(:has(> *)) {
 .header-ctas {
   align-items: center;
   display: flex;
-  grid-gap: 1rem;
-  margin-left: auto;
+  grid-area: ctas;
+  grid-gap: var(--space-xs);
+  justify-self: end;
+  /* Desktop keeps the looser cluster gap. */
+  @media (min-width: 48em) {
+    grid-gap: var(--space-sm);
+  }
 }
 
-.header-ctas > * {
-  min-width: fit-content;
-  font-size: var(--type-label);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  text-decoration: none;
+/* Header icon controls — 44px targets, thin Phosphor glyphs */
+.header-icon-button {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  transition: opacity var(--duration-fast) var(--ease-out);
+  width: 44px;
 }
 
-.header-ctas > *:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+.header-icon-button:hover {
+  opacity: 0.7;
+}
+
+.header-icon-button:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+ * Skeleton primitives — reusable loading placeholders
+ * (reduced-motion: the global rule collapses the pulse to static)
+ * ============================================================ */
+.skeleton {
+  display: block;
+  background: var(--color-secondary);
+  /* Ambient pulse — scales with the theme's base duration (minimal 1.25s,
+     playful 1.75s). */
+  animation: skeleton-pulse calc(var(--duration-base) * 5) var(--ease-out) infinite alternate;
+}
+
+@keyframes skeleton-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+.skeleton--icon {
+  width: 36px;
+  height: 36px;
+}
+
+.skeleton--row {
+  height: 1rem;
+}
+
+/* Header skeleton — mirrors the header's three-zone grid and 64px height so
+   the resolved Header replaces it with no layout shift. Every block is
+   vertically centered in the bar. */
+.header-skeleton {
+  pointer-events: none;
+}
+
+.header-skeleton > * {
+  align-self: center;
+}
+
+.header-skeleton__list {
+  grid-area: list;
+  justify-self: start;
+}
+
+.header-skeleton__logo {
+  grid-area: logo;
+  justify-self: center;
+  width: 10rem;
+  height: 32px;
+}
+
+.header-skeleton__nav {
+  display: none;
+}
+
+@media (min-width: 48em) {
+  .header-skeleton__logo {
+    justify-self: start;
+  }
+  .header-skeleton__nav {
+    display: block;
+    grid-area: nav;
+    justify-self: center;
+    /* 40–50% of the header width (design review) — a proper nav row. */
+    width: 50%;
+    height: 32px;
+  }
+  .header-skeleton__list {
+    display: none;
+  }
 }
 
 /* ============================================================
@@ -443,6 +562,20 @@ button.reset:hover:not(:has(> *)) {
 .footer-menu a:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+/* Config-driven footer taglines (content.footer) */
+.footer-taglines {
+  margin-top: var(--space-lg);
+  text-align: center;
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: var(--type-body-lg);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  margin: 0;
 }
 
 /* ============================================================
@@ -554,35 +687,74 @@ textarea:focus {
  * Product items & grids
  * ============================================================ */
 .product-item {
-  display: block;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
 }
 
-.product-item h4 {
-  font-family: var(--font-body);
-  font-size: var(--type-label);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  margin: var(--space-md) 0 var(--space-xs);
+/* Product card — portrait editorial composition (config-driven crop).
+   Design: MASTER.md → Product card. The meta row (name left, price right)
+   is pinned to the bottom of the card via margin-top: auto, so all cards
+   in a row align regardless of image content. */
+.product-item .product-meta {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-md);
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: var(--space-md);
 }
 
-.product-item h4:hover {
+.product-item .product-meta h4 {
+  font-family: var(--font-display);
+  font-size: var(--type-body);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.product-item .product-meta h4:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
-.product-item .product-price {
+.product-item .product-meta .product-price {
+  color: var(--color-muted-foreground);
+  font-size: var(--type-body);
   font-variant-numeric: tabular-nums;
+  margin: 0;
+  white-space: nowrap;
 }
 
-/* Card images: uniform square crop, always fill the column, never distort */
+/* Card images: crop driven by layout.cardAspectRatio (data attribute on
+   <main>). `!important` is required because Hydrogen's <Image> emits the
+   image's OWN intrinsic ratio as an inline style (aspect-ratio: w/h),
+   which would otherwise override the theme's card crop and make every
+   card a different height. */
 .product-item img,
 .collection-item img,
 .recommended-product img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1 !important;
+  height: auto;
   object-fit: cover;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+  width: 100%;
+}
+
+main[data-card-aspect='portrait'] .product-item img {
+  aspect-ratio: 4 / 5 !important;
+}
+
+main[data-card-aspect='wide'] .product-item img {
+  aspect-ratio: 16 / 10 !important;
+}
+
+/* Subtle editorial zoom on hover (minimal); playful's sticker transform
+   overrides this via higher specificity under [data-theme='playful']. */
+.product-item:hover img {
+  transform: scale(1.02);
 }
 
 .products-grid,
@@ -1036,5 +1208,260 @@ textarea:focus {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .product-item:hover img {
+    transform: none;
+  }
+}
+
+/* ============================================================
+ * Dev-only theme preview switcher (not shipped in production)
+ * ============================================================ */
+.theme-switcher {
+  align-items: center;
+  background: var(--color-background);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  bottom: var(--space-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  position: fixed;
+  right: var(--space-md);
+  z-index: var(--z-modal);
+}
+
+.theme-switcher__label {
+  font-size: var(--type-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.theme-switcher__select {
+  border-radius: var(--radius-sm);
+  font-size: var(--type-label);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+/* ============================================================
+ * Playful DTC preset (theme #2) — config-driven theming.
+ *
+ * All rules are gated on `[data-theme='playful']` set on <html> by the
+ * root layout from hydrogen.config.json. Token values themselves swap via
+ * the runtime CSS custom properties emitted on <html>; these rules cover
+ * structure/typography the shared token set cannot express.
+ *
+ * Design language master:
+ * design-system/e-commerce-website/PLAYFUL-DTC-MASTER.md
+ * ============================================================ */
+
+/* Cream-dominant surfaces + ink text everywhere */
+[data-theme='playful'] body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Poster display / geometric body — headings get the geometric family */
+[data-theme='playful'] h1,
+[data-theme='playful'] h2,
+[data-theme='playful'] .statement,
+[data-theme='playful'] .section-title {
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
+}
+
+[data-theme='playful'] h3,
+[data-theme='playful'] h4,
+[data-theme='playful'] h5,
+[data-theme='playful'] h6 {
+  font-family: var(--font-heading);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Chunky banded header (headerStyle flag: 'chunky') — theme-agnostic */
+.header[data-header-style='chunky'] {
+  height: auto;
+  padding-block: var(--space-md);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+[data-theme='playful'] .header > a strong {
+  font-family: var(--font-condensed);
+  font-size: var(--type-heading);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Rounded product surfaces, square buttons, pill badges */
+[data-theme='playful'] .product-item img,
+[data-theme='playful'] .collection-item img,
+[data-theme='playful'] .recommended-product img,
+[data-theme='playful'] .featured-collection-image,
+[data-theme='playful'] .blog-article-image,
+[data-theme='playful'] .product-image img {
+  border-radius: var(--radius-card);
+}
+
+[data-theme='playful'] .product-form button,
+[data-theme='playful'] .cart-discount button,
+[data-theme='playful'] .cart-line-quantity button,
+[data-theme='playful'] .order-search-buttons button,
+[data-theme='playful'] .home__hero-cta {
+  border-radius: var(--radius-none);
+}
+
+[data-theme='playful'] .product-options-item,
+[data-theme='playful'] .product-options-item:disabled {
+  border-radius: var(--radius-pill);
+}
+
+/* Grid density flag (gridDensity: 'compact') — theme-agnostic */
+main[data-grid-density='compact'] .products-grid,
+main[data-grid-density='compact'] .collections-grid,
+main[data-grid-density='compact'] .recommended-products-grid,
+main[data-grid-density='compact'] .blogs-grid,
+main[data-grid-density='compact'] .blog-grid {
+  --grid-item-width: 260px;
+  grid-gap: var(--space-lg) var(--space-md);
+}
+
+/* Banded full-bleed home sections — zero vertical section spacing */
+[data-theme='playful'] .home {
+  padding: 0;
+  max-width: none;
+  margin: 0;
+}
+
+[data-theme='playful'] .home__hero {
+  background: var(--color-secondary);
+  min-height: 60dvh;
+  padding: var(--space-huge) var(--space-lg);
+  margin: 0;
+}
+
+[data-theme='playful'] .featured-collection {
+  margin: 0;
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+[data-theme='playful'] .featured-collection h1 {
+  font-size: var(--type-display);
+}
+
+[data-theme='playful'] .recommended-products {
+  background: var(--color-secondary);
+  padding: var(--space-2xl) var(--space-lg);
+  margin: 0;
+}
+
+[data-theme='playful'] .home__hero-cta {
+  box-shadow: 6px 6px 0 var(--color-primary);
+  transform: rotate(-1.5deg);
+}
+
+[data-theme='playful'] .home__hero-cta:hover {
+  box-shadow: 10px 10px 0 var(--color-primary);
+  transform: rotate(-1.5deg) translateY(-2px);
+}
+
+/* ============================================================
+ * Marquee section (first-class widget, config-driven content)
+ * ============================================================ */
+.marquee {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-block: 2px solid var(--color-primary);
+  overflow: hidden;
+  padding: var(--space-sm) 0;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll var(--marquee-duration, 28s) linear infinite;
+}
+
+.marquee[data-direction='right'] .marquee__track {
+  animation-direction: reverse;
+}
+
+.marquee[data-speed='fast'] .marquee__track {
+  --marquee-duration: 16s;
+}
+
+.marquee[data-speed='slow'] .marquee__track {
+  --marquee-duration: 40s;
+}
+
+.marquee__group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marquee__item {
+  font-family: var(--font-condensed);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 0 var(--space-lg);
+}
+
+.marquee__item::after {
+  content: '✦';
+  margin-left: var(--space-lg);
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
+  }
+
+  .marquee {
+    overflow-x: auto;
+  }
+}
+
+/* ============================================================
+ * Sticker hover primitive (shared/ui) — tilt + hard offset shadow
+ * ============================================================ */
+.sticker-hover {
+  display: block;
+}
+
+[data-theme='playful'] .sticker-hover > img {
+  display: block;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+[data-theme='playful'] .sticker-hover:hover > img {
+  transform: rotate(-2.5deg) translateY(-6px);
+  box-shadow: 10px 10px 0 var(--color-hero-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme='playful'] .sticker-hover:hover > img {
+    transform: none;
+    box-shadow: none;
   }
 }

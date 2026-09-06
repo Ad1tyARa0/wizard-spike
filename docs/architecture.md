@@ -38,12 +38,25 @@ app/                        # Hydrogen/React Router shell (convention-fixed)
     │   ├── cart-drawer/    #   drawer UI state, CartDrawer, CartToggle
     │   ├── product-form/   #   ProductForm, AddToCartButton
     │   └── search/         #   SearchForm(+Predictive), SearchResults(+Predictive)
-    ├── widgets/            # composed blocks (one public API: index.ts) —
-    │                       #   Header, Footer, PageLayout, ProductItem,
-    │                       #   CartMain/CartLineItem/CartSummary,
-    │                       #   PaginatedResourceSection, MockShopNotice
+    ├── widgets/            # composed blocks — one module per folder
+    │   ├── header/         #   Header, HeaderMenu, HeaderSkeleton
+    │   ├── cart/           #   CartMain, CartLineItem, CartSummary, cart-types
+    │   ├── footer/         #   Footer
+    │   ├── page-layout/    #   PageLayout
+    │   ├── product/        #   ProductItem
+    │   ├── marquee/        #   Marquee
+    │   ├── mock-shop-notice/          # MockShopNotice
+    │   ├── paginated-resource-section/# PaginatedResourceSection
+    │   └── index.ts        #   one public API
     └── shared/             # no business logic; each segment has index.ts
-        ├── ui/             #   Aside, ProductImage, ProductPrice, ClientOnly
+        ├── ui/             #   one module per folder
+        │   ├── aside/      #   Aside, useAside
+        │   ├── client-only/#   ClientOnly
+        │   ├── product/    #   ProductImage, ProductPrice
+        │   ├── skeleton/   #   Skeleton, SkeletonIcon, SkeletonRow
+        │   ├── sticker-hover/         # StickerHover
+        │   ├── theme/      #   ThemeSwitcher
+        │   └── index.ts    #   one public API
         ├── api/            #   fragments.ts (GraphQL)
         ├── lib/            #   search.ts, redirect.ts
         └── styles/         #   tokens.css/tokens.ts, app.css, reset.css, drawer.css
@@ -78,6 +91,20 @@ boundaries are clear, changes stay local.
 
 `bun run lint` runs oxlint **and** the FSD checker; CI should run both,
 plus `lint:circular` (madge).
+
+### Module organization (widgets & shared/ui)
+
+Every module in `widgets/` and `shared/ui/` lives in its own kebab-case folder
+with a public `index.ts`, grouping related files together:
+
+- `widgets/header/` → `header.tsx` + `header-skeleton.tsx`
+- `widgets/cart/` → `cart-main.tsx`, `cart-line-item.tsx`, `cart-summary.tsx`, `cart-types.ts`
+- `shared/ui/skeleton/` → the skeleton primitives; `shared/ui/product/` → image + price primitives
+
+A module folder's `index.ts` is the only import surface within the layer, and
+the layer's top-level `index.ts` (`~/src/widgets`, `~/src/shared/ui`) is the
+only surface for external consumers. New widgets / UI primitives must follow
+this structure (requirement: architecture spec `module-folder-organization`).
 
 ## Naming conventions
 

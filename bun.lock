@@ -15,11 +15,15 @@
         "react-dom": "^19.2.8",
         "react-redux": "^9.3.0",
         "react-router": "7.16.0",
-        "react-router-dom": "7.16.0"
+        "react-router-dom": "7.16.0",
       },
       "devDependencies": {
         "@fontsource-variable/cormorant": "^5.3.0",
+        "@fontsource-variable/fredoka": "^5.3.0",
+        "@fontsource-variable/manrope": "^5.3.0",
         "@fontsource-variable/montserrat": "^5.3.0",
+        "@fontsource/anton": "^5.3.0",
+        "@fontsource/archivo-black": "^5.3.0",
         "@graphql-codegen/cli": "5.0.2",
         "@react-router/dev": "7.16.0",
         "@react-router/fs-routes": "7.16.0",
@@ -35,9 +39,9 @@
         "oxlint": "^1.79.0",
         "prettier": "^3.4.2",
         "typescript": "^5.9.2",
-        "vite": "^8.2.1"
-      }
-    }
+        "vite": "^8.2.1",
+      },
+    },
   },
   "packages": {
     "@ardatan/relay-compiler": ["@ardatan/relay-compiler@13.0.2", "", { "dependencies": { "@babel/runtime": "^8.0.0", "immutable": "^5.1.9", "invariant": "^2.2.4" }, "peerDependencies": { "graphql": "*" } }, "sha512-VFpv9UP820SiwDUPYtq7PmD3jifzZlevkQ26bhbSzFeruSTys0eHzQCZyKg+IhgmZzwPI9AFjPe26ABNjGeIKg=="],
@@ -200,7 +204,15 @@
 
     "@fontsource-variable/cormorant": ["@fontsource-variable/cormorant@5.3.0", "", {}, "sha512-S3/jFZ2+Erx8ML5+lo71rYKqVpJF13CZ3yWX7xfjQk1wFcPhT9Gp+l2tnNSLOx5Mzjn3mQmVPutpvx91O2VqpQ=="],
 
+    "@fontsource-variable/fredoka": ["@fontsource-variable/fredoka@5.3.0", "", {}, "sha512-13w98iw2RcmYfZQRZPLSu+0YJK3HHm5A2XrpU26moFIAePmfiKfvkmEJUgkc8r5GNR+pbDijOueS1KdGAMAWmQ=="],
+
+    "@fontsource-variable/manrope": ["@fontsource-variable/manrope@5.3.0", "", {}, "sha512-6D5dgokHsWDDMtmXHznKa0hK229NN+1a4BLPmUCLqcO1Pw5EEhWY5RFt0AcXnVRAljFFPfRtLkJePQj6LSsV6g=="],
+
     "@fontsource-variable/montserrat": ["@fontsource-variable/montserrat@5.3.0", "", {}, "sha512-7PaZoxaxrWLAyrhO46v65An9LhUhfkTExWLhfbywYZCnZEgg/W1rEHnlNmZKjNZ3nJTVYyicqxlJt10z/26yTA=="],
+
+    "@fontsource/anton": ["@fontsource/anton@5.3.0", "", {}, "sha512-OR1D5n124n2XRs66SbX7IjcOSptljEJE8FcDNnlni2y1/M6KpTx7cU2PIWzTSsBj4WFkHPw24On8qw3qkQZuTw=="],
+
+    "@fontsource/archivo-black": ["@fontsource/archivo-black@5.3.0", "", {}, "sha512-7EsTIQ+Blf96ktpzTUpI7msi+u9/AJxM/GZxOSkEubVd1jSTrFSTNxMgfpX/8rQsjZ+19a+qvRbtcTEp5J/72g=="],
 
     "@google/model-viewer": ["@google/model-viewer@4.3.1", "", { "dependencies": { "@monogrid/gainmap-js": "^3.1.0", "lit": "^3.2.1" }, "peerDependencies": { "three": "^0.183.0" } }, "sha512-GP+inXhAtY31E8rILVmByA6z8CZZjdlNajddppyI1/j1eIaSQiZcMRaUqTFe7+jv4mzRzwKIOiKBud0apiv+WQ=="],
 

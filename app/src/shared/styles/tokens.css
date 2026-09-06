@@ -19,10 +19,13 @@
   --color-destructive: #dc2626;
   --color-on-destructive: #ffffff;
   --color-ring: #d4af37;
+  --color-hero-accent: #d4af37;
 
   /* ---- Typography: oversized display, editorial serif, readable body ---- */
   --font-display: 'Montserrat Variable', system-ui, sans-serif;
   --font-editorial: 'Cormorant Variable', Georgia, serif;
+  --font-heading: 'Montserrat Variable', system-ui, sans-serif;
+  --font-condensed: 'Montserrat Variable', system-ui, sans-serif;
   --font-body: 'Montserrat Variable', system-ui, sans-serif;
 
   --type-giant: clamp(3rem, 10vw, 12rem);
@@ -53,6 +56,8 @@
   /* ---- Radii: sharp by default ---- */
   --radius-none: 0;
   --radius-sm: 2px;
+  --radius-card: 0;
+  --radius-pill: 999px;
 
   /* ---- Borders: line-based separation ---- */
   --border-width: 1px;
@@ -61,6 +66,11 @@
   --duration-fast: 150ms;
   --duration-base: 250ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- Icon sizes: predefined scale (sm / md / lg) ---- */
+  --icon-sm: 20px;
+  --icon-md: 24px;
+  --icon-lg: 32px;
 
   /* ---- Layout ---- */
   --breakpoint-sm: 375px;

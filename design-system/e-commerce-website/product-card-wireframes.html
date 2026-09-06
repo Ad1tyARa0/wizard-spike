@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Product Card Wireframes — Minimal preset</title>
+<!--
+  THROWAWAY PROTOTYPE — not shipped.
+  Plan: four product-card variants for the minimal preset, switchable via
+  ?variant= and a floating bottom bar. A = current (squashed baseline);
+  B/C/D are structurally different compositions. Every variant shows the
+  hydrogen.config.json keys that would drive it (config-driven theming).
+-->
+<style>
+  :root {
+    --primary: #000;
+    --bg: #fff;
+    --stone: #f5f5f4;
+    --muted: #a8a29e;
+    --muted-fg: #57534e;
+    --accent: #d4af37;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: 'Montserrat', system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--primary);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- doc header ---------- */
+  .doc-header {
+    border-bottom: 1px solid var(--primary);
+    padding: 32px 48px 24px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .doc-header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .doc-header p { margin: 0; color: var(--muted-fg); font-size: 0.9rem; max-width: 70ch; }
+  .doc-header .tag {
+    display: inline-block;
+    border: 1px solid var(--primary);
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* ---------- variant shell ---------- */
+  .variant { display: none; padding: 48px; max-width: 1440px; margin: 0 auto; }
+  .variant.active { display: block; }
+  .variant-head {
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .variant-head h2 {
+    font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em;
+    text-transform: uppercase; margin: 0;
+  }
+  .variant-head .verdict { font-size: 0.85rem; color: var(--muted-fg); }
+
+  /* config mapping box */
+  .config-box {
+    border: 1px dashed var(--muted);
+    background: var(--stone);
+    padding: 16px 20px;
+    margin: 40px 0 0;
+    font-size: 0.8rem;
+  }
+  .config-box h3 {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    margin: 0 0 8px; font-weight: 700;
+  }
+  .config-box code { background: #e7e5e4; padding: 1px 5px; border-radius: 3px; }
+  .config-box .new { background: var(--accent); color: #000; padding: 1px 5px; border-radius: 3px; font-size: 0.68rem; letter-spacing: 0.05em; }
+
+  /* ---------- shared card bits ---------- */
+  .grid { display: grid; gap: var(--gap-y, 48px) var(--gap-x, 24px); }
+  .grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--cw, 380px)), 1fr)); }
+  .grid--4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--cw, 260px)), 1fr)); }
+  .photo {
+    position: relative; overflow: hidden; width: 100%;
+    background-size: cover; background-position: center;
+  }
+  .card { text-decoration: none; color: inherit; display: block; }
+  .card:hover .photo img, .card:hover .photo { transform: scale(1.02); }
+
+  /* ---------- A: current (baseline) ---------- */
+  .va .grid { --gap-y: 96px; --gap-x: 48px; --cw: 380px; }
+  .va .photo { aspect-ratio: 1 / 1; }
+  .va .card h4 {
+    font-family: var(--sans);
+    font-size: 0.8125rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin: 8px 0 4px;
+  }
+  .va .card small { font-size: 0.8125rem; color: var(--primary); }
+  .va .flag {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #fff; background: rgba(0,0,0,0.25); z-index: 2;
+  }
+
+  /* ---------- B: portrait editorial ---------- */
+  .vb .grid { --gap-y: 56px; --gap-x: 32px; --cw: 320px; }
+  .vb .photo { aspect-ratio: 4 / 5; }
+  .vb .card { display: flex; flex-direction: column; }
+  .vb .card h3 {
+    font-family: var(--sans);
+    font-size: 1rem; font-weight: 500; letter-spacing: -0.01em;
+    margin: 20px 0 6px;
+  }
+  .vb .card .price { font-size: 0.9rem; color: var(--muted-fg); font-variant-numeric: tabular-nums; }
+  .vb .card .note { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
+  .vb .card:hover h3 { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* ---------- C: radical whitespace ---------- */
+  .vc .grid { --gap-y: 128px; --gap-x: 48px; --cw: 400px; }
+  .vc .photo { aspect-ratio: 1 / 1; }
+  .vc .card { position: relative; padding-top: 40px; }
+  .vc .card .index {
+    position: absolute; top: 0; left: 0;
+    font-size: 0.7rem; letter-spacing: 0.14em; color: var(--muted);
+  }
+  .vc .card .line { border-top: 1px solid var(--primary); margin: 40px 0 20px; }
+  .vc .card h3 {
+    font-family: var(--serif);
+    font-size: 1.6rem; font-weight: 400; letter-spacing: -0.01em;
+    margin: 0 0 8px;
+  }
+  .vc .card .cta { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--primary); }
+  .vc .card:hover .cta { color: var(--accent); }
+
+  /* ---------- D: compact hairline ---------- */
+  .vd .grid { --gap-y: 40px; --gap-x: 16px; --cw: 280px; }
+  .vd .photo { aspect-ratio: 1 / 1; }
+  .vd .card .row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    border-top: 1px solid var(--primary); margin-top: 12px; padding-top: 10px;
+  }
+  .vd .card h4 {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    margin: 0;
+  }
+  .vd .card .price { font-size: 0.75rem; color: var(--muted-fg); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .vd .card:hover h4 { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ---------- floating switcher ---------- */
+  .switcher {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    background: var(--primary); color: var(--bg);
+    padding: 10px 18px; border-radius: 999px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    z-index: 1000; font-family: var(--sans);
+  }
+  .switcher button {
+    background: none; border: none; color: inherit; cursor: pointer;
+    font-size: 1.2rem; line-height: 1; padding: 4px 10px;
+  }
+  .switcher button:hover { color: var(--accent); }
+  .switcher .label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+
+  @media (max-width: 700px) {
+    .variant { padding: 24px; }
+    .doc-header { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <span class="tag">Prototype — throwaway, not shipped</span>
+  <h1>Minimal preset · product card wireframes</h1>
+  <p>
+    The current card crops photos to a 1:1 square, sets the title as a micro uppercase label
+    8px below the image, and spaces rows 96px apart — which reads as “squashed”.
+    Flip through four structurally different directions with the bar below (or ←/→ keys).
+    Every variant is config-driven: each shows the <code>hydrogen.config.json</code> keys that would produce it.
+  </p>
+</header>
+
+<!-- ============ A — current (baseline) ============ -->
+<section class="variant va" id="v-A">
+  <div class="variant-head">
+    <h2>A — Current (baseline)</h2>
+    <span class="verdict">Square crop · micro label · 96px rows — this is the squashed state</span>
+  </div>
+  <div class="grid grid--3">
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#d6d3d1 0%,#a8a29e 100%);"><div class="flag">1:1 crop</div></div>
+      <h4>Monument Chair</h4>
+      <small>$1,240</small>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#e7e5e4 0%,#d6d3d1 100%);"><div class="flag">1:1 crop</div></div>
+      <h4>Arc Lamp</h4>
+      <small>$480</small>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#d6d3d1 0%,#f5f5f4 100%);"><div class="flag">1:1 crop</div></div>
+      <h4>Line Vase</h4>
+      <small>$95</small>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#c7c4be 0%,#a8a29e 100%);"><div class="flag">1:1 crop</div></div>
+      <h4>Field Table</h4>
+      <small>$2,800</small>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#e7e5e4 0%,#c7c4be 100%);"><div class="flag">1:1 crop</div></div>
+      <h4>Orbit Clock</h4>
+      <small>$260</small>
+    </a>
+  </div>
+  <div class="config-box">
+    <h3>What drives this today</h3>
+    <code>layout.gridDensity: "comfortable"</code> (→ <code>--grid-item-width: 380px</code>) ·
+    <code>design.space.xl: "96px"</code> (row gap) ·
+    <code>design.type.label: "0.8125rem"</code> (title) ·
+    image hard-coded <code>aspect-ratio: 1/1</code> in CSS — <em>not</em> configurable yet.
+  </div>
+</section>
+
+<!-- ============ B — portrait editorial ============ -->
+<section class="variant vb" id="v-B">
+  <div class="variant-head">
+    <h2>B — Portrait editorial</h2>
+    <span class="verdict">4:5 portrait crop · real title hierarchy · price on its own line (chosen ✓)</span>
+  </div>
+  <div class="grid grid--3">
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(180deg,#d6d3d1 0%,#78716c 100%);"></div>
+      <h3>Monument Chair</h3>
+      <span class="price">$1,240</span>
+      <span class="note">Oak · wool</span>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(180deg,#e7e5e4 0%,#a8a29e 100%);"></div>
+      <h3>Arc Lamp</h3>
+      <span class="price">$480</span>
+      <span class="note">Steel · linen shade</span>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(180deg,#d6d3d1 0%,#8b8577 100%);"></div>
+      <h3>Line Vase</h3>
+      <span class="price">$95</span>
+      <span class="note">Stoneware</span>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(180deg,#c7c4be 0%,#57534e 100%);"></div>
+      <h3>Field Table</h3>
+      <span class="price">$2,800</span>
+      <span class="note">Solid oak</span>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(180deg,#e7e5e4 0%,#9c968c 100%);"></div>
+      <h3>Orbit Clock</h3>
+      <span class="price">$260</span>
+      <span class="note">Brass · steel</span>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(180deg,#d6d3d1 0%,#6b6b66 100%);"></div>
+      <h3>Slab Bookend</h3>
+      <span class="price">$140</span>
+      <span class="note">Travertine</span>
+    </a>
+  </div>
+  <div class="config-box">
+    <h3>Config drives this</h3>
+    <code>layout.cardAspectRatio: "portrait"</code> <span class="new">new key</span> (→ <code>aspect-ratio: 4/5</code>) ·
+    <code>design.type.heading</code> for the title (1rem, medium) ·
+    <code>design.colors.mutedForeground</code> for price ·
+    <code>design.space.lg: "48px"</code> row gap · <code>layout.gridDensity: "comfortable"</code> (<code>--grid-item-width: 320px</code>).
+  </div>
+</section>
+
+<!-- ============ C — radical whitespace ============ -->
+<section class="variant vc" id="v-C">
+  <div class="variant-head">
+    <h2>C — Radical whitespace</h2>
+    <span class="verdict">Square image, but the card is a statement: index number, hairline, serif title, “View →”</span>
+  </div>
+  <div class="grid grid--3">
+    <a class="card" href="#">
+      <span class="index">01</span>
+      <div class="photo" style="background-image:linear-gradient(150deg,#e7e5e4 0%,#c7c4be 60%,#a8a29e 100%);"></div>
+      <div class="line"></div>
+      <h3>Monument Chair</h3>
+      <span class="cta">View →</span>
+    </a>
+    <a class="card" href="#">
+      <span class="index">02</span>
+      <div class="photo" style="background-image:linear-gradient(150deg,#f5f5f4 0%,#d6d3d1 60%,#8b8577 100%);"></div>
+      <div class="line"></div>
+      <h3>Arc Lamp</h3>
+      <span class="cta">View →</span>
+    </a>
+    <a class="card" href="#">
+      <span class="index">03</span>
+      <div class="photo" style="background-image:linear-gradient(150deg,#e7e5e4 0%,#b5b0a6 60%,#6b6b66 100%);"></div>
+      <div class="line"></div>
+      <h3>Line Vase</h3>
+      <span class="cta">View →</span>
+    </a>
+  </div>
+  <div class="config-box">
+    <h3>Config drives this</h3>
+    <code>layout.cardAspectRatio: "square"</code> <span class="new">new key</span> ·
+    <code>design.fonts.editorial</code> for the serif title ·
+    <code>design.space.xl: "128px"</code> row gap · <code>design.colors.muted</code> for index ·
+    <code>design.colors.accent</code> for hover “View →”. Hierarchy lives in the card component, driven by these tokens.
+  </div>
+</section>
+
+<!-- ============ D — compact hairline ============ -->
+<section class="variant vd" id="v-D">
+  <div class="variant-head">
+    <h2>D — Compact hairline</h2>
+    <span class="verdict">Dense 4-up catalog: title left, price right on a hairline, tight rows — for “many products” pages</span>
+  </div>
+  <div class="grid grid--4">
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#e7e5e4 0%,#a8a29e 100%);"></div>
+      <div class="row"><h4>Monument Chair</h4><span class="price">$1,240</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#d6d3d1 0%,#8b8577 100%);"></div>
+      <div class="row"><h4>Arc Lamp</h4><span class="price">$480</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#f5f5f4 0%,#b5b0a6 100%);"></div>
+      <div class="row"><h4>Line Vase</h4><span class="price">$95</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#c7c4be 0%,#57534e 100%);"></div>
+      <div class="row"><h4>Field Table</h4><span class="price">$2,800</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#e7e5e4 0%,#9c968c 100%);"></div>
+      <div class="row"><h4>Orbit Clock</h4><span class="price">$260</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#d6d3d1 0%,#6b6b66 100%);"></div>
+      <div class="row"><h4>Slab Bookend</h4><span class="price">$140</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#e7e5e4 0%,#78716c 100%);"></div>
+      <div class="row"><h4>Glass Carafe</h4><span class="price">$75</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="photo" style="background-image:linear-gradient(160deg,#f5f5f4 0%,#a8a29e 100%);"></div>
+      <div class="row"><h4>Brass Tray</h4><span class="price">$185</span></div>
+    </a>
+  </div>
+  <div class="config-box">
+    <h3>Config drives this</h3>
+    <code>layout.gridDensity: "compact"</code> (existing key — <code>--grid-item-width: 260px</code>) ·
+    <code>layout.cardAspectRatio: "square"</code> <span class="new">new key</span> ·
+    <code>design.type.label</code> for title/price ·
+    <code>design.space.lg: "40px"</code> row gap. The hairline row is the card's layout flag (e.g. <code>layout.cardLayout: "hairline"</code> <span class="new">new key</span>).
+  </div>
+</section>
+
+<!-- floating switcher -->
+<div class="switcher" role="toolbar" aria-label="Switch product card variant">
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="sw-label">A — Current</span>
+  <button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+  const VARIANTS = [
+    { key: 'A', name: 'Current (baseline)' },
+    { key: 'B', name: 'Portrait editorial' },
+    { key: 'C', name: 'Radical whitespace' },
+    { key: 'D', name: 'Compact hairline' },
+  ];
+  const label = document.getElementById('sw-label');
+  let index = 0;
+
+  function apply() {
+    VARIANTS.forEach((v, i) => {
+      document.getElementById('v-' + v.key).classList.toggle('active', i === index);
+    });
+    label.textContent = VARIANTS[index].key + ' — ' + VARIANTS[index].name;
+    const url = new URL(window.location.href);
+    url.searchParams.set('variant', VARIANTS[index].key);
+    window.history.replaceState(null, '', url.toString());
+  }
+
+  function cycle(delta) {
+    index = (index + delta + VARIANTS.length) % VARIANTS.length;
+    apply();
+  }
+
+  // honor ?variant= for shareable, reload-stable links
+  const initial = new URL(window.location.href).searchParams.get('variant');
+  const found = VARIANTS.findIndex((v) => v.key === initial);
+  if (found >= 0) index = found;
+
+  document.getElementById('prev').addEventListener('click', () => cycle(-1));
+  document.getElementById('next').addEventListener('click', () => cycle(1));
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, textarea, [contenteditable]')) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  apply();
+</script>
+</body>
+</html>

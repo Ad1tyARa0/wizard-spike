@@ -12,10 +12,13 @@ import {
 import { Analytics, getShopAnalytics, useNonce } from '@shopify/hydrogen';
 import type { Route } from './+types/root';
 import favicon from '~/assets/favicon.svg';
+import { defaultTheme, loadConfig, tokensToCssVars } from '~/src/shared/config';
+import type { ThemePresetName, ThemeState } from '~/src/shared/config';
 import { FOOTER_QUERY, HEADER_QUERY } from '~/src/shared/api';
 import appStyles from '~/src/shared/styles/app.css?url';
 import resetStyles from '~/src/shared/styles/reset.css?url';
 import { PageLayout } from '~/src/widgets';
+import { ThemeSwitcher } from '~/src/shared/ui';
 
 export type RootLoader = typeof loader;
 
@@ -69,14 +72,22 @@ export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
 
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
+  // The header query is deferred too (see loadDeferredData): the page shell
+  // paints immediately with a skeleton header instead of blocking first paint
+  // on the Storefront API.
+  const criticalData = {};
 
   const { storefront, env } = args.context;
+
+  // Config-driven theming: hydrogen.config.json → runtime token resolution.
+  // In non-production the loader also accepts a request-time config override
+  // (the wizard's live-preview seam); production ignores it.
+  const theme = await loadConfig({ request: args.request });
 
   return {
     ...deferredData,
     ...criticalData,
+    theme,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     shop: getShopAnalytics({
       storefront,
@@ -94,32 +105,28 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 /**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
-async function loadCriticalData({ context }: Route.LoaderArgs) {
-  const { storefront } = context;
-
-  const [header] = await Promise.all([
-    storefront.query(HEADER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
-      },
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-
-  return { header };
-}
-
-/**
  * Load data for rendering content below the fold. This data is deferred and will be
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({ context }: Route.LoaderArgs) {
-  const { storefront, customerAccount, cart } = context;
+  const { storefront, cart } = context;
+
+  // Deferred header: renders behind a Suspense skeleton (HeaderSkeleton) so
+  // first paint doesn't wait on the Storefront API. Cached long-lived and
+  // error-tolerant, like the footer query.
+  const header = storefront
+    .query(HEADER_QUERY, {
+      cache: storefront.CacheLong(),
+      variables: {
+        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+      },
+    })
+    .catch((error: Error) => {
+      // Log query errors, but don't throw them so the page can still render
+      console.error(error);
+      return null;
+    });
 
   // defer the footer query (below the fold)
   const footer = storefront
@@ -136,7 +143,7 @@ function loadDeferredData({ context }: Route.LoaderArgs) {
     });
   return {
     cart: cart.get(),
-    isLoggedIn: customerAccount.isLoggedIn(),
+    header,
     footer,
   };
 }
@@ -144,8 +151,16 @@ function loadDeferredData({ context }: Route.LoaderArgs) {
 export function Layout({ children }: { children?: React.ReactNode }) {
   const nonce = useNonce();
 
+  // Emit the resolved runtime token set as CSS custom properties on <html>
+  // plus the active preset marker (`data-theme`) for preset-scoped styles.
+  // Static tokens.css keeps the minimal defaults, so the page renders even
+  // before/without loader data.
+  const data = useRouteLoaderData<RootLoader>('root');
+  const theme: ThemeState = data?.theme ?? defaultTheme();
+  const cssVars = tokensToCssVars(theme.tokens) as React.CSSProperties;
+
   return (
-    <html lang="en">
+    <html lang="en" data-theme={theme.preset} style={cssVars}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -156,6 +171,18 @@ export function Layout({ children }: { children?: React.ReactNode }) {
       </head>
       <body>
         {children}
+        {/* Dev-only theme preview switcher — not rendered in production
+            builds (import.meta.env.PROD is statically replaced). A full-page
+            navigate re-runs the root loader, which applies the preview
+            override via the request-time seam (?theme=…). */}
+        {!import.meta.env.PROD && (
+          <ThemeSwitcher
+            current={theme.preset}
+            onSelect={(preset: ThemePresetName) => {
+              window.location.href = `/?theme=${preset}`;
+            }}
+          />
+        )}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>

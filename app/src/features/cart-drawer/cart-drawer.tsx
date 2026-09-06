@@ -15,7 +15,7 @@ import {
  * reconciliation with Hydrogen server actions is scoped to change
  * `implement-cart-capability`.
  */
-export function CartDrawer() {
+export function CartDrawer({ iconSize }: { iconSize: string }) {
   const dispatch = useDispatch();
   const isOpen = useSelector(selectCartDrawerOpen);
   const lines = useSelector(selectCartLines);
@@ -65,7 +65,7 @@ export function CartDrawer() {
             onClick={close}
             aria-label="Close cart"
           >
-            <X size={24} weight="bold" aria-hidden="true" />
+            <X size={iconSize} weight="bold" aria-hidden="true" />
           </button>
         </header>
 
