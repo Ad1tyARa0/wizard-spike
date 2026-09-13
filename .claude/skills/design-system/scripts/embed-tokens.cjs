@@ -15,12 +15,16 @@ const path = require('path');
 
 // Find project root (look for assets/design-tokens.css)
 function findProjectRoot(startDir) {
+  // Walk up until dirname stops changing: on Windows the root is 'C:\', so a
+  // `dir !== '/'` guard never terminates.
   let dir = startDir;
-  while (dir !== '/') {
+  for (;;) {
     if (fs.existsSync(path.join(dir, 'assets', 'design-tokens.css'))) {
       return dir;
     }
-    dir = path.dirname(dir);
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
   }
   return null;
 }
@@ -57,9 +61,7 @@ const MINIMAL_TOKENS = [
 function extractTokens(css, minimal = false) {
   // Extract :root block
   const rootMatch = css.match(/:root\s*\{([^}]+)\}/g);
-  if (!rootMatch) {
-    return '';
-  }
+  if (!rootMatch) return '';
 
   let allVars = [];
   for (const block of rootMatch) {
@@ -68,7 +70,9 @@ function extractTokens(css, minimal = false) {
   }
 
   if (minimal) {
-    allVars = allVars.filter((v) => MINIMAL_TOKENS.some((token) => v.includes(token)));
+    allVars = allVars.filter(v =>
+      MINIMAL_TOKENS.some(token => v.includes(token))
+    );
   }
 
   // Dedupe
