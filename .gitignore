@@ -12,3 +12,6 @@ node_modules
 .tmp/
 .home/
 *.tsbuildinfo
+
+# Impeccable skill engine binaries (downloaded per-platform on first run)
+**/impeccable/scripts/bin/
