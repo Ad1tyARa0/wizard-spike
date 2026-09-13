@@ -679,7 +679,7 @@ export type ProductFragment = Pick<
       optionValues: Array<
         Pick<StorefrontAPI.ProductOptionValue, 'name'> & {
           firstSelectableVariant?: StorefrontAPI.Maybe<
-            Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'id' | 'sku' | 'title'> & {
+            Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'quantityAvailable' | 'id' | 'sku' | 'title'> & {
               compareAtPrice?: StorefrontAPI.Maybe<
                 Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
               >;
@@ -709,7 +709,7 @@ export type ProductFragment = Pick<
     }
   >;
   selectedOrFirstAvailableVariant?: StorefrontAPI.Maybe<
-    Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'id' | 'sku' | 'title'> & {
+    Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'quantityAvailable' | 'id' | 'sku' | 'title'> & {
       compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>;
       image?: StorefrontAPI.Maybe<
         { __typename: 'Image' } & Pick<
@@ -724,7 +724,7 @@ export type ProductFragment = Pick<
     }
   >;
   adjacentVariants: Array<
-    Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'id' | 'sku' | 'title'> & {
+    Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'quantityAvailable' | 'id' | 'sku' | 'title'> & {
       compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>;
       image?: StorefrontAPI.Maybe<
         { __typename: 'Image' } & Pick<
@@ -766,7 +766,7 @@ export type ProductQuery = {
           optionValues: Array<
             Pick<StorefrontAPI.ProductOptionValue, 'name'> & {
               firstSelectableVariant?: StorefrontAPI.Maybe<
-                Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'id' | 'sku' | 'title'> & {
+                Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'quantityAvailable' | 'id' | 'sku' | 'title'> & {
                   compareAtPrice?: StorefrontAPI.Maybe<
                     Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
                   >;
@@ -796,7 +796,7 @@ export type ProductQuery = {
         }
       >;
       selectedOrFirstAvailableVariant?: StorefrontAPI.Maybe<
-        Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'id' | 'sku' | 'title'> & {
+        Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'quantityAvailable' | 'id' | 'sku' | 'title'> & {
           compareAtPrice?: StorefrontAPI.Maybe<
             Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
           >;
@@ -813,7 +813,7 @@ export type ProductQuery = {
         }
       >;
       adjacentVariants: Array<
-        Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'id' | 'sku' | 'title'> & {
+        Pick<StorefrontAPI.ProductVariant, 'availableForSale' | 'quantityAvailable' | 'id' | 'sku' | 'title'> & {
           compareAtPrice?: StorefrontAPI.Maybe<
             Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
           >;

@@ -6,6 +6,9 @@ import type { ProductFragment } from 'storefrontapi.generated';
 import { cartLineAdded, cartLineFromVariant } from '../../entities/cart';
 import { AddToCartButton } from './add-to-cart-button';
 
+/** At or below this quantity the product form shows a low-stock indicator. */
+const LOW_STOCK_THRESHOLD = 5;
+
 export function ProductForm({
   productOptions,
   selectedVariant,
@@ -15,6 +18,13 @@ export function ProductForm({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const quantityAvailable = selectedVariant?.quantityAvailable ?? null;
+  const isLowStock =
+    quantityAvailable !== null &&
+    quantityAvailable > 0 &&
+    quantityAvailable <= LOW_STOCK_THRESHOLD;
+
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -95,6 +105,11 @@ export function ProductForm({
           </div>
         );
       })}
+      {isLowStock && (
+        <p className="product-form-inventory" role="status">
+          Only {quantityAvailable} left in stock
+        </p>
+      )}
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {

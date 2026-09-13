@@ -1246,6 +1246,15 @@ main[data-card-aspect='wide'] .product-item img {
   margin-bottom: var(--space-lg);
 }
 
+.product-form-inventory {
+  color: var(--color-accent-strong);
+  font-size: var(--type-label);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  margin: 0 0 var(--space-md);
+}
+
 .product-options-grid {
   display: flex;
   flex-wrap: wrap;
