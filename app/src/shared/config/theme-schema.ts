@@ -55,6 +55,7 @@ const heroContentSchema = z
     sub: z.string().optional(),
     cta: z.string().optional(),
     ctaHref: z.string().optional(),
+    image: z.string().optional(),
   })
   .passthrough();
 

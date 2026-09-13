@@ -1,6 +1,7 @@
 import { Form, NavLink, Outlet, data as remixData, useLoaderData } from 'react-router';
 import type { Route } from './+types/route';
 import { CUSTOMER_DETAILS_QUERY } from '~/src/entities/customer';
+import { Button } from '~/src/shared/ui';
 
 export function shouldRevalidate() {
   return true;
@@ -78,7 +79,7 @@ function AccountMenu() {
 function Logout() {
   return (
     <Form className="account-logout" method="POST" action="/account/logout">
-      &nbsp;<button type="submit">Sign out</button>
+      &nbsp;<Button type="submit">Sign out</Button>
     </Form>
   );
 }

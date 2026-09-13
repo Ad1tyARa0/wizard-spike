@@ -64,6 +64,7 @@ export const MINIMAL_TOKENS: TokenSet = {
   radius: {
     none: '0',
     sm: '2px',
+    button: '4px',
     card: '0',
     pill: '999px',
   },
@@ -120,6 +121,7 @@ export const MINIMAL_CONTENT: ThemeContent = {
     sub: '',
     cta: 'Shop now',
     ctaHref: '/collections/all',
+    image: '',
   },
   marquee: {
     items: [],

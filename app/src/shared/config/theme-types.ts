@@ -77,6 +77,8 @@ export interface SpaceTokens {
 export interface RadiusTokens {
   none: string;
   sm: string;
+  /** Shared button primitive — the app's single CTA corner radius. */
+  button: string;
   card: string;
   pill: string;
 }
@@ -171,6 +173,11 @@ export interface HeroContent {
   sub: string;
   cta: string;
   ctaHref: string;
+  /**
+   * Optional full-bleed hero media URL (config-driven). Empty string falls
+   * back to the live shop `brand.coverImage` when present, else no media.
+   */
+  image: string;
 }
 
 /** Copy-first content defaults (nav/footer/hero/marquee). */

@@ -19,7 +19,7 @@ type SearchFormProps = Omit<FormProps, 'children'> & {
  *        name="q"
  *        placeholder="Search…"
  *      />
- *      <button type="submit">Search</button>
+ *      <Button type="submit">Search</Button>
  *   </>
  *  )}
  *  </SearchForm>

@@ -15,10 +15,18 @@
       "statement": "Less, but better.",
       "sub": "Considered goods for everyday life — honest design, nothing more.",
       "cta": "Shop the collection",
-      "ctaHref": "/collections/all"
+      "ctaHref": "/collections/all",
+      "image": ""
     },
     "marquee": {
-      "items": ["Gluten-free", "Vegan", "Crunchy", "No fake stuff", "Made for everyone", "Big flavor"],
+      "items": [
+        "Gluten-free",
+        "Vegan",
+        "Crunchy",
+        "No fake stuff",
+        "Made for everyone",
+        "Big flavor"
+      ],
       "direction": "left",
       "speed": "default"
     }

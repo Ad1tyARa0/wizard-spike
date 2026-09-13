@@ -26,6 +26,8 @@ describe('tokensToCssVars — resolved tokens as CSS custom properties', () => {
     expect(vars['--space-2xl']).toBe('128px');
     expect(vars['--radius-card']).toBe('0');
     expect(vars['--radius-pill']).toBe('999px');
+    // shared button primitive radius — 4px, the app's single CTA corner radius
+    expect(vars['--radius-button']).toBe('4px');
     // icon-size scale
     expect(vars['--icon-sm']).toBe('20px');
     expect(vars['--icon-md']).toBe('24px');
@@ -46,6 +48,8 @@ describe('tokensToCssVars — resolved tokens as CSS custom properties', () => {
     expect(vars['--color-primary']).toBe('#181b48');
     expect(vars['--color-accent']).toBe('#be008b');
     expect(vars['--radius-card']).toBe('2rem');
+    // playful keeps the shared button square-cornered via the token
+    expect(vars['--radius-button']).toBe('0');
     expect(vars['--font-display']).toContain('Archivo Black');
     expect(vars['--font-condensed']).toContain('Anton');
   });

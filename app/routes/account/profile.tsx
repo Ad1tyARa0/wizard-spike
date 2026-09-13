@@ -3,6 +3,7 @@ import type { CustomerUpdateInput } from '@shopify/hydrogen/customer-account-api
 import type { CustomerFragment } from 'customer-accountapi.generated';
 import type { Route } from './+types/profile';
 import { CUSTOMER_UPDATE_MUTATION } from '~/src/entities/customer';
+import { Button } from '~/src/shared/ui';
 
 export type ActionResponse = {
   error: string | null;
@@ -116,9 +117,9 @@ export default function AccountProfile() {
         ) : (
           <br />
         )}
-        <button type="submit" disabled={state !== 'idle'}>
+        <Button type="submit" disabled={state !== 'idle'}>
           {state !== 'idle' ? 'Updating' : 'Update'}
-        </button>
+        </Button>
       </Form>
     </div>
   );

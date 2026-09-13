@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { CartForm, Image } from '@shopify/hydrogen';
 import type { CartLineUpdateInput } from '@shopify/hydrogen/storefront-api-types';
 import { useVariantUrl } from '../../entities/product';
-import { ProductPrice, useAside } from '../../shared/ui';
+import { Button, ProductPrice, useAside } from '../../shared/ui';
 import { type CartLayout, type CartLine, type LineItemChildrenMap } from './cart-types';
 
 export type { CartLine } from './cart-types';
@@ -109,25 +109,27 @@ function CartLineQuantity({ line }: { line: CartLine }) {
     <div className="cart-line-quantity">
       <small>Quantity: {quantity} &nbsp;&nbsp;</small>
       <CartLineUpdateButton lines={[{ id: lineId, quantity: prevQuantity }]}>
-        <button
+        <Button
           aria-label="Decrease quantity"
           disabled={quantity <= 1 || !!isOptimistic}
           name="decrease-quantity"
+          type="submit"
           value={prevQuantity}
         >
           <span>&#8722; </span>
-        </button>
+        </Button>
       </CartLineUpdateButton>
       &nbsp;
       <CartLineUpdateButton lines={[{ id: lineId, quantity: nextQuantity }]}>
-        <button
+        <Button
           aria-label="Increase quantity"
-          name="increase-quantity"
-          value={nextQuantity}
           disabled={!!isOptimistic}
+          name="increase-quantity"
+          type="submit"
+          value={nextQuantity}
         >
           <span>&#43;</span>
-        </button>
+        </Button>
       </CartLineUpdateButton>
       &nbsp;
       <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
@@ -148,9 +150,9 @@ function CartLineRemoveButton({ lineIds, disabled }: { lineIds: string[]; disabl
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{ lineIds }}
     >
-      <button disabled={disabled} type="submit">
+      <Button disabled={disabled} type="submit">
         Remove
-      </button>
+      </Button>
     </CartForm>
   );
 }

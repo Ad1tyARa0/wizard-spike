@@ -8,7 +8,7 @@ import {
   SearchFormPredictive,
   SearchResultsPredictive,
 } from '../../features/search';
-import { Aside, ClientOnly } from '../../shared/ui';
+import { Aside, Button, ClientOnly } from '../../shared/ui';
 import { Footer } from '../footer';
 import { Header, HeaderMenu, HeaderSkeleton } from '../header';
 
@@ -83,7 +83,7 @@ function SearchAside() {
                 list={queriesDatalistId}
               />
               &nbsp;
-              <button onClick={goToSearch}>Search</button>
+              <Button onClick={goToSearch}>Search</Button>
             </>
           )}
         </SearchFormPredictive>

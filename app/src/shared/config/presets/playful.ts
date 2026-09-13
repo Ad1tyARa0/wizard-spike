@@ -69,6 +69,7 @@ export const PLAYFUL_TOKENS: TokenSet = {
   radius: {
     none: '0',
     sm: '4px',
+    button: '0',
     card: '2rem',
     pill: '999px',
   },
@@ -125,6 +126,7 @@ export const PLAYFUL_CONTENT: ThemeContent = {
     sub: '',
     cta: 'Shop now',
     ctaHref: '/collections/all',
+    image: '',
   },
   marquee: {
     items: [],

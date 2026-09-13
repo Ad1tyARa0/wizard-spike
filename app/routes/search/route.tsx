@@ -8,6 +8,7 @@ import {
   type RegularSearchReturn,
   getEmptyPredictiveSearchResult,
 } from '~/src/shared/lib';
+import { Button } from '~/src/shared/ui';
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: `Hydrogen | Search` }];
@@ -51,7 +52,7 @@ export default function SearchPage() {
               type="search"
             />
             &nbsp;
-            <button type="submit">Search</button>
+            <Button type="submit">Search</Button>
           </>
         )}
       </SearchForm>

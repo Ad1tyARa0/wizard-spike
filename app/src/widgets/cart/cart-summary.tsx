@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { useFetcher } from 'react-router';
 import { CartForm, Money, type OptimisticCart } from '@shopify/hydrogen';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
+import { Button } from '../../shared/ui';
 import type { CartLayout } from './cart-types';
 
 type CartSummaryProps = {
@@ -78,9 +79,9 @@ function CartDiscounts({
             <div className="cart-discount" role="group" aria-labelledby={discountsHeadingId}>
               <code>{codes?.join(', ')}</code>
               &nbsp;
-              <button type="submit" aria-label="Remove discount">
+              <Button aria-label="Remove discount" type="submit">
                 Remove
-              </button>
+              </Button>
             </div>
           </UpdateDiscountForm>
         </div>
@@ -99,9 +100,9 @@ function CartDiscounts({
             placeholder="Discount code"
           />
           &nbsp;
-          <button type="submit" aria-label="Apply discount code">
+          <Button aria-label="Apply discount code" type="submit">
             Apply
-          </button>
+          </Button>
         </div>
       </UpdateDiscountForm>
     </section>
@@ -221,13 +222,13 @@ function CartGiftCard({
             ref={giftCardCodeInput}
           />
           &nbsp;
-          <button
-            type="submit"
-            disabled={giftCardAddFetcher.state !== 'idle'}
+          <Button
             aria-label="Apply gift card code"
+            disabled={giftCardAddFetcher.state !== 'idle'}
+            type="submit"
           >
             Apply
-          </button>
+          </Button>
         </div>
       </AddGiftCardForm>
     </section>
@@ -271,14 +272,14 @@ function RemoveGiftCardForm({
     >
       {children}
       &nbsp;
-      <button
-        type="submit"
+      <Button
         aria-label={`Remove gift card ending in ${lastCharacters}`}
         onClick={onRemoveClick}
         ref={buttonRef}
+        type="submit"
       >
         Remove
-      </button>
+      </Button>
     </CartForm>
   );
 }

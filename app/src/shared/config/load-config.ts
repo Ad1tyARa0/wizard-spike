@@ -1,7 +1,10 @@
 /**
  * Theme capability — config loading (hydrogen.config.json) + preview seam.
  *
- * `loadConfig()` runs in the root loader. Reading the file is best-effort:
+ * `loadConfig()` runs in the root loader. The project-root config is imported
+ * at BUILD time (bundled JSON) so it resolves on every runtime — including
+ * worker runtimes such as Oxygen/mini-oxygen, where `node:fs` does not exist.
+ * An explicit `path` (tests / tooling) still reads from disk, best-effort:
  * absent, malformed, or schema-invalid config falls back to the default
  * preset's values and the page still renders (missing-config-falls-back).
  *
@@ -10,6 +13,7 @@
  * header `x-theme-config`) so the wizard can live-preview a draft theme
  * without a rebuild or deployment. Production ignores the override.
  */
+import bundledConfig from '../../../../hydrogen.config.json';
 import { parseThemeConfig, type ThemeConfig } from './theme-schema';
 import { defaultTheme, resolveTheme } from './resolve-tokens';
 import type { ThemeState } from './theme-types';
@@ -18,7 +22,7 @@ const CONFIG_FILENAME = 'hydrogen.config.json';
 const PREVIEW_HEADER = 'x-theme-config';
 
 export interface LoadConfigOptions {
-  /** Explicit config file path (tests pass fixtures); defaults to project root. */
+  /** Explicit config file path (tests pass fixtures); defaults to the bundled config. */
   path?: string;
   /** Override the production check (tests). */
   isProduction?: boolean;
@@ -30,20 +34,19 @@ function isProductionEnv(): boolean {
   return typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';
 }
 
-function resolveConfigPath(explicitPath?: string): string {
-  if (explicitPath) {
-    return explicitPath;
-  }
-  const cwd = typeof process !== 'undefined' ? process.cwd?.() : undefined;
-  return `${cwd ?? '.'}/${CONFIG_FILENAME}`;
-}
-
 /**
- * Read + validate the config file. Never throws: any failure yields the
- * default (minimal) config.
+ * Read + validate the config. Never throws: any failure yields the default
+ * (minimal) config.
+ *
+ * No explicit path → the build-time bundled `hydrogen.config.json`, which is
+ * what makes merchant config effective on worker runtimes.
  */
 export async function readConfig(path?: string): Promise<ThemeConfig> {
-  const file = await readConfigFile(resolveConfigPath(path));
+  if (!path) {
+    return parseThemeConfig(bundledConfig as unknown) ?? { theme: 'minimal' };
+  }
+
+  const file = await readConfigFile(path);
   if (file === null) {
     return { theme: 'minimal' };
   }
@@ -55,11 +58,10 @@ export async function readConfig(path?: string): Promise<ThemeConfig> {
   }
 }
 
-async function readConfigFile(path: string): Promise<string | null> {
+export async function readConfigFile(path: string): Promise<string | null> {
   try {
     // Dynamic import keeps `node:fs` out of the static bundle; on runtimes
-    // without a filesystem (e.g. Oxygen workers) this fails and we fall
-    // back to defaults, exactly as if the file were missing.
+    // without a filesystem this fails and the caller falls back to defaults.
     const fs = await import('node:fs');
     return fs.readFileSync(path, 'utf8');
   } catch {
@@ -128,4 +130,4 @@ function safeDecode(value: string): string {
   }
 }
 
-export { defaultTheme };
+export { defaultTheme, CONFIG_FILENAME };

@@ -5,6 +5,7 @@
  * import only from this top-level file.
  */
 export { Aside, useAside } from './aside';
+export { Button, ButtonLink, type ButtonProps, type ButtonLinkProps } from './button';
 export { ClientOnly } from './client-only';
 export { ProductImage, ProductPrice } from './product';
 export { Skeleton, SkeletonIcon, SkeletonRow } from './skeleton';

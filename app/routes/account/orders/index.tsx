@@ -10,6 +10,7 @@ import {
   buildOrderSearchQuery,
   parseOrderFilters,
 } from '~/src/entities/customer';
+import { Button } from '~/src/shared/ui';
 import { PaginatedResourceSection } from '~/src/widgets';
 
 type OrdersLoaderData = {
@@ -164,11 +165,11 @@ function OrderSearchForm({ currentFilters }: { currentFilters: OrderFilterParams
         </div>
 
         <div className="order-search-buttons">
-          <button type="submit" disabled={isSearching}>
+          <Button type="submit" disabled={isSearching}>
             {isSearching ? 'Searching' : 'Search'}
-          </button>
+          </Button>
           {hasFilters && (
-            <button
+            <Button
               type="button"
               disabled={isSearching}
               onClick={() => {
@@ -177,7 +178,7 @@ function OrderSearchForm({ currentFilters }: { currentFilters: OrderFilterParams
               }}
             >
               Clear
-            </button>
+            </Button>
           )}
         </div>
       </fieldset>

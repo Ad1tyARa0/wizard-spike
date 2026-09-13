@@ -14,6 +14,7 @@ import {
   DELETE_ADDRESS_MUTATION,
   UPDATE_ADDRESS_MUTATION,
 } from '~/src/entities/customer';
+import { Button } from '~/src/shared/ui';
 
 export type ActionResponse = {
   addressId?: string | null;
@@ -293,9 +294,9 @@ function NewAddressForm() {
     <AddressForm addressId={'NEW_ADDRESS_ID'} address={newAddress} defaultAddress={null}>
       {({ stateForMethod }) => (
         <div>
-          <button disabled={stateForMethod('POST') !== 'idle'} formMethod="POST" type="submit">
+          <Button disabled={stateForMethod('POST') !== 'idle'} formMethod="POST" type="submit">
             {stateForMethod('POST') !== 'idle' ? 'Creating' : 'Create'}
-          </button>
+          </Button>
         </div>
       )}
     </AddressForm>
@@ -318,16 +319,16 @@ function ExistingAddresses({
         >
           {({ stateForMethod }) => (
             <div>
-              <button disabled={stateForMethod('PUT') !== 'idle'} formMethod="PUT" type="submit">
+              <Button disabled={stateForMethod('PUT') !== 'idle'} formMethod="PUT" type="submit">
                 {stateForMethod('PUT') !== 'idle' ? 'Saving' : 'Save'}
-              </button>
-              <button
+              </Button>
+              <Button
                 disabled={stateForMethod('DELETE') !== 'idle'}
                 formMethod="DELETE"
                 type="submit"
               >
                 {stateForMethod('DELETE') !== 'idle' ? 'Deleting' : 'Delete'}
-              </button>
+              </Button>
             </div>
           )}
         </AddressForm>
