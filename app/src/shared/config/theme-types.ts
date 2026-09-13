@@ -12,7 +12,8 @@
  */
 
 /** Shipped design-language presets. */
-export type ThemePresetName = 'minimal' | 'playful';
+export const THEME_PRESET_NAMES = ['minimal', 'playful'] as const;
+export type ThemePresetName = (typeof THEME_PRESET_NAMES)[number];
 
 /** Color roles — one complete set per preset (no preset depends on another). */
 export interface ColorTokens {
@@ -147,11 +148,16 @@ export type DesignOverrides = {
   icon?: Partial<IconSizeTokens>;
 };
 
-export type HeaderStyle = 'slim' | 'chunky';
-export type GridDensity = 'compact' | 'comfortable';
-export type CardAspectRatio = 'square' | 'portrait' | 'wide';
-export type MarqueeDirection = 'left' | 'right';
-export type MarqueeSpeed = 'fast' | 'default' | 'slow';
+export const HEADER_STYLES = ['slim', 'chunky'] as const;
+export type HeaderStyle = (typeof HEADER_STYLES)[number];
+export const GRID_DENSITIES = ['compact', 'comfortable'] as const;
+export type GridDensity = (typeof GRID_DENSITIES)[number];
+export const CARD_ASPECT_RATIOS = ['square', 'portrait', 'wide'] as const;
+export type CardAspectRatio = (typeof CARD_ASPECT_RATIOS)[number];
+export const MARQUEE_DIRECTIONS = ['left', 'right'] as const;
+export type MarqueeDirection = (typeof MARQUEE_DIRECTIONS)[number];
+export const MARQUEE_SPEEDS = ['fast', 'default', 'slow'] as const;
+export type MarqueeSpeed = (typeof MARQUEE_SPEEDS)[number];
 
 /** Layout variant flags — structure varies without code edits. */
 export interface LayoutFlags {

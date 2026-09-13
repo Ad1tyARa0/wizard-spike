@@ -14,8 +14,16 @@
  * always renders (see loadConfig).
  */
 import { z } from 'zod';
+import {
+  CARD_ASPECT_RATIOS,
+  GRID_DENSITIES,
+  HEADER_STYLES,
+  MARQUEE_DIRECTIONS,
+  MARQUEE_SPEEDS,
+  THEME_PRESET_NAMES,
+} from './theme-types';
 
-const themePresetSchema = z.enum(['minimal', 'playful']).default('minimal');
+const themePresetSchema = z.enum(THEME_PRESET_NAMES).default('minimal');
 
 const designOverridesSchema = z
   .object({
@@ -33,9 +41,9 @@ const designOverridesSchema = z
 
 const layoutSchema = z
   .object({
-    headerStyle: z.enum(['slim', 'chunky']).optional(),
-    gridDensity: z.enum(['compact', 'comfortable']).optional(),
-    cardAspectRatio: z.enum(['square', 'portrait', 'wide']).optional(),
+    headerStyle: z.enum(HEADER_STYLES).optional(),
+    gridDensity: z.enum(GRID_DENSITIES).optional(),
+    cardAspectRatio: z.enum(CARD_ASPECT_RATIOS).optional(),
     homeSectionOrder: z.array(z.string()).optional(),
   })
   .passthrough();
@@ -43,8 +51,8 @@ const layoutSchema = z
 const marqueeContentSchema = z
   .object({
     items: z.array(z.string()).optional(),
-    direction: z.enum(['left', 'right']).optional(),
-    speed: z.enum(['fast', 'default', 'slow']).optional(),
+    direction: z.enum(MARQUEE_DIRECTIONS).optional(),
+    speed: z.enum(MARQUEE_SPEEDS).optional(),
   })
   .passthrough();
 

@@ -12,6 +12,11 @@ export interface CartState extends CartVM {}
 
 const initialState: CartState = EMPTY_CART;
 
+/** Recompute the cart's total quantity from its lines (single source of truth). */
+function recountTotal(state: CartState) {
+  state.totalQuantity = state.lines.reduce((sum, line) => sum + line.quantity, 0);
+}
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
@@ -37,7 +42,7 @@ const cartSlice = createSlice({
       } else {
         state.lines.push(action.payload);
       }
-      state.totalQuantity = state.lines.reduce((sum, l) => sum + l.quantity, 0);
+      recountTotal(state);
       state.status = 'syncing';
       state.error = undefined;
     },
@@ -48,14 +53,14 @@ const cartSlice = createSlice({
         return;
       }
       line.quantity = action.payload.quantity;
-      state.totalQuantity = state.lines.reduce((sum, l) => sum + l.quantity, 0);
+      recountTotal(state);
       state.status = 'syncing';
       state.error = undefined;
     },
     /** Optimistic removal. */
     cartLineRemoved(state, action: PayloadAction<string>) {
       state.lines = state.lines.filter((l) => l.key !== action.payload);
-      state.totalQuantity = state.lines.reduce((sum, l) => sum + l.quantity, 0);
+      recountTotal(state);
       state.status = 'syncing';
       state.error = undefined;
     },

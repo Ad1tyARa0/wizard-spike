@@ -20,6 +20,14 @@ export { MINIMAL_PRESET } from './presets/minimal';
 export { PLAYFUL_PRESET } from './presets/playful';
 export { applyPreviewOverride, loadConfig, readConfig } from './load-config';
 export type { LoadConfigOptions } from './load-config';
+export {
+  CARD_ASPECT_RATIOS,
+  GRID_DENSITIES,
+  HEADER_STYLES,
+  MARQUEE_DIRECTIONS,
+  MARQUEE_SPEEDS,
+  THEME_PRESET_NAMES,
+} from './theme-types';
 export type {
   BreakpointTokens,
   ColorTokens,
