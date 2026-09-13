@@ -92,10 +92,6 @@ a {
   text-underline-offset: 4px;
 }
 
-a:hover {
-  text-decoration-thickness: 2px;
-}
-
 ::selection {
   background: var(--color-primary);
   color: var(--color-on-primary);
@@ -329,7 +325,6 @@ button.reset:not(:has(> *)) {
 }
 
 button.reset:hover:not(:has(> *)) {
-  text-decoration: underline;
   cursor: pointer;
 }
 
@@ -419,11 +414,6 @@ button.reset:hover:not(:has(> *)) {
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   text-decoration: none;
-}
-
-.header-menu-item:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 
 .header-ctas {
@@ -562,11 +552,6 @@ button.reset:hover:not(:has(> *)) {
   text-decoration: none;
 }
 
-.footer-menu a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
 /* Config-driven footer taglines (content.footer) */
 .footer-taglines {
   margin-top: var(--space-lg);
@@ -685,11 +670,6 @@ textarea:focus {
   font-weight: var(--weight-bold);
   letter-spacing: -0.01em;
   margin: 0;
-}
-
-.product-item .product-meta h4:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 
 .product-item .product-meta .product-price {
@@ -1070,55 +1050,31 @@ main[data-card-aspect='wide'] .product-item img {
   text-align: right;
 }
 
-/* Variant A product grid — generous columns, hairline cell separators at
+/* Variant A product grid — generous columns, whitespace-separated cells at
    each density. Shared by the featured-collection products and the
    recommended-products grid. Overrides the shared auto-fit grid above. */
 .recommended-products-grid,
 .featured-products-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  column-gap: 0;
+  column-gap: var(--space-md);
   row-gap: var(--space-2xl);
   margin-bottom: 0;
 }
 
-/* Two-up at 768–1439px: hairline before every even cell. */
+/* Two-up at 768–1439px. */
 @media (min-width: 48em) and (max-width: 89.99em) {
   .recommended-products-grid,
   .featured-products-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .recommended-products-grid > *,
-  .featured-products-grid > * {
-    border-left: var(--border-width) solid var(--color-border);
-    padding-left: var(--space-md);
-  }
-
-  .recommended-products-grid > :nth-child(odd),
-  .featured-products-grid > :nth-child(odd) {
-    border-left: 0;
-    padding-left: 0;
-  }
 }
 
-/* Four-up at ≥1440px: hairline before every cell except each row's first. */
+/* Four-up at ≥1440px. */
 @media (min-width: 90em) {
   .recommended-products-grid,
   .featured-products-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .recommended-products-grid > *,
-  .featured-products-grid > * {
-    border-left: var(--border-width) solid var(--color-border);
-    padding-left: var(--space-md);
-  }
-
-  .recommended-products-grid > :nth-child(4n + 1),
-  .featured-products-grid > :nth-child(4n + 1) {
-    border-left: 0;
-    padding-left: 0;
   }
 }
 
@@ -1667,11 +1623,6 @@ main[data-grid-density='compact'] .blog-grid {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-item-width)), 1fr));
 }
 
-[data-theme='playful'] .featured-products-grid > * {
-  border-left: 0;
-  padding: 0;
-}
-
 [data-theme='playful'] .recommended-products {
   background: var(--color-secondary);
   padding: var(--space-2xl) var(--space-lg);
@@ -1683,11 +1634,6 @@ main[data-grid-density='compact'] .blog-grid {
    density sets --grid-item-width 260px), no editorial hairline cells. */
 [data-theme='playful'] .recommended-products-grid {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-item-width)), 1fr));
-}
-
-[data-theme='playful'] .recommended-products-grid > * {
-  border-left: 0;
-  padding: 0;
 }
 
 [data-theme='playful'] .recommended-products-title {

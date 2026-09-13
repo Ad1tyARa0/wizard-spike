@@ -151,10 +151,6 @@
   text-decoration: none;
 }
 
-.drawer__line-title:hover {
-  text-decoration: underline;
-}
-
 .drawer__line-variant,
 .drawer__line-meta {
   font-size: var(--type-label);
