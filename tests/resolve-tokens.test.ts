@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'bun:test';
-import { defaultTheme, resolveTheme, resolveTokens } from '../app/src/shared/config';
-import type { DesignOverrides, TokenSet } from '../app/src/shared/config';
-import { MINIMAL_PRESET, MINIMAL_TOKENS } from '../app/src/shared/config/presets/minimal';
-import { PLAYFUL_PRESET, PLAYFUL_TOKENS } from '../app/src/shared/config/presets/playful';
+import { defaultTheme, resolveTheme } from '../app/src/entities/theme';
+import { resolveTokens } from '../app/src/entities/theme/resolve-tokens';
+import type { DesignOverrides, TokenSet } from '../app/src/entities/theme/theme-types';
+import { MINIMAL_PRESET, MINIMAL_TOKENS } from '../app/src/entities/theme/presets/minimal';
+import { PLAYFUL_PRESET, PLAYFUL_TOKENS } from '../app/src/entities/theme/presets/playful';
 
 describe('resolveTokens — defaults ⊕ preset ⊕ overrides', () => {
   test('resolver is pure: same inputs produce identical output', () => {

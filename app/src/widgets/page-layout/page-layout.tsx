@@ -1,7 +1,8 @@
 import { Suspense, useId } from 'react';
 import { Await, Link } from 'react-router';
+import { useSelector } from 'react-redux';
 import type { FooterQuery, HeaderQuery } from 'storefrontapi.generated';
-import type { ThemeState } from '../../shared/config';
+import { selectThemeLayout } from '../../entities/theme';
 import { CartDrawer } from '../../features/cart-drawer';
 import {
   SEARCH_ENDPOINT,
@@ -16,7 +17,6 @@ interface PageLayoutProps {
   footer: Promise<FooterQuery | null>;
   header: Promise<HeaderQuery | null>;
   publicStoreDomain: string;
-  theme: ThemeState;
   children?: React.ReactNode;
 }
 
@@ -25,8 +25,8 @@ export function PageLayout({
   footer,
   header,
   publicStoreDomain,
-  theme,
 }: PageLayoutProps) {
+  const layout = useSelector(selectThemeLayout);
   return (
     <Aside.Provider>
       <SearchAside />
@@ -43,7 +43,7 @@ export function PageLayout({
                   <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
                 )}
                 {header && (
-                  <Header header={header} publicStoreDomain={publicStoreDomain} theme={theme} />
+                  <Header header={header} publicStoreDomain={publicStoreDomain} />
                 )}
               </>
             )}
@@ -51,15 +51,15 @@ export function PageLayout({
         </Suspense>
       </ClientOnly>
       <ClientOnly>
-        <CartDrawer iconSize={theme.tokens.icon.md} />
+        <CartDrawer />
       </ClientOnly>
       <main
-        data-grid-density={theme.layout.gridDensity}
-        data-card-aspect={theme.layout.cardAspectRatio}
+        data-grid-density={layout.gridDensity}
+        data-card-aspect={layout.cardAspectRatio}
       >
         {children}
       </main>
-      <Footer footer={footer} header={header} publicStoreDomain={publicStoreDomain} theme={theme} />
+      <Footer footer={footer} header={header} publicStoreDomain={publicStoreDomain} />
     </Aside.Provider>
   );
 }

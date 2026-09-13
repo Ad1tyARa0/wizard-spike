@@ -1,4 +1,4 @@
-import type { MarqueeContent } from '../../shared/config';
+import type { MarqueeContent } from '../../entities/theme';
 
 interface MarqueeProps {
   content: MarqueeContent;

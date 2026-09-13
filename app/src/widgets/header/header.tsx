@@ -1,14 +1,19 @@
 import { NavLink } from 'react-router';
 import { ListIcon, MagnifyingGlassIcon, type IconWeight } from '@phosphor-icons/react';
+import { useSelector } from 'react-redux';
 import type { HeaderQuery } from 'storefrontapi.generated';
-import type { ThemeState } from '../../shared/config';
+import {
+  selectThemeContent,
+  selectThemeLayout,
+  selectThemePreset,
+  selectThemeTokens,
+} from '../../entities/theme';
 import { CartToggle } from '../../features/cart-drawer';
 import { useAside } from '../../shared/ui';
 
 interface HeaderProps {
   header: HeaderQuery;
   publicStoreDomain: string;
-  theme: ThemeState;
 }
 
 type Viewport = 'desktop' | 'mobile';
@@ -25,16 +30,20 @@ type Viewport = 'desktop' | 'mobile';
  * stays [menu toggle] [logo] [desktop nav] [ctas] so keyboard tab order reads
  * logo → nav → actions on desktop and menu → logo → actions on mobile.
  */
-export function Header({ header, publicStoreDomain, theme }: HeaderProps) {
+export function Header({ header, publicStoreDomain }: HeaderProps) {
   const { shop, menu } = header;
+  const preset = useSelector(selectThemePreset);
+  const tokens = useSelector(selectThemeTokens);
+  const layout = useSelector(selectThemeLayout);
+  const content = useSelector(selectThemeContent);
   // Phosphor ultra-thin icons for the minimal preset; bold for playful
   // (matches the pre-existing playful cart icon weight).
-  const iconWeight: IconWeight = theme.preset === 'minimal' ? 'thin' : 'bold';
+  const iconWeight: IconWeight = preset === 'minimal' ? 'thin' : 'bold';
   // Predefined icon-size scale from the theme token set — header controls
   // standardize on md (24px).
-  const iconSize = theme.tokens.icon.md;
+  const iconSize = tokens.icon.md;
   return (
-    <header className="header" data-header-style={theme.layout.headerStyle}>
+    <header className="header" data-header-style={layout.headerStyle}>
       <HeaderMenuMobileToggle weight={iconWeight} size={iconSize} />
       <NavLink className="header-logo" prefetch="intent" to="/" style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
@@ -44,7 +53,7 @@ export function Header({ header, publicStoreDomain, theme }: HeaderProps) {
         viewport="desktop"
         primaryDomainUrl={header.shop.primaryDomain.url}
         publicStoreDomain={publicStoreDomain}
-        navFallback={theme.content.nav}
+        navFallback={content.nav}
       />
       <HeaderCtas iconWeight={iconWeight} iconSize={iconSize} />
     </header>

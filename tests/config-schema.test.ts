@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { parseThemeConfig } from '../app/src/shared/config';
+import { parseThemeConfig } from '../app/src/entities/theme/theme-schema';
 
 describe('theme-config-schema (hydrogen.config.json v0.1)', () => {
   test('valid config parses with theme, design, layout, content', () => {

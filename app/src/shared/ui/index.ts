@@ -10,4 +10,3 @@ export { ClientOnly } from './client-only';
 export { ProductImage, ProductPrice } from './product';
 export { Skeleton, SkeletonIcon, SkeletonRow } from './skeleton';
 export { StickerHover } from './sticker-hover';
-export { ThemeSwitcher } from './theme';

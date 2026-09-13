@@ -1,21 +1,21 @@
 import { Suspense } from 'react';
 import { Await, NavLink } from 'react-router';
+import { useSelector } from 'react-redux';
 import type { FooterQuery, HeaderQuery } from 'storefrontapi.generated';
-import type { ThemeState } from '../../shared/config';
+import { selectThemeContent } from '../../entities/theme';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
   header: Promise<HeaderQuery | null>;
   publicStoreDomain: string;
-  theme: ThemeState;
 }
 
 export function Footer({
   footer: footerPromise,
   header: headerPromise,
   publicStoreDomain,
-  theme,
 }: FooterProps) {
+  const content = useSelector(selectThemeContent);
   return (
     <Suspense>
       <Await resolve={headerPromise}>
@@ -30,9 +30,9 @@ export function Footer({
                     publicStoreDomain={publicStoreDomain}
                   />
                 )}
-                {theme.content.footer.length > 0 && (
+                {content.footer.length > 0 && (
                   <div className="footer-taglines">
-                    {theme.content.footer.map((line) => (
+                    {content.footer.map((line) => (
                       <p className="footer-tagline" key={line}>
                         {line}
                       </p>

@@ -8,6 +8,7 @@ import {
   selectCartSubtotal,
   selectCartTotalQuantity,
 } from '~/src/entities/cart';
+import { selectThemeTokens } from '~/src/entities/theme';
 
 /**
  * Cart drawer — FSD: features/cart-drawer (client-only; mount inside
@@ -15,8 +16,9 @@ import {
  * reconciliation with Hydrogen server actions is scoped to change
  * `implement-cart-capability`.
  */
-export function CartDrawer({ iconSize }: { iconSize: string }) {
+export function CartDrawer() {
   const dispatch = useDispatch();
+  const iconSize = useSelector(selectThemeTokens).icon.md;
   const isOpen = useSelector(selectCartDrawerOpen);
   const lines = useSelector(selectCartLines);
   const totalQuantity = useSelector(selectCartTotalQuantity);

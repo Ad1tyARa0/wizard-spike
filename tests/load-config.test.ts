@@ -2,11 +2,10 @@ import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
-  applyPreviewOverride,
   defaultTheme,
   loadConfig,
-  readConfig,
-} from '../app/src/shared/config';
+} from '../app/src/entities/theme';
+import { applyPreviewOverride, readConfig } from '../app/src/entities/theme/load-config';
 
 const fixtureDir = join(process.cwd(), '.tmp', 'config-tests');
 

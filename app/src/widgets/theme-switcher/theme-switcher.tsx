@@ -1,4 +1,4 @@
-import type { ThemePresetName } from '../../config';
+import type { ThemePresetName } from '~/src/entities/theme';
 
 interface ThemeSwitcherProps {
   current: ThemePresetName;

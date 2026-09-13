@@ -5,6 +5,7 @@ import type { EntryContext } from 'react-router';
 import { type HydrogenRouterContextProvider, createContentSecurityPolicy } from '@shopify/hydrogen';
 import { isbot } from 'isbot';
 import { makeStore } from '~/src/app/store';
+import { loadConfig } from '~/src/entities/theme';
 
 export default async function handleRequest(
   request: Request,
@@ -23,8 +24,10 @@ export default async function handleRequest(
   // Per-request Redux store: keeps SSR output identical to the client's
   // initial state (ProductForm dispatches only on client events, so the
   // server store never mutates during render) and prevents cross-request
-  // state leakage.
-  const store = makeStore();
+  // state leakage. The theme is resolved once here and seeded into the store
+  // so server-rendered components read the correct theme via useSelector.
+  const theme = await loadConfig({ request });
+  const store = makeStore({ theme });
 
   const body = await renderToReadableStream(
     <NonceProvider>

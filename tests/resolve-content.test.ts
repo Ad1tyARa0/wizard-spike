@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { resolveHeroContent } from '../app/src/shared/config';
-import type { HeroContent } from '../app/src/shared/config';
+import { resolveHeroContent } from '../app/src/entities/theme';
+import type { HeroContent } from '../app/src/entities/theme';
 
 const CONFIG_HERO: HeroContent = {
   eyebrow: 'New Collection',

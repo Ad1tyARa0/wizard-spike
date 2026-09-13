@@ -33,6 +33,7 @@ app/                        # Hydrogen/React Router shell (convention-fixed)
     ├── entities/           # domain models + slices + api clients (each slice has index.ts)
     │   ├── cart/           #   CartVM model, cartSlice, cartLineFromVariant
     │   ├── product/        #   variants model (moved from lib/variants)
+    │   ├── theme/          #   config-driven theming: schema, presets, resolver, loader, css-vars, redux slice
     │   └── customer/       #   session, orderFilters, customer-account api
     ├── features/           # user-facing behaviors (each slice has index.ts)
     │   ├── cart-drawer/    #   drawer UI state, CartDrawer, CartToggle
@@ -47,19 +48,19 @@ app/                        # Hydrogen/React Router shell (convention-fixed)
     │   ├── marquee/        #   Marquee
     │   ├── mock-shop-notice/          # MockShopNotice
     │   ├── paginated-resource-section/# PaginatedResourceSection
+    │   ├── theme-switcher/ #   ThemeSwitcher (dev-only preview)
     │   └── index.ts        #   one public API
     └── shared/             # no business logic; each segment has index.ts
         ├── ui/             #   one module per folder
         │   ├── aside/      #   Aside, useAside
         │   ├── client-only/#   ClientOnly
         │   ├── product/    #   ProductImage, ProductPrice
-        │   ├── skeleton/   #   Skeleton, SkeletonIcon, SkeletonRow
-        │   ├── sticker-hover/         # StickerHover
-        │   ├── theme/      #   ThemeSwitcher
-        │   └── index.ts    #   one public API
+    │       ├── skeleton/   #   Skeleton, SkeletonIcon, SkeletonRow
+    │       ├── sticker-hover/         # StickerHover
+    │       └── index.ts    #   one public API
         ├── api/            #   fragments.ts (GraphQL)
         ├── lib/            #   search.ts, redirect.ts
-        └── styles/         #   tokens.css/tokens.ts, app.css, reset.css, drawer.css
+        └── styles/         #   tokens.css, app.css, reset.css, drawer.css
 ```
 
 ### Why FSD here
@@ -125,21 +126,28 @@ Enforced by `scripts/check-filenames.mjs` (`bun run lint:filenames`).
 
 - **Server data** (products, collections, authoritative cart, customer) is
   fetched in React Router loaders/actions via `storefront` and passed down.
-- **Redux** holds ephemeral client state: the cart view-model
-  (`entities/cart/cartSlice`) and drawer UI (`features/cart-drawer/model`).
+- **Redux** holds the resolved **theme** (`entities/theme` — seeded once per
+  request in `entry.server.tsx`), plus ephemeral client state: the cart
+  view-model (`entities/cart/cartSlice`) and drawer UI
+  (`features/cart-drawer/model`).
 - **Side effects** run in `app/listenerMiddleware.ts`
   (`createListenerMiddleware`): currently cart-id persistence to localStorage;
   server-cart reconciliation is the next step (change
   `implement-cart-capability`).
 
-The Redux Provider mounts **client-side only** (`entry.client.tsx`), so there
-is no per-request store on the server and no request cross-contamination.
-Redux-consuming components render inside `<ClientOnly>`.
+The Redux Provider mounts **per request on the server** (`entry.server.tsx`,
+seeding the theme) and **per boot on the client** (`entry.client.tsx`, which
+rehydrates the theme from the serialized `window.__THEME_STATE__` so hydration
+matches the server HTML). Each render gets a fresh store via `makeStore()`, so
+there is no cross-request state leakage. Ephemeral Redux state (cart, drawer)
+is consumed inside `<ClientOnly>`; the theme is consumed anywhere via
+`useSelector` because it is seeded before render on both sides.
 
 ## Design language
 
 **Exaggerated Minimalism** — see `design-system/e-commerce-website/MASTER.md`
-(source of truth) and `shared/styles/tokens.{css,ts}` (implementation).
+(source of truth) and the `minimal` preset in `app/src/entities/theme`
+(implementation; emitted as CSS custom properties at runtime).
 
 ## Scripts
 

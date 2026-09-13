@@ -14,3 +14,4 @@ export { MockShopNotice } from './mock-shop-notice';
 export { PageLayout } from './page-layout';
 export { PaginatedResourceSection } from './paginated-resource-section';
 export { ProductItem } from './product';
+export { ThemeSwitcher } from './theme-switcher';

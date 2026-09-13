@@ -1,10 +1,8 @@
 import { describe, expect, test } from 'bun:test';
-import {
-  MINIMAL_PRESET,
-  PLAYFUL_PRESET,
-  resolveTokens,
-  tokensToCssVars,
-} from '../app/src/shared/config';
+import { tokensToCssVars } from '../app/src/entities/theme';
+import { resolveTokens } from '../app/src/entities/theme/resolve-tokens';
+import { MINIMAL_PRESET } from '../app/src/entities/theme/presets/minimal';
+import { PLAYFUL_PRESET } from '../app/src/entities/theme/presets/playful';
 
 describe('tokensToCssVars — resolved tokens as CSS custom properties', () => {
   test('maps every token group to the established CSS variable names', () => {

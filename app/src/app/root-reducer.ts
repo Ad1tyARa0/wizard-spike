@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { cartReducer } from '~/src/entities/cart';
+import { themeReducer } from '~/src/entities/theme';
 import { cartDrawerReducer } from '~/src/features/cart-drawer';
 
 /**
@@ -10,6 +11,7 @@ import { cartDrawerReducer } from '~/src/features/cart-drawer';
 export const rootReducer = combineReducers({
   cart: cartReducer,
   cartDrawer: cartDrawerReducer,
+  theme: themeReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

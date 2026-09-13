@@ -1,5 +1,6 @@
 import { Fragment, Suspense } from 'react';
 import { Await, Link, useLoaderData, useRouteLoaderData } from 'react-router';
+import { useSelector } from 'react-redux';
 import { Image } from '@shopify/hydrogen';
 import { ArrowRightIcon } from '@phosphor-icons/react';
 import type {
@@ -8,8 +9,8 @@ import type {
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import type { Route } from './+types/route';
-import { defaultTheme, resolveHeroContent } from '~/src/shared/config';
-import type { HeroContent, ThemeState } from '~/src/shared/config';
+import { resolveHeroContent, selectTheme } from '~/src/entities/theme';
+import type { HeroContent } from '~/src/entities/theme';
 import { ButtonLink, Skeleton, SkeletonRow } from '~/src/shared/ui';
 import { Marquee, MockShopNotice, ProductItem } from '~/src/widgets';
 
@@ -77,8 +78,8 @@ export default function Homepage() {
   // from hydrogen.config.json (with the preview seam applied). The shop
   // identity backs the hero when the config carries no copy.
   const rootData = useRouteLoaderData('root') as
-    { theme?: ThemeState; header?: { shop?: { name?: string; description?: string } } } | undefined;
-  const theme = rootData?.theme ?? defaultTheme();
+    { header?: { shop?: { name?: string; description?: string } } } | undefined;
+  const theme = useSelector(selectTheme);
   const shop = rootData?.header?.shop;
   // Production-real hero: config copy ⊕ live shop data ⊕ generic fallback —
   // the presets ship no brand copy. The hero image is config-first

@@ -10,15 +10,15 @@ import {
   useRouteLoaderData,
 } from 'react-router';
 import { Analytics, getShopAnalytics, useNonce } from '@shopify/hydrogen';
+import { useDispatch, useSelector } from 'react-redux';
 import type { Route } from './+types/root';
 import favicon from '~/assets/favicon.svg';
-import { defaultTheme, loadConfig, tokensToCssVars } from '~/src/shared/config';
-import type { ThemePresetName, ThemeState } from '~/src/shared/config';
+import { resolveTheme, selectTheme, themeSet, tokensToCssVars } from '~/src/entities/theme';
+import type { ThemePresetName } from '~/src/entities/theme';
 import { FOOTER_QUERY, HEADER_QUERY } from '~/src/shared/api';
 import appStyles from '~/src/shared/styles/app.css?url';
 import resetStyles from '~/src/shared/styles/reset.css?url';
-import { PageLayout } from '~/src/widgets';
-import { ThemeSwitcher } from '~/src/shared/ui';
+import { PageLayout, ThemeSwitcher } from '~/src/widgets';
 
 export type RootLoader = typeof loader;
 
@@ -79,15 +79,9 @@ export async function loader(args: Route.LoaderArgs) {
 
   const { storefront, env } = args.context;
 
-  // Config-driven theming: hydrogen.config.json → runtime token resolution.
-  // In non-production the loader also accepts a request-time config override
-  // (the wizard's live-preview seam); production ignores it.
-  const theme = await loadConfig({ request: args.request });
-
   return {
     ...deferredData,
     ...criticalData,
-    theme,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     shop: getShopAnalytics({
       storefront,
@@ -150,13 +144,14 @@ function loadDeferredData({ context }: Route.LoaderArgs) {
 
 export function Layout({ children }: { children?: React.ReactNode }) {
   const nonce = useNonce();
+  const dispatch = useDispatch();
 
   // Emit the resolved runtime token set as CSS custom properties on <html>
   // plus the active preset marker (`data-theme`) for preset-scoped styles.
   // Static tokens.css keeps the minimal defaults, so the page renders even
-  // before/without loader data.
-  const data = useRouteLoaderData<RootLoader>('root');
-  const theme: ThemeState = data?.theme ?? defaultTheme();
+  // before/without loader data. The theme is read from the Redux store, which
+  // the server seeds from hydrogen.config.json (see entry.server.tsx).
+  const theme = useSelector(selectTheme);
   const cssVars = tokensToCssVars(theme.tokens) as React.CSSProperties;
 
   return (
@@ -168,18 +163,27 @@ export function Layout({ children }: { children?: React.ReactNode }) {
         <link rel="stylesheet" href={appStyles} />
         <Meta />
         <Links />
+        {/* Serialize the resolved theme so the client store can rehydrate
+            identical state before hydration (no SSR/client mismatch). */}
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `window.__THEME_STATE__ = ${JSON.stringify(theme).replace(/</g, '\\u003c')};`,
+          }}
+        />
       </head>
       <body>
         {children}
         {/* Dev-only theme preview switcher — not rendered in production
-            builds (import.meta.env.PROD is statically replaced). A full-page
-            navigate re-runs the root loader, which applies the preview
-            override via the request-time seam (?theme=…). */}
+            builds (import.meta.env.PROD is statically replaced). Dispatching
+            themeSet re-resolves the preset and re-renders in place (no reload);
+            the ephemeral change is lost on reload. */}
         {!import.meta.env.PROD && (
           <ThemeSwitcher
             current={theme.preset}
             onSelect={(preset: ThemePresetName) => {
-              window.location.href = `/?theme=${preset}`;
+              dispatch(themeSet(resolveTheme({ theme: preset })));
             }}
           />
         )}
