@@ -13,5 +13,9 @@ node_modules
 .home/
 *.tsbuildinfo
 
-# Impeccable skill engine binaries (downloaded per-platform on first run)
-**/impeccable/scripts/bin/
+# Agent & editor tooling (local installs; not needed to build, deploy, or run)
+.claude/
+.agents/
+.cursor/
+.codex/
+.impeccable/
