@@ -1,7 +1,14 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["react", "react-hooks", "typescript", "import", "unicorn", "jsx-a11y"],
-  "ignorePatterns": [".claude/**", "design-system/**", "*.generated.d.ts"],
+  "ignorePatterns": [
+    ".agents/**",
+    ".claude/**",
+    ".codex/**",
+    ".cursor/**",
+    "design-system/**",
+    "*.generated.d.ts"
+  ],
   "env": {
     "browser": true,
     "node": true,
