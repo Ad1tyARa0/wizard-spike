@@ -13,8 +13,8 @@ import type { HeroContent, ThemeState } from '~/src/shared/config';
 import { ButtonLink, Skeleton, SkeletonRow } from '~/src/shared/ui';
 import { Marquee, MockShopNotice, ProductItem } from '~/src/widgets';
 
-export const meta: Route.MetaFunction = () => {
-  return [{ title: 'Hydrogen | Home' }];
+export const meta: Route.MetaFunction = ({ data }) => {
+  return [{ title: data?.shopName ? `${data.shopName} | Home` : 'Home' }];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -32,17 +32,23 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ context }: Route.LoaderArgs) {
-  const [{ collections, shop }] = await Promise.all([
-    context.storefront.query<FeaturedCollectionQuery>(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
+  // Section-level resilience: a failed featured query degrades to no featured
+  // band (and no shop cover/title) instead of taking the whole page down.
+  const featured = await context.storefront
+    .query<FeaturedCollectionQuery>(FEATURED_COLLECTION_QUERY)
+    .catch((error: Error) => {
+      console.error(error);
+      return null;
+    });
 
   return {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
-    featuredCollection: collections.nodes[0],
+    featuredCollection: featured?.collections.nodes[0] ?? null,
+    // Shop name backs the page title and the hero statement fallback.
+    shopName: featured?.shop?.name ?? null,
     // Hero media fallback: the shop's brand cover image, resolved at first
     // paint (config `hero.image` wins over this in resolveHeroContent).
-    shopCoverImageUrl: shop?.brand?.coverImage?.image?.url ?? null,
+    shopCoverImageUrl: featured?.shop?.brand?.coverImage?.image?.url ?? null,
   };
 }
 
@@ -97,6 +103,11 @@ export default function Homepage() {
   const pad = (n: number) => String(n).padStart(2, '0');
   const statementIndex = (id: string) => pad(statementIds.indexOf(id) + 1);
 
+  // Recommended must not repeat the featured collection's own products.
+  const featuredProductIds = new Set(
+    (data.featuredCollection?.products?.nodes ?? []).map((product) => product.id),
+  );
+
   const sectionFor = (id: string): React.ReactNode => {
     switch (id) {
       case 'hero':
@@ -113,7 +124,11 @@ export default function Homepage() {
         ) : null;
       case 'recommendedProducts':
         return (
-          <RecommendedProducts index={statementIndex(id)} products={data.recommendedProducts} />
+          <RecommendedProducts
+            excludeIds={featuredProductIds}
+            index={statementIndex(id)}
+            products={data.recommendedProducts}
+          />
         );
       default:
         return null;
@@ -136,28 +151,27 @@ function HeroSection({ content, index }: { content: HeroContent; index: string }
     <section className={heroClass} aria-labelledby="home-statement">
       {content.image && (
         <div className="home__hero-media" role="presentation">
-          <img
+          <Image
             alt=""
+            data={{ altText: '', url: content.image }}
             decoding="async"
             fetchPriority="high"
             loading="eager"
-            src={content.image}
             sizes="100vw"
           />
         </div>
       )}
-      {content.eyebrow && (
-        <p className="home__hero-meta">
-          <span className="home__hero-index" aria-hidden="true">
-            {index}
-          </span>
-          <span className="eyebrow">{content.eyebrow}</span>
-        </p>
-      )}
-      {/* The statement stays the page's accessible h1 but is not rendered
-          visually — the hero is image-led, so the eyebrow, lead line and CTA
-          carry the message. */}
-      <h1 className="sr-only" id="home-statement">
+      {/* The numeral always renders so the section sequence stays honest;
+          the eyebrow is optional merchant copy. */}
+      <p className="home__hero-meta">
+        <span className="home__hero-index" aria-hidden="true">
+          {index}
+        </span>
+        {content.eyebrow ? <span className="eyebrow">{content.eyebrow}</span> : null}
+      </p>
+      {/* The statement is the page's accessible h1 and the hero's giant
+          display headline, with or without media. */}
+      <h1 className="home__hero-statement" id="home-statement">
         {content.statement}
       </h1>
       <div className="home__hero-foot">
@@ -238,12 +252,19 @@ function FeaturedCollection({
 }
 
 function RecommendedProducts({
+  excludeIds,
   products,
   index,
 }: {
+  excludeIds: Set<string>;
   products: Promise<RecommendedProductsQuery | null>;
   index: string;
 }) {
+  // Keep the two grids distinct; when everything would be filtered out, the
+  // section shows its empty state instead of repeating the featured grid.
+  const visibleProducts = (response: RecommendedProductsQuery | null) =>
+    (response?.products.nodes ?? []).filter((product) => !excludeIds.has(product.id));
+
   return (
     <section className="recommended-products" aria-labelledby="recommended-products-title">
       <div className="recommended-products-head">
@@ -251,32 +272,54 @@ function RecommendedProducts({
           <span className="recommended-products-index" aria-hidden="true">
             {index}
           </span>
-          Recommended
+          New arrivals
         </h2>
         <span className="recommended-products-count">
           <Suspense fallback={null}>
             <Await resolve={products}>
-              {(response) =>
-                response ? String(response.products.nodes.length).padStart(2, '0') + ' items' : null
-              }
+              {(response) => {
+                if (!response) {
+                  return null;
+                }
+                const count = visibleProducts(response).length;
+                return count > 0 ? `${count} ${count === 1 ? 'item' : 'items'}` : null;
+              }}
             </Await>
           </Suspense>
         </span>
       </div>
       <Suspense fallback={<RecommendedSkeleton />}>
         <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
-                : null}
-            </div>
-          )}
+          {(response) => {
+            if (!response) {
+              return <RecommendedEmpty state="error" />;
+            }
+            const items = visibleProducts(response);
+            if (items.length === 0) {
+              return <RecommendedEmpty state="empty" />;
+            }
+            return (
+              <div className="recommended-products-grid">
+                {items.map((product) => (
+                  <ProductItem key={product.id} product={product} />
+                ))}
+              </div>
+            );
+          }}
         </Await>
       </Suspense>
     </section>
+  );
+}
+
+function RecommendedEmpty({ state }: { state: 'empty' | 'error' }) {
+  return (
+    <p className="recommended-products-empty">
+      {state === 'error' ? 'New arrivals could not be loaded.' : 'New arrivals are on the way.'}{' '}
+      <Link prefetch="intent" to="/collections/all">
+        Browse the catalog
+      </Link>
+    </p>
   );
 }
 
@@ -343,6 +386,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
       }
     }
     shop {
+      name
       brand {
         coverImage {
           image {

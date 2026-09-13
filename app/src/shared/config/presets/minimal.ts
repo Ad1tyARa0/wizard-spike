@@ -15,6 +15,7 @@ export const MINIMAL_TOKENS: TokenSet = {
     background: '#ffffff',
     foreground: '#000000',
     accent: '#d4af37',
+    accentStrong: '#8a6d1f',
     onAccent: '#000000',
     secondary: '#f5f5f4',
     onSecondary: '#000000',
@@ -23,7 +24,7 @@ export const MINIMAL_TOKENS: TokenSet = {
     border: '#000000',
     destructive: '#dc2626',
     onDestructive: '#ffffff',
-    ring: '#d4af37',
+    ring: '#a87c0e',
     heroAccent: '#d4af37',
   },
   fonts: {

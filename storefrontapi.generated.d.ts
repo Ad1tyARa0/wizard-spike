@@ -337,6 +337,7 @@ export type FeaturedCollectionQuery = {
     >;
   };
   shop: {
+    name: string;
     brand?: StorefrontAPI.Maybe<{
       coverImage?: StorefrontAPI.Maybe<{
         image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;

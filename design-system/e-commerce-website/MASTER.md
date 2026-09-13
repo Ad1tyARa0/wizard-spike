@@ -40,6 +40,7 @@ minimal, statement design.
 | Background           | `#FFFFFF` | `--color-background`       |
 | On Background        | `#000000` | `--color-foreground`       |
 | Accent (single)      | `#D4AF37` | `--color-accent`           |
+| Accent (strong)      | `#8A6D1F` | `--color-accent-strong`    |
 | On Accent            | `#000000` | `--color-on-accent`        |
 | Secondary (surface)  | `#F5F5F4` | `--color-secondary`        |
 | On Secondary         | `#000000` | `--color-on-secondary`     |
@@ -48,11 +49,14 @@ minimal, statement design.
 | Border               | `#000000` | `--color-border`           |
 | Destructive          | `#DC2626` | `--color-destructive`      |
 | On Destructive       | `#FFFFFF` | `--color-on-destructive`   |
-| Ring (focus)         | `#D4AF37` | `--color-ring`             |
+| Ring (focus)         | `#A87C0E` | `--color-ring`             |
 
 **Color Notes:** Black/white dominant with a single gold accent (`#D4AF37`,
 vibrant, luxury-appropriate). The accent is used sparingly: CTAs, focus rings,
 selected states, and one editorial highlight per view. Never a second accent.
+Small text that carries the accent (index numerals) uses `--color-accent-strong`
+(`#8A6D1F`, ≥ 4.5:1 on white); the focus ring is `#A87C0E` so it stays ≥ 3:1 on
+both white and black surfaces.
 
 ### Typography
 
@@ -178,22 +182,22 @@ the standard premium e-commerce ratio. Validated via
 Icons are sized from this scale — never ad-hoc literals. The scale is part of
 the config-driven token set (`design.icon` overrides apply without code edits).
 
-### Button (shared primitive, updated 2026-09-10)
+### Button (shared primitive, updated 2026-09-13)
 
 `shared/ui/button` — `Button` (button element) and `ButtonLink` (anchor) — is
 the storefront's only button. Every text call-to-action renders it; no screen
-styles its own button.
+styles its own button. `ButtonLink` renders a router `Link` for internal hrefs
+(client navigation + prefetch) and a plain anchor for external URLs.
 
-| Aspect   | Rule                                                                                                                                                                                                                                                              |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Surface  | Hollow — transparent fill, `1px` border in `currentColor`, no shadow in any state                                                                                                                                                                                 |
-| Radius   | `--radius-button` — `4px` (minimal preset) / `0` (playful); a token, never a prop                                                                                                                                                                                 |
-| Label    | Uppercase, `--type-label`, `--weight-bold`, `--tracking-label`                                                                                                                                                                                                    |
-| Size     | One size app-wide — `min-height: 44px`, `padding: 8px 24px`                                                                                                                                                                                                       |
-| Hover    | No fill or tint — the dot is the only hover feedback; `translateY(-1px)` lift, press nudges down `1px`                                                                                                                                                            |
-| Focus    | `2px` ring in `--color-ring`, `2px` offset                                                                                                                                                                                                                        |
-| Disabled | `opacity: 0.5`, `not-allowed` cursor, no animation                                                                                                                                                                                                                |
-| Shimmer  | `shimmer` prop — `hover` (default) / `always` / `none`; plain-CSS port of Magic UI's `ShimmerButton` (MIT): a soft gradient dot in the border colour, travelling as a band `shimmerSize` (2px) thick hugging the border from outside it — never inside the button |
+| Aspect   | Rule                                                                                                                                                      |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Surface  | Hollow — transparent fill, `1px` border in `currentColor`, no shadow in any state                                                                         |
+| Radius   | `--radius-button` — `4px` (minimal preset) / `0` (playful); a token, never a prop                                                                         |
+| Label    | Uppercase, `--type-label`, `--weight-bold`, `--tracking-label`                                                                                            |
+| Size     | One size app-wide — `min-height: 44px`, `padding: 8px 24px`                                                                                               |
+| Hover    | Inverts to a filled `--color-primary` block with `--color-on-primary` label (over media the inherited border/label color flips with it); 150ms transition |
+| Focus    | `2px` ring in `--color-ring`, `2px` offset (over the hero scrim the ring flips to `--color-on-primary`)                                                   |
+| Disabled | `opacity: 0.5`, `not-allowed` cursor, no fill on hover                                                                                                    |
 
 Because the border is `currentColor`, a button inherits an inverted color over
 photographic backgrounds (the hero CTA) with no variant prop. The playful
@@ -202,7 +206,8 @@ preset decoration, not part of the primitive. Icon-only controls (header
 menu/search/cart, drawer close) and product variant chips are not CTAs and keep
 their own treatment.
 
-Spec: `openspec/changes/standardize-button-component/`.
+Spec history: `openspec/changes/standardize-button-component/` (its shimmer port
+was superseded by the shipped hollow surface above).
 
 ---
 

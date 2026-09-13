@@ -21,11 +21,11 @@
 
 | Rule            | Value                                                                                                                                                                                                    |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Meta row        | `01 — New Collection`: index in accent gold + eyebrow (small caps). Rendered only when `content.hero.eyebrow` is set                                                                                     |
-| Statement       | Kept as the page's accessible `h1` (`sr-only`) — **not rendered visually**; the eyebrow, lead line and CTA carry the message                                                                             |
+| Meta row        | `01 — New Collection`: index + eyebrow grouped left (small caps). The numeral always renders; the eyebrow only when `content.hero.eyebrow` is set                                                        |
+| Statement       | The page's accessible `h1` and the hero's giant display headline in both media and text heroes (falls back to the shop name when config copy is empty)                                                   |
 | Media           | Optional full-bleed backdrop, viewport-wide and centered at every resolution (100vw breakout + `object-position: center`). Source: `content.hero.image` (your URL) → live shop `brand.coverImage` → none |
 | Scrim           | Primary-token gradient (stronger top + bottom where text sits) so on-primary text holds ≥ 4.5:1 over any photo                                                                                           |
-| Text on media   | Lead/meta flip to `--color-on-primary`; playful preset hides the media layer and keeps its wash-band hero                                                                                                |
+| Text on media   | Statement, lead, meta and index flip to `--color-on-primary`; playful preset hides the media layer and keeps its wash-band hero                                                                          |
 | Foot            | Lead (Cormorant italic) left, **single** hollow CTA right; stacks + full-width CTA below 768px                                                                                                           |
 | CTA             | **Hollow** — transparent background, one thin `1px` border in `currentColor`; hover inverts to a filled primary block                                                                                    |
 | Section padding | `--space-2xl` vertical desktop / `--space-xl` mobile · `min-height: calc(100svh - header)`, centered                                                                                                     |
@@ -66,18 +66,20 @@ featured collection has no image.
 | Media    | 16:9 crop (`object-fit: cover`), 4:3 below 1100px; side + products render when the collection has no image (`--text-only`)                                     |
 | Side     | Kicker `02 — Featured Collection` (gold index) → display title (`--type-display`) → "View collection →" underline link with gold arrow (Phosphor, aria-hidden) |
 | Heading  | Title is an `h2` (`featured-collection-title`); the page keeps exactly one `h1` (hero statement)                                                               |
-| Products | First 4 products of the collection, in the same hairline editorial grid as Recommended (single / two-up / four-up), separated by whitespace                    |
+| Products | First 4 products of the collection, in the same whitespace-separated editorial grid as New arrivals (single / two-up / four-up)                                |
 | Query    | `FEATURED_COLLECTION_QUERY` fetches `collection.products(first: 4)`; render falls back gracefully when empty                                                   |
 
-### Recommended products — editorial section head + hairline grid
+### Recommended products — editorial section head + whitespace grid
 
-| Rule            | Value                                                                                         |
-| --------------- | --------------------------------------------------------------------------------------------- |
-| Head            | `03 — Recommended` + tabular `04 items` count. Section separated by whitespace (no rule line) |
-| Grid            | Single column < 768px · two-up 768–1439px · four-up ≥1440px                                   |
-| Cell separators | `1px` black `border-left` + `--space-md` left padding on every cell except each row's first   |
-| Cards           | Shared product card (4:5 portrait, pinned meta row) — `shared/widgets` `ProductItem`          |
-| Loading         | 4 skeleton cards (media 4:5 + meta rows) — no layout shift                                    |
+| Rule            | Value                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| Head            | `03 — New arrivals` + tabular `N items` count. Section separated by whitespace (no rule line)                |
+| Grid            | Single column < 768px · two-up 768–1439px · four-up ≥1440px                                                  |
+| Cell separators | Whitespace only — `--space-lg` column gap / `--space-xl` row gap; no hairlines                               |
+| Dedupe          | Excludes the featured collection's own products; falls back to the full list if that would empty the section |
+| Cards           | Shared product card (4:5 portrait, pinned meta row) — `shared/widgets` `ProductItem`                         |
+| Loading         | 4 skeleton cards (media 4:5 + meta rows) — no layout shift                                                   |
+| Empty/error     | Says what happened and links to the catalog — never a heading over blank space                               |
 
 ### Marquee (optional quiet band)
 
@@ -88,9 +90,11 @@ Anton ✦ band belongs to the playful preset).
 
 ## Guardrails (unchanged from MASTER)
 
-- Black/white dominant; gold `--color-accent` only for index numerals, focus
-  rings, the single CTA, and the featured arrow. No second accent.
-- Radius 0; separation by hairlines, never shadows.
+- Black/white dominant; gold `--color-accent` only for the single CTA and the
+  featured arrow; small accent text (index numerals) uses `--color-accent-strong`
+  (`#8A6D1F`, ≥ 4.5:1 on white), and focus rings use `--color-ring` (`#A87C0E`,
+  ≥ 3:1 on white and black). No second accent.
+- Radius 0; separation by whitespace, never shadows or hairlines.
 - `prefers-reduced-motion` honored (global collapse; no entry animation added).
 - Contrast ≥ 4.5:1; visible `:focus-visible` ring from `--color-ring`.
 - No horizontal scroll at 375/768/1024/1440.

@@ -23,13 +23,13 @@ The Theme MUST make shared UI primitives themeable through tokens, context, or p
 
 ### Requirement: home-body-editorial-statement
 
-The Theme MUST render the minimal-preset home body as an editorial composition: an image-led hero (over an optional full-bleed config-driven image) with a meta row, a lead line and a single hollow CTA, a featured-collection editorial header with its own products, and a recommended-products section with an editorial section head and a hairline-separated grid.
+The Theme MUST render the minimal-preset home body as an editorial composition: an image-led hero (over an optional full-bleed config-driven image) with a meta row, a lead line and a single hollow CTA, a featured-collection editorial header with its own products, and a recommended-products section with an editorial section head and a whitespace-separated grid.
 
 #### Scenario: hero-image-led
 
 - **WHEN** the hero renders under the minimal preset
 - **THEN** it fills the first viewport (`min-height: calc(100svh - header)`) centered with `--space-2xl` vertical padding
-- **AND** the configured statement is kept as the page's accessible `h1` (visually hidden) rather than rendered as display type
+- **AND** the configured statement renders as the hero's giant display headline (and remains the page's accessible `h1`) with or without hero media, falling back to the shop name
 - **AND** it shows a meta row (gold editorial index plus eyebrow) and a foot row with the editorial-italic lead on the left and the single CTA on the right
 
 #### Scenario: hero-media-backdrop
@@ -37,7 +37,7 @@ The Theme MUST render the minimal-preset home body as an editorial composition: 
 - **WHEN** the hero renders with a config or live-shop cover image under the minimal preset
 - **THEN** the image fills the hero as a decorative layer (`role="presentation"`, empty alt) that spans the full viewport width, centered at every resolution (`100vw` breakout, `object-position: center`)
 - **AND** a primary-token gradient scrim keeps on-primary text at ≥ 4.5:1 contrast
-- **AND** lead/meta text flips to `--color-on-primary`
+- **AND** statement, lead and meta text flip to `--color-on-primary`
 - **AND** under the playful preset the media layer is hidden and the wash-band hero is preserved
 
 #### Scenario: hero-cta-hollow
@@ -65,7 +65,7 @@ The Theme MUST render the minimal-preset home body as an editorial composition: 
 - **WHEN** the recommended-products section renders under the minimal preset
 - **THEN** it shows an editorial section head (gold-indexed title and a tabular item count) separated by whitespace rather than extra rule lines
 - **AND** the product grid shows one column below 768px, two columns from 768px, and four columns at or above 1440px
-- **AND** every cell except each row's first is separated by a hairline `border-left` with no shadows
+- **AND** every cell is separated by whitespace (`--space-lg` column gap, `--space-xl` row gap) with no hairlines or shadows
 
 #### Scenario: recommended-loading-skeleton
 

@@ -21,6 +21,8 @@ export interface ColorTokens {
   background: string;
   foreground: string;
   accent: string;
+  /** Darkened accent for small text (index numerals) — meets 4.5:1 on light surfaces. */
+  accentStrong: string;
   onAccent: string;
   secondary: string;
   onSecondary: string;

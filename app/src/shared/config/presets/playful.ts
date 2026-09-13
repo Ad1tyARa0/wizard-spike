@@ -20,6 +20,7 @@ export const PLAYFUL_TOKENS: TokenSet = {
     background: '#fff6eb', // cream — dominant surface
     foreground: '#181b48',
     accent: '#be008b', // magenta hero accent
+    accentStrong: '#be008b', // passes 4.5:1 on the cream surface
     onAccent: '#fff6eb',
     secondary: '#e6edff', // light indigo wash
     onSecondary: '#181b48',

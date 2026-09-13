@@ -10,6 +10,7 @@
   --color-background: #ffffff;
   --color-foreground: #000000;
   --color-accent: #d4af37;
+  --color-accent-strong: #8a6d1f;
   --color-on-accent: #000000;
   --color-secondary: #f5f5f4;
   --color-on-secondary: #000000;
@@ -18,7 +19,7 @@
   --color-border: #000000;
   --color-destructive: #dc2626;
   --color-on-destructive: #ffffff;
-  --color-ring: #d4af37;
+  --color-ring: #a87c0e;
   --color-hero-accent: #d4af37;
 
   /* ---- Typography: oversized display, editorial serif, readable body ---- */

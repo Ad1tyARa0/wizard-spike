@@ -579,6 +579,47 @@ input[type='submit'] {
   cursor: pointer;
 }
 
+/* Shared button primitive (shared/ui/button) — hollow surface, token radius,
+   no shadow. Hover inverts to a filled primary block; focus ring from the
+   ring token. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--radius-button);
+  background-color: transparent;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-label);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.btn:hover:not(:disabled):not([aria-disabled='true']) {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 input,
 select,
 textarea {
@@ -789,9 +830,9 @@ main[data-card-aspect='wide'] .product-item img {
 }
 
 /* Scrim: darkens the photo so on-primary text keeps ≥ 4.5:1 contrast over any
-   image. Stronger at the top (eyebrow) and bottom (lead + CTA) where text
-   sits, lighter through the middle so the photo still reads. Derived from the
-   primary token — no hard-coded color. */
+   image. Holds ≥ 55% through the band where text sits (worst case: white
+   photo), deeper at the top and bottom edges. Derived from the primary
+   token — no hard-coded color. */
 .home__hero-media::after {
   content: '';
   position: absolute;
@@ -799,7 +840,7 @@ main[data-card-aspect='wide'] .product-item img {
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, var(--color-primary) 62%, transparent) 0%,
-    color-mix(in srgb, var(--color-primary) 38%, transparent) 45%,
+    color-mix(in srgb, var(--color-primary) 55%, transparent) 50%,
     color-mix(in srgb, var(--color-primary) 88%, transparent) 100%
   );
 }
@@ -810,10 +851,13 @@ main[data-card-aspect='wide'] .product-item img {
   border-bottom: 0;
 }
 
-/* Text flips to on-primary over the photo (white-on-black scrim). */
+/* Text flips to on-primary over the photo (white-on-black scrim), including
+   the statement and its index numeral. */
 .home__hero--media .home__hero-sub,
+.home__hero--media .home__hero-statement,
 .home__hero--media .home__hero-meta,
-.home__hero--media .home__hero-meta .eyebrow {
+.home__hero--media .home__hero-meta .eyebrow,
+.home__hero--media .home__hero-index {
   color: var(--color-on-primary);
 }
 
@@ -830,12 +874,28 @@ main[data-card-aspect='wide'] .product-item img {
 }
 
 .home__hero-index {
-  color: var(--color-accent);
+  color: var(--color-accent-strong);
   font-family: var(--font-body);
   font-size: var(--type-label);
   font-weight: var(--weight-black);
   font-variant-numeric: tabular-nums;
   letter-spacing: var(--tracking-label);
+}
+
+/* Visible statement for the no-media hero (media heroes keep the sr-only h1
+   and let the photo lead). At full giant scale — the design language's
+   signature move — with the wireframe's tight display leading. */
+.home__hero-statement {
+  font-family: var(--font-display);
+  font-size: var(--type-giant);
+  font-weight: var(--weight-black);
+  line-height: 0.88;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  margin: 0;
+  max-width: 12ch;
 }
 
 .home__hero-foot {
@@ -862,9 +922,14 @@ main[data-card-aspect='wide'] .product-item img {
 }
 
 /* Hero CTA renders the shared button primitive (`ButtonLink`); the page only
- * sets the color it inherits, and the hollow surface follows it. */
+ * sets the color it inherits, and the hollow surface follows it. Focus rings
+ * flip to on-primary so they stay visible over the dark scrim. */
 .home__hero--media .home__hero-cta {
   color: var(--color-on-primary);
+}
+
+.home__hero--media .home__hero-cta:focus-visible {
+  outline-color: var(--color-on-primary);
 }
 
 /* Mobile: tighter vertical rhythm, stacked foot, full-width hollow CTA. */
@@ -942,7 +1007,7 @@ main[data-card-aspect='wide'] .product-item img {
 }
 
 .featured-collection-index {
-  color: var(--color-accent);
+  color: var(--color-accent-strong);
   font-weight: var(--weight-black);
   font-variant-numeric: tabular-nums;
 }
@@ -1031,7 +1096,7 @@ main[data-card-aspect='wide'] .product-item img {
 }
 
 .recommended-products-index {
-  color: var(--color-accent);
+  color: var(--color-accent-strong);
   font-weight: var(--weight-black);
   font-variant-numeric: tabular-nums;
 }
@@ -1057,8 +1122,8 @@ main[data-card-aspect='wide'] .product-item img {
 .featured-products-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  column-gap: var(--space-md);
-  row-gap: var(--space-2xl);
+  column-gap: var(--space-lg);
+  row-gap: var(--space-xl);
   margin-bottom: 0;
 }
 
@@ -1076,6 +1141,18 @@ main[data-card-aspect='wide'] .product-item img {
   .featured-products-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+/* Empty/error state for the deferred recommended grid — says what happened
+   and offers the next step instead of a heading over blank space. */
+.recommended-products-empty {
+  color: var(--color-muted-foreground);
+  font-size: var(--type-body);
+  margin: 0;
+}
+
+.recommended-products-empty a {
+  color: var(--color-foreground);
 }
 
 /* Loading skeleton for the deferred recommended grid — mirrors the card
@@ -1433,6 +1510,8 @@ main[data-card-aspect='wide'] .product-item img {
 
   .product-item:hover img {
     transform: none;
+    /* Non-motion hover cue when the zoom is collapsed. */
+    filter: brightness(1.06);
   }
 }
 
