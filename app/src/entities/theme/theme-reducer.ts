@@ -7,10 +7,17 @@
  * seed → client rehydration); `themeSet` replaces it again for runtime
  * previews (e.g. the Layer 1 wizard live-preview).
  */
-import { createReducer } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { defaultTheme } from './resolve-tokens';
 import { themeSet } from './theme-actions';
 
-export const themeReducer = createReducer(defaultTheme(), (builder) => {
-  builder.addCase(themeSet, (_state, action) => action.payload);
+const themeSlice = createSlice({
+  name: 'theme',
+  initialState: defaultTheme(),
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(themeSet, (_state, action) => action.payload);
+  },
 });
+
+export const themeReducer = themeSlice.reducer;

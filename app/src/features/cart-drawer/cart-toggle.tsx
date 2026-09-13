@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { ShoppingCartIcon, type IconWeight } from '@phosphor-icons/react';
-import { cartDrawerOpened } from './model';
+import { cartDrawerOpened } from './cart-drawer-actions';
 import { selectCartTotalQuantity } from '~/src/entities/cart';
 
 /**

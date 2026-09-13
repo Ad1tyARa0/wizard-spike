@@ -8,15 +8,17 @@ export {
   cartLineAdded,
   cartLineQuantityChanged,
   cartLineRemoved,
-  cartReducer,
   cartSyncFailed,
   cartSyncSucceeded,
+  CartActionTypes,
+} from './cart-actions';
+export { cartReducer } from './cart-reducer';
+export {
   selectCart,
   selectCartLines,
   selectCartStatus,
   selectCartSubtotal,
   selectCartTotalQuantity,
-} from './cart-slice';
-export type { CartState } from './cart-slice';
+} from './cart-selectors';
 export { EMPTY_CART, cartLineFromVariant } from './model';
-export type { CartLineVM, CartVM, Money, VariantLike } from './model';
+export type { CartLineVM, CartState, CartVM, Money, VariantLike } from './model';

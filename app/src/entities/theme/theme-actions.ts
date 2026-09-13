@@ -14,7 +14,9 @@ import type { ThemeState } from './theme-types';
  * string is a single, findable literal (no magic strings at call sites).
  */
 export namespace ThemeActionTypes {
-  export const THEME_SET = 'theme/THEME_SET';
+  const themeSet = 'theme';
+
+  export const THEME_SET = `${themeSet}/THEME_SET`;
 }
 
 /** Replace the resolved theme state (hydration from the server). */

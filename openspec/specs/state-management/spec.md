@@ -8,7 +8,7 @@ The State Management capability defines the protocol for adding client/server st
 
 ### Requirement: slice-file-organization
 
-A Redux slice MUST be split into separate kebab-case files for actions, reducer, and selectors (e.g. `theme-actions.ts`, `theme-reducer.ts`, `theme-selectors.ts`) rather than a single `createSlice` monolith, and those files MUST live inside the owning entity slice (e.g. `entities/theme/`).
+A Redux slice MUST be split into separate kebab-case files for actions, reducer, and selectors (e.g. `theme-actions.ts`, `theme-reducer.ts`, `theme-selectors.ts`) rather than one monolithic slice file, and those files MUST live inside the owning entity slice (e.g. `entities/theme/`).
 
 #### Scenario: actions-in-dedicated-file
 
@@ -19,7 +19,7 @@ A Redux slice MUST be split into separate kebab-case files for actions, reducer,
 #### Scenario: reducer-separate-from-actions
 
 - **WHEN** the slice reducer handles an action
-- **THEN** it is defined in `*-reducer.ts` using `createReducer` and references the exported action creator
+- **THEN** it is defined in `*-reducer.ts` using `createSlice` with `extraReducers` (the slice owns no inline `reducers`) and references the exported action creators
 
 #### Scenario: selectors-in-dedicated-file
 
@@ -28,12 +28,22 @@ A Redux slice MUST be split into separate kebab-case files for actions, reducer,
 
 ### Requirement: namespaced-action-types
 
-Action-type string constants MUST be grouped under an exported namespace so every type is a single, findable literal, and callers MUST dispatch the exported action creator (or reference the namespace constant) rather than raw strings.
+Action-type string constants MUST be grouped under an exported namespace that holds a local base const for the feature and builds the exported type as `<base>/<FEATURE_ACTION>` with a template literal, so every type is a single, findable literal, and callers MUST dispatch the exported action creator (or reference the namespace constant) rather than raw strings.
 
 #### Scenario: constant-under-namespace
 
 - **WHEN** a slice declares an action type
-- **THEN** it is written as `export namespace <Feature>ActionTypes { export const <FEATURE_ACTION> = '<feature>/<FEATURE_ACTION>'; }`
+- **THEN** it is written as a namespace with a local base const and a template-literal type, e.g.
+
+  ```ts
+  export namespace ThemeActionTypes {
+    const themeSet = 'theme';
+
+    export const THEME_SET = `${themeSet}/THEME_SET`;
+  }
+  ```
+
+- **AND** the exported type string is `<base>/<FEATURE_ACTION>` (e.g. `theme/THEME_SET`)
 
 #### Scenario: no-magic-strings
 

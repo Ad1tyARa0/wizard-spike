@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { X } from '@phosphor-icons/react';
-import { cartDrawerClosed, selectCartDrawerOpen } from './model';
+import { cartDrawerClosed } from './cart-drawer-actions';
+import { selectCartDrawerOpen } from './cart-drawer-selectors';
 import {
   selectCart,
   selectCartLines,

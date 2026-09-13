@@ -34,6 +34,9 @@ export interface CartVM {
   error?: string;
 }
 
+/** The cart slice's state shape (the view-model plus slice bookkeeping). */
+export interface CartState extends CartVM {}
+
 export const EMPTY_CART: CartVM = {
   lines: [],
   totalQuantity: 0,
