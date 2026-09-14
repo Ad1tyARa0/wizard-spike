@@ -77,6 +77,9 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
     id
     handle
     title
+    availableForSale
+    productType
+    vendor
     featuredImage {
       id
       altText
@@ -90,6 +93,13 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       }
       maxVariantPrice {
         ...MoneyCollectionItem
+      }
+    }
+    variants(first: 1) {
+      nodes {
+        id
+        title
+        availableForSale
       }
     }
   }

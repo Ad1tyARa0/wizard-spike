@@ -5,12 +5,14 @@ import { Button } from '../../shared/ui';
 export function AddToCartButton({
   analytics,
   children,
+  className,
   disabled,
   lines,
   onClick,
 }: {
   analytics?: unknown;
   children: React.ReactNode;
+  className?: string;
   disabled?: boolean;
   lines: Array<OptimisticCartLineInput>;
   onClick?: () => void;
@@ -21,6 +23,7 @@ export function AddToCartButton({
         <>
           <input name="analytics" type="hidden" value={JSON.stringify(analytics)} />
           <Button
+            className={className}
             type="submit"
             variant="solid"
             onClick={onClick}

@@ -98,7 +98,9 @@ borders, and `stark` buttons. Small accent text (12–14px) uses
 | `--space-2`      | `8px`   | Icon gaps, compact control padding                                      |
 | `--space-3`      | `12px`  | Compact control padding                                                 |
 | `--space-4`      | `16px`  | Bar gutters, compact control box                                        |
+| `--space-5`      | `20px`  | Collection card padding (mobile)                                        |
 | `--space-6`      | `24px`  | Standard padding                                                        |
+| `--space-7`      | `28px`  | Collection card padding (desktop)                                       |
 | `--space-8`      | `32px`  | Desktop bar gutters                                                     |
 | `--space-11`     | `44px`  | Default control / touch-target height                                   |
 | `--space-12`     | `48px`  | Section breathing                                                       |
@@ -130,19 +132,31 @@ optional marquee) now live in `pages/home.md` (page override, Variant A —
 Editorial Statement). This file remains the storefront-wide Master; the home
 override applies only to the home body under the minimal preset.
 
-### Product Card (updated 2026-08-28)
+### Product Card (updated 2026-09-14)
 
-**Portrait editorial composition** — crop product photos to **4:5 portrait**
-(`layout.cardAspectRatio: "portrait"`, config-driven). Card anatomy:
+**Responsive catalog card** — the lightweight card used in the home and
+collection grids (not the product page). Anatomy: a bordered surface with a
+media canvas + details block; every value is a design token and the crop is
+config-driven (`layout.cardAspectRatio` → `data-card-aspect` on `<main>`).
 
-- Image: 4:5 crop, `object-fit: cover`, subtle 1.02 scale on hover (replaced by
-  a brightness cue under reduced motion). The crop is forced over each photo's
-  intrinsic ratio so every card in a row is the same height.
-- Meta row, pinned to the bottom: **Name** (left, display family, bold) and
-  **Price** (right, muted foreground, tabular, nowrap).
+- Media canvas: `aspect-ratio` from `layout.cardAspectRatio` — **portrait**
+  (4:5, minimal), **square** (1:1, playful), **wide** (16:10); `object-fit:
+cover` forces the crop over each photo's intrinsic ratio so every card in a
+  row is the same height. Hairline bottom rule; image-less products fall back to
+  a mono `Product shot` placeholder.
+- Badge: `Sold out` label pinned top-left when `availableForSale` is false.
+- Quick add: a full-width accent bar pinned to the canvas bottom — visible on
+  mobile, slides up on hover / `:focus-within` from 48em. Single-variant add via
+  `AddToCartButton`.
+- Details: **name** (left, display family, bold, uppercase) and **price**
+  (right, mono, tabular, nowrap) on a flex row; `productType` as flavour notes;
+  vendor + variant title as dashed-rule meta tags.
+- Hover: the border shifts to `--color-primary` and the quick-add reveals — no
+  layout-shifting transform.
 
-**No card shadows** — separation comes from the crop, whitespace, and hover
-states, never a drop shadow. Whitespace between cards stays exaggerated.
+**No card shadows** — separation comes from the crop, hairlines, whitespace,
+and hover states, never a drop shadow. Whitespace between cards stays
+exaggerated. Full card spec: `pages/products.md`.
 
 ---
 

@@ -1,5 +1,6 @@
 import { Link, useLoaderData } from 'react-router';
-import { Image, getPaginationVariables } from '@shopify/hydrogen';
+import { Money, getPaginationVariables } from '@shopify/hydrogen';
+import { ArrowRightIcon } from '@phosphor-icons/react';
 import type { CollectionFragment } from 'storefrontapi.generated';
 import type { Route } from './+types/route';
 import { PaginatedResourceSection } from '~/src/widgets';
@@ -52,33 +53,56 @@ export default function Collections() {
         connection={collections}
         resourcesClassName="collections-grid"
       >
-        {({ node: collection, index }) => (
-          <CollectionItem key={collection.id} collection={collection} index={index} />
-        )}
+        {({ node: collection }) => <CollectionCard key={collection.id} collection={collection} />}
       </PaginatedResourceSection>
     </div>
   );
 }
 
-function CollectionItem({ collection, index }: { collection: CollectionFragment; index: number }) {
+/**
+ * Collection card — title + item count, a hairline-separated list of the
+ * collection's first products, and a footer link into the full collection.
+ * See `design-system/e-commerce-website/pages/collections.md`.
+ */
+function CollectionCard({ collection }: { collection: CollectionFragment }) {
+  const products = collection.products.nodes;
+  const count = String(products.length).padStart(2, '0');
   return (
-    <Link
-      className="collection-item"
-      key={collection.id}
-      to={`/collections/${collection.handle}`}
-      prefetch="intent"
-    >
-      {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
-      )}
-      <h5>{collection.title}</h5>
-    </Link>
+    <article className="collection-card">
+      <div className="collection-card-body">
+        <header className="collection-card-header">
+          <h3 className="collection-card-title">{collection.title}</h3>
+          <span className="collection-card-count">{count} items</span>
+        </header>
+        {products.length > 0 && (
+          <ul className="collection-card-products">
+            {products.map((product) => (
+              <li className="collection-card-product" key={product.id}>
+                <div className="collection-card-product-info">
+                  <span className="collection-card-product-name">{product.title}</span>
+                  {product.productType ? (
+                    <span className="collection-card-product-meta">{product.productType}</span>
+                  ) : null}
+                </div>
+                <span className="collection-card-product-price">
+                  <Money data={product.priceRange.minVariantPrice} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <Link
+        className="collection-card-footer"
+        prefetch="intent"
+        to={`/collections/${collection.handle}`}
+      >
+        <span>View entire collection</span>
+        <span aria-hidden="true" className="collection-card-arrow">
+          <ArrowRightIcon />
+        </span>
+      </Link>
+    </article>
   );
 }
 
@@ -87,12 +111,19 @@ const COLLECTIONS_QUERY = `#graphql
     id
     title
     handle
-    image {
-      id
-      url
-      altText
-      width
-      height
+    products(first: 4) {
+      nodes {
+        id
+        title
+        handle
+        productType
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+      }
     }
   }
   query StoreCollections(

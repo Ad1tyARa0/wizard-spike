@@ -6,37 +6,83 @@ import type {
   RecommendedProductFragment,
 } from 'storefrontapi.generated';
 import { useVariantUrl } from '../../entities/product';
-import { StickerHover } from '../../shared/ui';
+import { AddToCartButton } from '../../features/product-form';
 
+type ProductCardFragment =
+  CollectionItemFragment | ProductItemFragment | RecommendedProductFragment;
+
+/**
+ * Product card — the lightweight catalog card used in the home and collection
+ * grids (not the product page): a media canvas with an optional status badge
+ * and an accent quick-add bar, then title/price and product metadata.
+ * Source: the responsive ProductCard wireframe (design-system pages/products.md).
+ */
 export function ProductItem({
   product,
   loading,
 }: {
-  product: CollectionItemFragment | ProductItemFragment | RecommendedProductFragment;
+  product: ProductCardFragment;
   loading?: 'eager' | 'lazy';
 }) {
   const variantUrl = useVariantUrl(product.handle);
   const image = product.featuredImage;
+  const variant = product.variants.nodes[0];
+  const variantTitle = variant?.title && variant.title !== 'Default Title' ? variant.title : null;
+  const metaTags = [product.vendor, variantTitle].filter((tag): tag is string => Boolean(tag));
   return (
-    <Link className="product-item" key={product.id} prefetch="intent" to={variantUrl}>
-      {image && (
-        <StickerHover>
-          {/* No hard-coded aspectRatio prop: the crop is config-driven via
-              layout.cardAspectRatio (CSS on main[data-card-aspect=…]). */}
-          <Image
-            alt={image.altText || product.title}
-            data={image}
-            loading={loading}
-            sizes="(min-width: 45em) 400px, 100vw"
-          />
-        </StickerHover>
-      )}
-      <div className="product-meta">
-        <h4>{product.title}</h4>
-        <small className="product-price">
-          <Money data={product.priceRange.minVariantPrice} />
-        </small>
+    <article className="product-card">
+      <div className="product-media-canvas">
+        <Link
+          aria-hidden="true"
+          className="product-media-link"
+          prefetch="intent"
+          tabIndex={-1}
+          to={variantUrl}
+        >
+          {image ? (
+            <Image
+              alt={image.altText || product.title}
+              data={image}
+              loading={loading}
+              sizes="(min-width: 45em) 400px, 100vw"
+            />
+          ) : (
+            <span className="product-media-placeholder">Product shot</span>
+          )}
+        </Link>
+        {product.availableForSale ? null : <span className="product-card-badge">Sold out</span>}
+        {variant ? (
+          <AddToCartButton
+            className="product-quick-add"
+            disabled={!variant.availableForSale}
+            lines={[{ merchandiseId: variant.id, quantity: 1 }]}
+          >
+            Quick add +
+          </AddToCartButton>
+        ) : null}
       </div>
-    </Link>
+      <div className="product-details">
+        <div className="product-header">
+          <h4 className="product-card-title">
+            <Link prefetch="intent" to={variantUrl}>
+              {product.title}
+            </Link>
+          </h4>
+          <span className="product-card-price">
+            <Money data={product.priceRange.minVariantPrice} />
+          </span>
+        </div>
+        {product.productType ? <p className="product-flavor-notes">{product.productType}</p> : null}
+        {metaTags.length > 0 ? (
+          <div className="product-meta-footer">
+            {metaTags.map((tag) => (
+              <span className="meta-tag" key={tag}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </article>
   );
 }

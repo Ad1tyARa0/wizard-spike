@@ -754,72 +754,180 @@ textarea:focus {
 }
 
 /* ============================================================
- * Product items & grids
+ * Product card (catalog grids) — the lightweight card used in catalog
+ * listings, not the product page. Source: the responsive ProductCard
+ * wireframe (design-system/e-commerce-website/pages/products.md).
  * ============================================================ */
-.product-item {
+.product-card {
+  position: relative;
   display: flex;
   flex-direction: column;
+  background: var(--color-secondary);
+  border: var(--border-width) solid var(--color-border);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+/* Media canvas — crop driven by layout.cardAspectRatio (data attribute on
+   <main>); the image fills it with `object-fit: cover`, which overrides
+   Hydrogen's inline intrinsic ratio. */
+.product-media-canvas {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--color-background);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+main[data-card-aspect='portrait'] .product-media-canvas {
+  aspect-ratio: 4 / 5;
+}
+
+main[data-card-aspect='wide'] .product-media-canvas {
+  aspect-ratio: 16 / 10;
+}
+
+.product-media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.product-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-media-placeholder {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.product-card-badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 2;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Quick-add: a full-width accent bar pinned to the bottom of the media
+   canvas. Visible on mobile; slides up on hover from the small breakpoint. */
+.product-quick-add {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--type-label-sm);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.product-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.product-card-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-body);
+  font-weight: var(--weight-black);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.product-card-title a {
+  color: inherit;
   text-decoration: none;
 }
 
-/* Product card — portrait editorial composition (config-driven crop).
-   Design: MASTER.md → Product card. The meta row (name left, price right)
-   is pinned to the bottom of the card via margin-top: auto, so all cards
-   in a row align regardless of image content. */
-.product-item .product-meta {
-  align-items: baseline;
-  display: flex;
-  gap: var(--space-md);
-  justify-content: space-between;
-  margin-top: auto;
-  padding-top: var(--space-md);
-}
-
-.product-item .product-meta h4 {
-  font-family: var(--font-display);
-  font-size: var(--type-body);
+.product-card-price {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
   font-weight: var(--weight-bold);
-  letter-spacing: -0.01em;
-  margin: 0;
-}
-
-.product-item .product-meta .product-price {
-  color: var(--color-muted-foreground);
-  font-size: var(--type-body);
   font-variant-numeric: tabular-nums;
-  margin: 0;
   white-space: nowrap;
 }
 
-/* Card images: crop driven by layout.cardAspectRatio (data attribute on
-   <main>). `!important` is required because Hydrogen's <Image> emits the
-   image's OWN intrinsic ratio as an inline style (aspect-ratio: w/h),
-   which would otherwise override the theme's card crop and make every
-   card a different height. */
-.product-item img,
-.collection-item img,
-.recommended-product img {
-  aspect-ratio: 1 / 1 !important;
-  height: auto;
-  object-fit: cover;
-  transition:
-    transform var(--duration-fast) var(--ease-out),
-    opacity var(--duration-fast) var(--ease-out);
-  width: 100%;
+.product-flavor-notes {
+  margin: 0;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
-main[data-card-aspect='portrait'] .product-item img {
-  aspect-ratio: 4 / 5 !important;
+.product-meta-footer {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  padding-top: var(--space-2);
+  border-top: var(--border-width) dashed var(--color-border);
 }
 
-main[data-card-aspect='wide'] .product-item img {
-  aspect-ratio: 16 / 10 !important;
+.meta-tag {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
-/* Subtle editorial zoom on hover (minimal); playful's sticker transform
-   overrides this via higher specificity under [data-theme='playful']. */
-.product-item:hover img {
-  transform: scale(1.02);
+@media (min-width: 48em) {
+  .product-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  .product-quick-add {
+    transform: translateY(100%);
+  }
+
+  .product-card:hover .product-quick-add,
+  .product-card:focus-within .product-quick-add {
+    transform: translateY(0);
+  }
+
+  .product-details {
+    padding: var(--space-5);
+    gap: var(--space-3);
+  }
+
+  .product-card-title {
+    font-size: var(--type-body-lg);
+  }
+
+  .product-card-price {
+    font-size: var(--type-label);
+  }
 }
 
 .products-grid,
@@ -834,17 +942,129 @@ main[data-card-aspect='wide'] .product-item img {
   margin-bottom: 2rem;
 }
 
-.collection-item {
-  text-decoration: none;
+/* ---- Collection card: title / count / product list / footer ----
+ * A surface card in the collections grid. Source: the responsive
+ * CollectionCard wireframe (design-system pages/collections.md). */
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-5);
+  background: var(--color-secondary);
+  border: var(--border-width) solid var(--color-border);
 }
 
-.collection-item h4 {
-  font-family: var(--font-body);
-  font-size: var(--type-label);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-label);
+.collection-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.collection-card-title {
+  margin: 0;
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
   text-transform: uppercase;
-  margin-top: var(--space-md);
+}
+
+.collection-card-count {
+  padding: var(--space-0-5) var(--space-1-5);
+  border: var(--border-width) solid var(--color-border);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  white-space: nowrap;
+}
+
+.collection-card-products {
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  list-style: none;
+}
+
+.collection-card-product {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: var(--border-width) dashed var(--color-border);
+}
+
+.collection-card-product-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+}
+
+.collection-card-product-name {
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-label-sm);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+}
+
+.collection-card-product-meta {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  text-transform: uppercase;
+}
+
+.collection-card-product-price {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
+  font-weight: var(--weight-bold);
+  white-space: nowrap;
+}
+
+.collection-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.collection-card-arrow {
+  display: inline-flex;
+  color: var(--color-accent);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.collection-card-footer:hover {
+  color: var(--color-accent-strong);
+}
+
+.collection-card-footer:hover .collection-card-arrow {
+  transform: translateX(var(--space-1));
+}
+
+@media (min-width: 48em) {
+  .collection-card {
+    padding: var(--space-7);
+  }
+
+  .collection-card-product-name {
+    font-size: var(--type-label);
+  }
 }
 
 /* ============================================================
@@ -1586,10 +1806,9 @@ main[data-card-aspect='wide'] .product-item img {
     transition-duration: 0.01ms !important;
   }
 
-  .product-item:hover img {
+  /* Reveal the quick-add without the slide. */
+  .product-quick-add {
     transform: none;
-    /* Non-motion hover cue when the zoom is collapsed. */
-    filter: brightness(1.06);
   }
 }
 
@@ -1674,9 +1893,7 @@ main[data-card-aspect='wide'] .product-item img {
 }
 
 /* Rounded product surfaces, pill badges. */
-[data-theme='playful'] .product-item img,
-[data-theme='playful'] .collection-item img,
-[data-theme='playful'] .recommended-product img,
+[data-theme='playful'] .product-card img,
 [data-theme='playful'] .featured-collection-image,
 [data-theme='playful'] .blog-article-image,
 [data-theme='playful'] .product-image img {

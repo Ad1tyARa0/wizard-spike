@@ -380,6 +380,9 @@ const FEATURED_COLLECTION_QUERY = `#graphql
     id
     title
     handle
+    availableForSale
+    productType
+    vendor
     priceRange {
       minVariantPrice {
         amount
@@ -392,6 +395,13 @@ const FEATURED_COLLECTION_QUERY = `#graphql
       altText
       width
       height
+    }
+    variants(first: 1) {
+      nodes {
+        id
+        title
+        availableForSale
+      }
     }
   }
   fragment FeaturedCollection on Collection {
@@ -436,6 +446,9 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     id
     title
     handle
+    availableForSale
+    productType
+    vendor
     priceRange {
       minVariantPrice {
         amount
@@ -448,6 +461,13 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       altText
       width
       height
+    }
+    variants(first: 1) {
+      nodes {
+        id
+        title
+        availableForSale
+      }
     }
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)

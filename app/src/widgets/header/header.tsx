@@ -104,38 +104,55 @@ export function HeaderMenu({
       : (FALLBACK_HEADER_MENU.items as HeaderMenuItem[]);
   }
 
+  // Resolve each item to a client-side path once, and drop items with no URL.
+  const links = items
+    .filter((item): item is HeaderMenuItem & { url: string } => Boolean(item.url))
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      url:
+        item.url.includes('myshopify.com') ||
+        item.url.includes(publicStoreDomain) ||
+        item.url.includes(primaryDomainUrl)
+          ? new URL(item.url).pathname
+          : item.url,
+    }));
+
+  // Guaranteed Home (mobile) and Collections entries, without duplicating the
+  // shop's own menu.
+  const showHome = viewport === 'mobile' && !links.some((link) => link.url === '/');
+  const showCollections = !links.some((link) => link.url === '/collections');
+
   return (
     <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
+      {showHome && (
         <NavLink className="header-menu-item" end onClick={close} prefetch="intent" to="/">
           Home
         </NavLink>
       )}
-      {items.map((item) => {
-        if (!item.url) {
-          return null;
-        }
-
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            onClick={close}
-            prefetch="intent"
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
+      {showCollections && (
+        <NavLink
+          className="header-menu-item"
+          end
+          onClick={close}
+          prefetch="intent"
+          to="/collections"
+        >
+          Collections
+        </NavLink>
+      )}
+      {links.map((link) => (
+        <NavLink
+          className="header-menu-item"
+          end
+          key={link.id}
+          onClick={close}
+          prefetch="intent"
+          to={link.url}
+        >
+          {link.title}
+        </NavLink>
+      ))}
     </nav>
   );
 }

@@ -36,6 +36,7 @@ describe('tokensToCssVars — resolved tokens as CSS custom properties', () => {
     // compact control type + 4px space scale
     expect(vars['--type-label-sm']).toBe('0.75rem');
     expect(vars['--space-4']).toBe('16px');
+    expect(vars['--space-5']).toBe('20px');
     expect(vars['--space-8']).toBe('32px');
     expect(vars['--space-11']).toBe('44px');
     // motion + breakpoints + z + layout
