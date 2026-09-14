@@ -1,8 +1,10 @@
 /**
  * FSD public API — shared/ui/button.
- * The app's button primitives: `Button` (button element) and `ButtonLink`
- * (anchor). Two variants (`solid` accent fill / `outline` border) and
- * optional leading/trailing icons.
+ * The app's single button primitive: `Button` (button element) and
+ * `ButtonLink` (anchor). Both take `variant` (solid | outline | stark) and
+ * `icon` + `iconPosition`; `ButtonLink` renders a router `Link` for internal
+ * hrefs.
  */
 export { Button, type ButtonProps } from './button';
 export { ButtonLink, type ButtonLinkProps } from './button-link';
+export type { ButtonIconPosition, ButtonVariant } from './button-shared';

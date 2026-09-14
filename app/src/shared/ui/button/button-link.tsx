@@ -1,13 +1,19 @@
 import type { ComponentProps, ReactNode } from 'react';
 import { Link } from 'react-router';
+import {
+  ButtonContent,
+  buttonClassName,
+  type ButtonIconPosition,
+  type ButtonVariant,
+} from './button-shared';
 
 export interface ButtonLinkProps extends ComponentProps<'a'> {
-  /** `solid` (accent fill, high-intent CTA) or `outline` (transparent + border). */
-  variant?: 'solid' | 'outline';
-  /** Icon rendered before the label (left). */
-  leadingIcon?: ReactNode;
-  /** Icon rendered after the label (right). */
-  trailingIcon?: ReactNode;
+  /** `solid` (accent fill), `outline` (transparent + border), `stark` (structure fill). */
+  variant?: ButtonVariant;
+  /** Glyph rendered inside the button, on the side set by `iconPosition`. */
+  icon?: ReactNode;
+  /** Side the icon sits on. Defaults to `left`. */
+  iconPosition?: ButtonIconPosition;
 }
 
 function isInternalHref(href: string | undefined): href is string {
@@ -18,19 +24,17 @@ export function ButtonLink({
   children,
   className,
   href,
+  icon,
+  iconPosition,
   ref,
   variant = 'outline',
-  leadingIcon,
-  trailingIcon,
   ...props
 }: ButtonLinkProps) {
-  const classes = ['btn', `btn--${variant}`, className].filter(Boolean).join(' ');
+  const classes = buttonClassName(variant, className);
   const content = (
-    <>
-      {leadingIcon}
+    <ButtonContent icon={icon} iconPosition={iconPosition}>
       {children}
-      {trailingIcon}
-    </>
+    </ButtonContent>
   );
 
   if (isInternalHref(href)) {

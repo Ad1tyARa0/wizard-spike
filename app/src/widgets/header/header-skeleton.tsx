@@ -6,20 +6,22 @@ import { SkeletonIcon, SkeletonRow } from '../../shared/ui';
  *
  * Composed from the reusable skeleton primitives: a logo row and a nav row,
  * plus icon blocks for the search and cart controls (and the mobile menu
- * toggle). Mirrors the real header's three-zone grid (`list logo ctas` on
- * mobile, `logo nav ctas` on desktop) and its 64px height, so the resolved
+ * toggle). Mirrors the real header's three-zone grid via `.header__inner`
+ * (`list logo ctas` on mobile, `logo nav ctas` on desktop) so the resolved
  * Header swaps in with no layout shift. Decorative: aria-hidden, no pointer
  * events.
  */
 export function HeaderSkeleton() {
   return (
     <header className="header header-skeleton" aria-hidden="true">
-      <SkeletonIcon className="header-skeleton__list" />
-      <SkeletonRow className="header-skeleton__logo" style={{ width: '100%' }} />
-      <SkeletonRow className="header-skeleton__nav" />
-      <div className="header-ctas">
-        <SkeletonIcon />
-        <SkeletonIcon />
+      <div className="header__inner">
+        <SkeletonIcon className="header-skeleton__list" />
+        <SkeletonRow className="header-skeleton__logo" />
+        <SkeletonRow className="header-skeleton__nav" />
+        <div className="header-ctas">
+          <SkeletonIcon />
+          <SkeletonIcon />
+        </div>
       </div>
     </header>
   );

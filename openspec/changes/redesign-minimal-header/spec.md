@@ -4,65 +4,52 @@
 
 ### Requirement: header-composition
 
-The Theme MUST render the storefront header as one ultra-minimal bar whose left, center, and right zones reorder by viewport: logo left, navigation centered, and search + cart icon controls on the right at desktop widths; list (menu) icon left, logo centered, and search + cart icon controls on the right at mobile widths. The header MUST contain no account link.
+The Theme MUST render the storefront header as one sticky bar on the canvas surface with a 1px structure bottom rule and an inner container capped at the layout container max. The bar MUST carry three zones — brand, navigation, and utilities (search, account, bag) — whose order changes by viewport.
 
 #### Scenario: desktop-composition
 
-- **WHEN** the header renders at a desktop viewport at or above the medium breakpoint
-- **THEN** the logo sits at the extreme left of the bar
-- **AND** the primary navigation is centered in the bar
-- **AND** the search and cart icon controls sit at the extreme right with search immediately left of cart
-- **AND** no account link appears in the header
+- **WHEN** the header renders at or above the medium breakpoint
+- **THEN** the brand sits at the leading edge
+- **AND** the primary navigation is centered
+- **AND** the search, account, and bag controls sit at the trailing edge in that order
 
 #### Scenario: mobile-composition
 
-- **WHEN** the header renders at a viewport below the medium breakpoint
-- **THEN** the list (menu) icon control sits at the extreme left of the bar
-- **AND** the logo is centered in the bar
-- **AND** the search and cart icon controls sit at the extreme right
-- **AND** no account link appears in the header
+- **WHEN** the header renders below the medium breakpoint
+- **THEN** the menu toggle sits at the leading edge
+- **AND** the brand follows it and truncates with an ellipsis when the shop name is long
+- **AND** the search, account, and bag controls sit at the trailing edge
+- **AND** the account label collapses so the control is icon-only below the small breakpoint
 
-#### Scenario: mobile-menu-toggle-hidden-on-desktop
-
-- **WHEN** the header renders at a desktop viewport at or above the medium breakpoint
-- **THEN** the list (menu) icon control is hidden
-- **AND** the desktop zone order (logo · centered nav · search + cart) remains unchanged
-
-#### Scenario: ultra-thin-icons
-
-- **WHEN** the minimal preset is active
-- **THEN** every header icon control (menu, search, cart) renders a Phosphor icon at the thin weight
-
-#### Scenario: cart-badge-high-contrast
-
-- **WHEN** the cart has line items
-- **THEN** the cart count badge renders as a circle filled with the primary token color
-- **AND** the count text renders in the on-primary token color
-
-#### Scenario: cart-icon-renders-shopping-cart
+#### Scenario: technical-typography
 
 - **WHEN** the header renders
-- **THEN** the cart icon control renders the Phosphor `ShoppingCart` glyph at 32px regardless of cart contents
+- **THEN** the brand and navigation labels render in the mono font family, uppercase
+- **AND** the brand uses the label-lg type step and the navigation uses the label-sm step
 
-#### Scenario: cart-icon-weight-empty
+#### Scenario: compact-utility-controls
 
-- **WHEN** the cart has no line items
-- **THEN** the cart icon renders at the theme weight (ultra-thin in the minimal preset)
+- **WHEN** a header utility control renders
+- **THEN** it uses the shared button primitive at its compact size
+- **AND** its icon is the 16px icon token, thin weight under the minimal preset and bold under playful
+- **AND** the control has an accessible name, `cursor: pointer`, and a visible focus ring
 
-#### Scenario: cart-icon-weight-filled
+#### Scenario: account-control
 
-- **WHEN** the cart has line items
-- **THEN** the cart icon renders at the Phosphor fill weight
+- **WHEN** the header renders
+- **THEN** an account control links to `/account`
+- **AND** its label is visible at or above the small breakpoint and hidden below it
+- **AND** when hidden, the control is an icon-only square with the same padding as the other icon controls
 
-#### Scenario: header-controls-accessible
+#### Scenario: bag-control
 
-- **WHEN** a user tabs to or taps a header icon control
-- **THEN** the control has an accessible name
-- **AND** the control provides a minimum 44px touch target
-- **AND** the control displays `cursor: pointer` and a visible accent focus ring on keyboard focus
+- **WHEN** the bag control renders
+- **THEN** it uses the shared button primitive's `stark` variant with the `ShoppingCart` glyph and a `Bag` label
+- **AND** it shows a two-digit accent count badge only when the cart has items
+- **AND** the badge is hidden when the count is zero
 
 #### Scenario: header-responsive-no-overflow
 
-- **WHEN** the header renders at 320, 768, 1024, and 1440 pixel viewports
-- **THEN** the bar shows the correct zone order for that viewport
-- **AND** no horizontal overflow occurs
+- **WHEN** the header renders at 375, 768, 1024, and 1440 pixel viewports
+- **THEN** the correct zone order shows for that viewport
+- **AND** the brand truncates rather than causing horizontal overflow

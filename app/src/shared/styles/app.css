@@ -329,62 +329,87 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /* ============================================================
- * Header — Exaggerated Minimalism, three zones.
- * Zone order (CSS grid-template-areas, swapped at the md breakpoint):
- *   Desktop: [logo] · [centered nav] · [search] [cart]
- *   Mobile : [list] · [centered logo] · [search] [cart]
+ * Header — wireframe-exact: canvas bar, 1px structure rule, Space
+ * Mono brand + nav, compact (32px) square utility controls. Zone order
+ * swaps at the md breakpoint:
+ *   Desktop: [logo] · [centered nav] · [search] [account] [bag]
+ *   Mobile : [list] · [centered logo] · [search] [account] [bag]
  * ============================================================ */
 .header {
-  align-items: center;
   background: var(--color-background);
-  display: grid;
-  grid-template-areas: 'list logo ctas';
-  grid-template-columns: 1fr auto 1fr;
-  height: var(--header-height);
-  /* Mobile: tight edge inset so the icon controls hug the screen edges and
-     the row doesn't read as centered. */
-  padding: 0 var(--space-sm);
+  border-bottom: var(--border-width) solid var(--color-primary);
+  padding: var(--space-4);
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  /* Equal 1fr side columns keep the center zone truly viewport-centered.
-     Align with page content inset so the header reads as one surface with
-     the hero below it (no border, same horizontal rhythm). */
   @media (min-width: 48em) {
-    grid-template-areas: 'logo nav ctas';
-    padding: 0 var(--space-lg);
+    padding: var(--space-4) var(--space-8);
   }
-  @media (min-width: 64em) {
-    padding: 0 var(--space-2xl);
-  }
+}
+
+.header__inner {
+  align-items: center;
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: var(--container-max);
 }
 
 .header-logo {
-  grid-area: logo;
-  justify-self: center;
+  align-items: center;
+  display: inline-flex;
+  flex: 0 1 auto;
+  gap: var(--space-3);
+  /* Allow the brand to shrink/ellipsize rather than collide with the
+     utilities when the shop name is long. */
+  min-width: 0;
+  overflow: hidden;
   text-decoration: none;
-  @media (min-width: 48em) {
-    justify-self: start;
+}
+
+.header-logo-mark {
+  background: var(--color-accent);
+  display: block;
+  flex: none;
+  height: var(--space-3);
+  width: var(--space-3);
+}
+
+.header-logo strong {
+  font-family: var(--font-mono);
+  font-size: var(--type-label-lg);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-label);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  transition: color var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+/* Darker accent for 12–14px text on the canvas (meets 4.5:1). */
+.header-logo:hover strong,
+.header-menu-item:hover,
+.header-menu-item[aria-current='page'] {
+  color: var(--color-accent-strong);
+}
+
+/* Mobile: the brand takes the free space between the menu toggle and the
+   utilities, so it can truncate instead of colliding with them. */
+@media (max-width: 39.99em) {
+  .header-logo {
+    flex: 1 1 auto;
   }
 }
 
-.header > a strong {
-  font-family: var(--font-display);
-  font-weight: var(--weight-black);
-  font-size: var(--type-heading);
-  letter-spacing: var(--tracking-tight);
-  text-transform: uppercase;
-}
-
 .header-menu-mobile-toggle {
-  grid-area: list;
-  justify-self: start;
+  flex: none;
 }
 
-/* The toggle also carries .header-icon-button (display: inline-flex), which
-   is declared later in this file and — at equal specificity — would override
-   this hide on desktop. Scoping the hide under .header raises its
-   specificity so the cascade can't win. */
+/* The toggle also carries .btn (display: inline-flex); scoping the hide under
+   .header raises its specificity so the cascade can't win on desktop. */
 @media (min-width: 48em) {
   .header .header-menu-mobile-toggle {
     display: none;
@@ -394,61 +419,46 @@ button.reset:hover:not(:has(> *)) {
 .header-menu-mobile {
   display: flex;
   flex-direction: column;
-  grid-gap: 1rem;
+  gap: var(--space-4);
 }
 
 .header-menu-desktop {
   display: none;
   @media (min-width: 48em) {
     display: flex;
-    grid-area: nav;
-    grid-gap: 1.5rem;
-    justify-self: center;
+    gap: var(--space-md);
+    margin-inline: auto;
   }
 }
 
 .header-menu-item {
   cursor: pointer;
-  font-size: var(--type-label);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-label);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
   text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
 .header-ctas {
   align-items: center;
   display: flex;
-  grid-area: ctas;
-  grid-gap: var(--space-xs);
-  justify-self: end;
-  /* Desktop keeps the looser cluster gap. */
+  flex: none;
+  gap: var(--space-sm);
   @media (min-width: 48em) {
-    grid-gap: var(--space-sm);
+    gap: var(--space-4);
   }
 }
 
-/* Header icon controls — 44px targets, thin Phosphor glyphs */
-.header-icon-button {
-  align-items: center;
-  background: transparent;
-  border: none;
-  color: var(--color-primary);
-  cursor: pointer;
-  display: inline-flex;
-  height: 44px;
-  justify-content: center;
-  transition: opacity var(--duration-fast) var(--ease-out);
-  width: 44px;
-}
-
-.header-icon-button:hover {
-  opacity: 0.7;
-}
-
-.header-icon-button:focus-visible {
-  outline: 2px solid var(--color-ring);
-  outline-offset: 2px;
+/* Account label collapses to icon-only below the sm breakpoint (640px, per
+   the wireframe's `hidden sm:inline`); the primitive's `.btn--collapse`
+   matches the padding to the icon-only controls. */
+.header-account__label {
+  display: none;
+  @media (min-width: 40em) {
+    display: inline;
+  }
 }
 
 /* ============================================================
@@ -481,27 +491,20 @@ button.reset:hover:not(:has(> *)) {
   height: 1rem;
 }
 
-/* Header skeleton — mirrors the header's three-zone grid and 64px height so
-   the resolved Header replaces it with no layout shift. Every block is
-   vertically centered in the bar. */
+/* Header skeleton — mirrors the resolved header's flex bar (brand, centered
+   nav, utilities) so the swap causes no layout shift. */
 .header-skeleton {
   pointer-events: none;
 }
 
-.header-skeleton > * {
-  align-self: center;
-}
-
-.header-skeleton__list {
-  grid-area: list;
-  justify-self: start;
+.header-skeleton__list,
+.header-skeleton__logo {
+  flex: none;
 }
 
 .header-skeleton__logo {
-  grid-area: logo;
-  justify-self: center;
   width: 10rem;
-  height: 32px;
+  height: var(--space-8);
 }
 
 .header-skeleton__nav {
@@ -509,17 +512,14 @@ button.reset:hover:not(:has(> *)) {
 }
 
 @media (min-width: 48em) {
-  .header-skeleton__logo {
-    justify-self: start;
-  }
   .header-skeleton__nav {
     display: block;
-    grid-area: nav;
-    justify-self: center;
-    /* 40–50% of the header width (design review) — a proper nav row. */
+    /* Centered nav row, ~50% of the bar. */
+    margin-inline: auto;
     width: 50%;
-    height: 32px;
+    height: var(--space-8);
   }
+
   .header-skeleton__list {
     display: none;
   }
@@ -580,14 +580,15 @@ input[type='submit'] {
 }
 
 /* Shared button primitive (shared/ui/button) — 70/20/10 geometry: zero
-   radius, no shadow, uppercase mono label. Two variants: `solid` (accent
-   fill, high-intent CTA) and `outline` (transparent + structure border). */
+   radius, no shadow, uppercase mono label. Variants: `solid` (accent fill,
+   high-intent CTA), `outline` (transparent + structure border), `stark`
+   (structure fill). */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  min-height: 44px;
+  min-height: var(--space-11);
   padding: var(--space-sm) var(--space-md);
   border: var(--border-width) solid var(--color-primary);
   border-radius: var(--radius-button);
@@ -611,14 +612,71 @@ input[type='submit'] {
   color: var(--color-on-accent);
 }
 
+/* Wireframe `.btn-accent:hover` → structure fill. */
 .btn--solid:hover:not(:disabled):not([aria-disabled='true']) {
-  background-color: var(--color-accent-strong);
-  color: var(--color-on-accent);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
+/* Wireframe `.btn-outline:hover` → structure fill. */
 .btn--outline:hover:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
+}
+
+/* Compact control size (header utilities): 32px tall, 12px mono label,
+   matching the wireframe's `px-3 py-2 text-xs` controls. */
+.btn--sm {
+  gap: var(--space-sm);
+  min-height: var(--space-8);
+  padding: var(--space-sm) var(--space-3);
+  font-size: var(--type-label-sm);
+}
+
+/* Icon-only square control. */
+.btn--icon {
+  padding: 0;
+  width: var(--space-11);
+}
+
+.btn--sm.btn--icon {
+  padding: var(--space-sm);
+  width: auto;
+}
+
+/* Collapses to an icon-only square below the small breakpoint when the call
+   site hides its label — identical padding to `.btn--icon`. */
+@media (max-width: 39.99em) {
+  .btn--collapse {
+    padding: var(--space-sm);
+  }
+}
+
+/* Wireframe `.btn-stark` → accent fill on hover. */
+.btn--stark {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.btn--stark:hover:not(:disabled):not([aria-disabled='true']) {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Count badge inside a button (e.g. the header bag control) — accent fill,
+   on-accent text, 10px mono, per the wireframe. */
+.btn__count {
+  align-items: center;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  display: inline-flex;
+  font-size: var(--type-label-xs);
+  font-variant-numeric: tabular-nums;
+  justify-content: center;
+  padding: var(--space-0-5) var(--space-1-5);
 }
 
 .btn:focus-visible {

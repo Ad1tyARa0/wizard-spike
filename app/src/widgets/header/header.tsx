@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router';
-import { ListIcon, MagnifyingGlassIcon, type IconWeight } from '@phosphor-icons/react';
+import { ListIcon, MagnifyingGlassIcon, UserIcon, type IconWeight } from '@phosphor-icons/react';
 import { useSelector } from 'react-redux';
 import type { HeaderQuery } from 'storefrontapi.generated';
 import {
@@ -9,7 +9,7 @@ import {
   selectThemeTokens,
 } from '../../entities/theme';
 import { CartToggle } from '../../features/cart-drawer';
-import { useAside } from '../../shared/ui';
+import { Button, ButtonLink, useAside } from '../../shared/ui';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -18,17 +18,22 @@ interface HeaderProps {
 
 type Viewport = 'desktop' | 'mobile';
 
+/** Icon size + weight resolved from the active theme, shared by the controls. */
+interface HeaderIcon {
+  size: string;
+  weight: IconWeight;
+}
+
 /**
- * Header — Exaggerated Minimalism composition (see OpenSpec change
- * `redesign-minimal-header`): one ultra-minimal bar with three zones that
- * reorder by viewport.
+ * Header — 70/20/10 "Rye Island" composition: canvas bar with a 1px structure
+ * rule, Space Mono brand + nav, and compact (32px) square utility controls.
  *
- *   Desktop (≥ 48em): [logo] · [centered nav] · [search] [cart]
- *   Mobile  (< 48em): [list] · [centered logo] · [search] [cart]
+ *   Desktop (≥ 48em): [logo] · [centered nav] · [search] [account] [bag]
+ *   Mobile  (< 48em): [list] · [logo] · [search] [account] [bag]
  *
- * The zone swap is pure CSS (`grid-template-areas` in app.css); the DOM order
- * stays [menu toggle] [logo] [desktop nav] [ctas] so keyboard tab order reads
- * logo → nav → actions on desktop and menu → logo → actions on mobile.
+ * The DOM order is [menu toggle] [logo] [desktop nav] [ctas] so keyboard tab
+ * order reads logo → nav → actions on desktop and menu → logo → actions on
+ * mobile; the mobile account label collapses to icon-only.
  */
 export function Header({ header, publicStoreDomain }: HeaderProps) {
   const { shop, menu } = header;
@@ -36,26 +41,28 @@ export function Header({ header, publicStoreDomain }: HeaderProps) {
   const tokens = useSelector(selectThemeTokens);
   const layout = useSelector(selectThemeLayout);
   const content = useSelector(selectThemeContent);
-  // Phosphor ultra-thin icons for the minimal preset; bold for playful
-  // (matches the pre-existing playful cart icon weight).
-  const iconWeight: IconWeight = preset === 'minimal' ? 'thin' : 'bold';
-  // Predefined icon-size scale from the theme token set — header controls
-  // standardize on md (24px).
-  const iconSize = tokens.icon.md;
+  // Phosphor ultra-thin icons for the minimal preset; bold for playful.
+  const icon: HeaderIcon = {
+    size: tokens.icon.xs,
+    weight: preset === 'minimal' ? 'thin' : 'bold',
+  };
   return (
     <header className="header" data-header-style={layout.headerStyle}>
-      <HeaderMenuMobileToggle weight={iconWeight} size={iconSize} />
-      <NavLink className="header-logo" prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-        navFallback={content.nav}
-      />
-      <HeaderCtas iconWeight={iconWeight} iconSize={iconSize} />
+      <div className="header__inner">
+        <HeaderMenuMobileToggle icon={icon} />
+        <NavLink className="header-logo" prefetch="intent" to="/" end>
+          <span aria-hidden="true" className="header-logo-mark" />
+          <strong>{shop.name}</strong>
+        </NavLink>
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+          navFallback={content.nav}
+        />
+        <HeaderCtas icon={icon} />
+      </div>
     </header>
   );
 }
@@ -100,7 +107,7 @@ export function HeaderMenu({
   return (
     <nav className={className} role="navigation">
       {viewport === 'mobile' && (
-        <NavLink end onClick={close} prefetch="intent" style={activeLinkStyle} to="/">
+        <NavLink className="header-menu-item" end onClick={close} prefetch="intent" to="/">
           Home
         </NavLink>
       )}
@@ -123,7 +130,6 @@ export function HeaderMenu({
             key={item.id}
             onClick={close}
             prefetch="intent"
-            style={activeLinkStyle}
             to={url}
           >
             {item.title}
@@ -134,42 +140,46 @@ export function HeaderMenu({
   );
 }
 
-function HeaderCtas({ iconWeight, iconSize }: { iconWeight: IconWeight; iconSize: string }) {
+function HeaderCtas({ icon }: { icon: HeaderIcon }) {
   return (
     <nav className="header-ctas" role="navigation" aria-label="Header actions">
-      <SearchToggle weight={iconWeight} size={iconSize} />
-      {/* The whole header is client-gated (see PageLayout), so the cart control
+      <SearchToggle icon={icon} />
+      <ButtonLink
+        aria-label="Account"
+        className="header-account btn--sm btn--collapse"
+        href="/account"
+        icon={<UserIcon aria-hidden="true" size={icon.size} weight={icon.weight} />}
+      >
+        <span className="header-account__label">Account</span>
+      </ButtonLink>
+      {/* The whole header is client-gated (see PageLayout), so the bag control
           only renders after hydration — no per-control skeleton needed. */}
-      <CartToggle weight={iconWeight} size={iconSize} />
+      <CartToggle size={icon.size} weight={icon.weight} />
     </nav>
   );
 }
 
-function HeaderMenuMobileToggle({ weight, size }: { weight: IconWeight; size: string }) {
+function HeaderMenuMobileToggle({ icon }: { icon: HeaderIcon }) {
   const { open } = useAside();
   return (
-    <button
-      className="header-icon-button header-menu-mobile-toggle reset"
-      type="button"
+    <Button
+      className="btn--icon btn--sm header-menu-mobile-toggle"
       aria-label="Open menu"
+      icon={<ListIcon aria-hidden="true" size={icon.size} weight={icon.weight} />}
       onClick={() => open('mobile')}
-    >
-      <ListIcon size={size} weight={weight} aria-hidden="true" />
-    </button>
+    />
   );
 }
 
-function SearchToggle({ weight, size }: { weight: IconWeight; size: string }) {
+function SearchToggle({ icon }: { icon: HeaderIcon }) {
   const { open } = useAside();
   return (
-    <button
-      className="header-icon-button reset"
-      type="button"
+    <Button
+      className="btn--icon btn--sm"
       aria-label="Search"
+      icon={<MagnifyingGlassIcon aria-hidden="true" size={icon.size} weight={icon.weight} />}
       onClick={() => open('search')}
-    >
-      <MagnifyingGlassIcon size={size} weight={weight} aria-hidden="true" />
-    </button>
+    />
   );
 }
 
@@ -214,10 +224,3 @@ const FALLBACK_HEADER_MENU = {
     },
   ],
 };
-
-function activeLinkStyle({ isActive, isPending }: { isActive: boolean; isPending: boolean }) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'var(--color-muted)' : 'var(--color-primary)',
-  };
-}

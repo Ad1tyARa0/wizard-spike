@@ -7,97 +7,111 @@
 ---
 
 **Project:** E-Commerce Website
-**Updated:** 2026-08-19 (user-mandated design language)
+**Updated:** 2026-09-14 (70/20/10 "Rye Island" system)
 **Category:** E-commerce (headless Hydrogen storefront)
 
 > **Decision note:** The ui-ux-pro-max skill's aggregated recommendation was
 > "Minimalism & Swiss Style". Per skill policy, dataset output is a
 > recommendation that never overrides the user — the user explicitly chose
-> **Exaggerated Minimalism**, which is the binding design language here.
+> **Exaggerated Minimalism**, now expressed through the 70/20/10 "Rye Island"
+> palette and type system below. The visual source of truth is
+> `design-system/e-commerce-website/exaggerated-minimalist-mockups.html`.
 
 ---
 
-## Style: Exaggerated Minimalism
+## Style: Exaggerated Minimalism (70/20/10)
 
 Bold minimalism, oversized typography, high contrast, negative space, loud
-minimal, statement design.
+minimal, statement design. The 70/20/10 split is the composition rule: 70%
+canvas, 20% structure, 10% accent.
 
-| Principle            | Rule                                                                                  |
-| -------------------- | ------------------------------------------------------------------------------------- |
-| Typography oversized | Display type `clamp(3rem, 10vw, 12rem)`, weight 900, `letter-spacing: -0.05em`        |
-| White space extreme  | Section padding ≥ 96px; hero padding `8rem`; nothing crowded                          |
-| Black/white dominant | `#000000` primary, `#FFFFFF` background — no other neutrals in hero/statement areas   |
-| Single accent only   | Exactly ONE vibrant accent (`--color-accent`). No secondary accent, no gradient mixes |
-| Elements minimal     | One statement per view; remove anything that does not earn its place                  |
-| Statement clear      | Every section communicates one idea in one glance                                     |
+| Principle             | Rule                                                                                                                                                                    |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 70% canvas            | Dominant light neutral canvas (`#F1F2F4`) — the page is mostly calm surface                                                                                             |
+| 20% structure         | Dark slate structure (`#20242B`) for text, rules, and filled controls                                                                                                   |
+| 10% accent            | Exactly ONE subdued accent (`#6C757D`); never a second accent or a gradient mix                                                                                         |
+| Typography oversized  | Display type `clamp(3rem, 10vw, 12rem)`, weight 900, tight tracking                                                                                                     |
+| Technical metadata    | Space Mono for brand, nav, controls, and labels; Inter for everything else                                                                                              |
+| Zero curves (minimal) | The 70/20/10 minimal preset is zero-radius with no shadows — separation is 1px rules and whitespace. Playful composes its own radii/shadows per `PLAYFUL-DTC-MASTER.md` |
+| Elements minimal      | One statement per view; remove anything that does not earn its place                                                                                                    |
+| Statement clear       | Every section communicates one idea in one glance                                                                                                                       |
 
 ### Color Palette
 
-| Role                 | Hex       | CSS Variable               |
-| -------------------- | --------- | -------------------------- |
-| Primary / Foreground | `#000000` | `--color-primary`          |
-| On Primary           | `#FFFFFF` | `--color-on-primary`       |
-| Background           | `#FFFFFF` | `--color-background`       |
-| On Background        | `#000000` | `--color-foreground`       |
-| Accent (single)      | `#D4AF37` | `--color-accent`           |
-| Accent (strong)      | `#8A6D1F` | `--color-accent-strong`    |
-| On Accent            | `#000000` | `--color-on-accent`        |
-| Secondary (surface)  | `#F5F5F4` | `--color-secondary`        |
-| On Secondary         | `#000000` | `--color-on-secondary`     |
-| Muted                | `#A8A29E` | `--color-muted`            |
-| Muted Foreground     | `#57534E` | `--color-muted-foreground` |
-| Border               | `#000000` | `--color-border`           |
-| Destructive          | `#DC2626` | `--color-destructive`      |
-| On Destructive       | `#FFFFFF` | `--color-on-destructive`   |
-| Ring (focus)         | `#A87C0E` | `--color-ring`             |
+| Role                | Hex         | CSS Variable               |
+| ------------------- | ----------- | -------------------------- |
+| Primary / Structure | `#20242B`   | `--color-primary`          |
+| On Primary          | `#F1F2F4`   | `--color-on-primary`       |
+| Background / Canvas | `#F1F2F4`   | `--color-background`       |
+| Foreground          | `#20242B`   | `--color-foreground`       |
+| Accent (single)     | `#6C757D`   | `--color-accent`           |
+| Accent (strong)     | `#50585E`   | `--color-accent-strong`    |
+| On Accent           | `#FFFFFF`   | `--color-on-accent`        |
+| Secondary (surface) | `#FFFFFF`   | `--color-secondary`        |
+| On Secondary        | `#20242B`   | `--color-on-secondary`     |
+| Muted / Subtle      | `#5F6773`   | `--color-muted`            |
+| Muted Foreground    | `#5F6773`   | `--color-muted-foreground` |
+| Border / Hairline   | `#20242B26` | `--color-border`           |
+| Destructive         | `#DC2626`   | `--color-destructive`      |
+| On Destructive      | `#FFFFFF`   | `--color-on-destructive`   |
+| Ring (focus)        | `#20242B`   | `--color-ring`             |
+| Hero accent         | `#6C757D`   | `--color-hero-accent`      |
 
-**Color Notes:** Black/white dominant with a single gold accent (`#D4AF37`,
-vibrant, luxury-appropriate). The accent is used sparingly: CTAs, focus rings,
-selected states, and one editorial highlight per view. Never a second accent.
-Small text that carries the accent (index numerals) uses `--color-accent-strong`
-(`#8A6D1F`, ≥ 4.5:1 on white); the focus ring is `#A87C0E` so it stays ≥ 3:1 on
-both white and black surfaces.
+**Color Notes:** Slate-accent 70/20/10, not black/gold. The accent fills
+high-intent buttons and the cart badge; structure fills the header rule,
+borders, and `stark` buttons. Small accent text (12–14px) uses
+`--color-accent-strong` so it holds ≥ 4.5:1 on the canvas. The focus ring is
+`--color-primary`, visible on every surface.
 
 ### Typography
 
-- **Display:** Montserrat 900 — giant statements, `clamp(3rem, 10vw, 12rem)`, `letter-spacing: -0.05em`, `text-transform: uppercase` for hero statements
-- **Editorial:** Cormorant 400–700 — product names, quotes, refined accents
-- **Body/UI:** Montserrat 300–500 — readable 16px+ body, labels 500
-- **Google Fonts:** [Cormorant + Montserrat](https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap)
+- **Display:** Inter 900 — headings and statements, `letter-spacing: -0.04em`, uppercase for hero statements
+- **Body/UI:** Inter 300–700 — readable body, labels
+- **Technical:** Space Mono 400/700 — brand wordmark, nav, utility/button labels, badges
+- **Google Fonts:** [Inter + Space Mono](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap)
 
 **Type scale (tokens):**
 
-| Token              | Value                         | Usage              |
-| ------------------ | ----------------------------- | ------------------ |
-| `--type-giant`     | `clamp(3rem, 10vw, 12rem)`    | Hero statements    |
-| `--type-display`   | `clamp(2.25rem, 5vw, 4.5rem)` | Section headlines  |
-| `--type-heading`   | `clamp(1.5rem, 2.5vw, 2rem)`  | Product titles     |
-| `--type-body`      | `1rem` / `1.125rem`           | Body copy          |
-| `--type-label`     | `0.8125rem`                   | Labels, meta       |
-| `--weight-black`   | `900`                         | Display            |
-| `--tracking-tight` | `-0.05em`                     | Display            |
-| `--tracking-wide`  | `0.08em`                      | Labels (uppercase) |
+| Token              | Value                         | Usage                     |
+| ------------------ | ----------------------------- | ------------------------- |
+| `--type-giant`     | `clamp(3rem, 10vw, 12rem)`    | Hero statements           |
+| `--type-display`   | `clamp(2.25rem, 5vw, 4.5rem)` | Section headlines         |
+| `--type-heading`   | `clamp(1.5rem, 2.5vw, 2rem)`  | Product titles            |
+| `--type-body`      | `1rem`                        | Body copy                 |
+| `--type-body-lg`   | `1.125rem`                    | Leads                     |
+| `--type-label`     | `0.8125rem`                   | Labels, meta              |
+| `--type-label-lg`  | `0.875rem`                    | Brand wordmark            |
+| `--type-label-sm`  | `0.75rem`                     | Mono nav + utility labels |
+| `--type-label-xs`  | `0.625rem`                    | Badges                    |
+| `--weight-black`   | `900`                         | Display                   |
+| `--tracking-tight` | `-0.04em`                     | Display                   |
+| `--tracking-label` | `0.12em`                      | Uppercase mono labels     |
 
-### Spacing (Extreme)
+### Spacing (4px primitive scale + semantic aliases)
 
-_Density: 1/10 — Spacious_
-
-| Token          | Value   | Usage                                |
-| -------------- | ------- | ------------------------------------ |
-| `--space-xs`   | `4px`   | Tight gaps                           |
-| `--space-sm`   | `8px`   | Icon gaps                            |
-| `--space-md`   | `24px`  | Standard padding                     |
-| `--space-lg`   | `48px`  | Section breathing                    |
-| `--space-xl`   | `96px`  | Section padding                      |
-| `--space-2xl`  | `128px` | Hero padding, massive whitespace     |
-| `--space-huge` | `8rem`  | Exaggerated whitespace (style token) |
+| Token            | Value   | Usage                                                                   |
+| ---------------- | ------- | ----------------------------------------------------------------------- |
+| `--space-0-5`    | `2px`   | Hairlines, badge vertical padding                                       |
+| `--space-1`      | `4px`   | Tight gaps                                                              |
+| `--space-1-5`    | `6px`   | Badge horizontal padding                                                |
+| `--space-2`      | `8px`   | Icon gaps, compact control padding                                      |
+| `--space-3`      | `12px`  | Compact control padding                                                 |
+| `--space-4`      | `16px`  | Bar gutters, compact control box                                        |
+| `--space-6`      | `24px`  | Standard padding                                                        |
+| `--space-8`      | `32px`  | Desktop bar gutters                                                     |
+| `--space-11`     | `44px`  | Default control / touch-target height                                   |
+| `--space-12`     | `48px`  | Section breathing                                                       |
+| `--space-16`     | `64px`  | Large stack                                                             |
+| `--space-24`     | `96px`  | Section padding                                                         |
+| `--space-32`     | `128px` | Hero padding, massive whitespace                                        |
+| semantic aliases | —       | `xs` 4 · `sm` 8 · `md` 24 · `lg` 48 · `xl` 96 · `2xl` 128 · `huge` 8rem |
 
 ### Effects
 
-- **Radius:** sharp — `0` for statements/cards, `2px` max on interactive chips, `4px` for buttons (`--radius-button`)
-- **Shadows:** avoid; use borders (`1px solid #000`) for separation
-- **Hover:** 150–250ms opacity/translateY(-1px) transitions, `cursor: pointer`
-- **Motion:** subtle scroll reveal (fade + y:12, 300–400ms, `power1.out`); respect `prefers-reduced-motion`; animate 1–2 key elements per view max
+- **Radius:** zero in the minimal preset — every radius token is `0`. Playful is governed by `PLAYFUL-DTC-MASTER.md`.
+- **Shadows:** none in the minimal preset — separation uses 1px structure rules. Playful may compose its own sticker shadow.
+- **Hover:** `100–250ms` background/color transitions, never a transform that shifts layout.
+- **Motion:** subtle; honor `prefers-reduced-motion` (transforms collapse, opacity/filter cues remain).
 
 ### Page Pattern: Editorial Statement
 
@@ -112,99 +126,86 @@ grid, huge whitespace) > Single-accent merchandising band > Footer (minimal).
 
 Home-page-specific composition rules (hero / featured / recommended /
 optional marquee) now live in `pages/home.md` (page override, Variant A —
-Editorial Statement; validated via `home-body-wireframes.html`). This file
-remains the storefront-wide Master; the home override applies only to the
-home body under the minimal preset.
+Editorial Statement). This file remains the storefront-wide Master; the home
+override applies only to the home body under the minimal preset.
 
 ### Product Card (updated 2026-08-28)
 
 **Portrait editorial composition** — crop product photos to **4:5 portrait**
-(`layout.cardAspectRatio: "portrait"`, config-driven; square is the fallback
-when the key is absent). Card anatomy, top to bottom:
+(`layout.cardAspectRatio: "portrait"`, config-driven). Card anatomy:
 
-- Image: 4:5 crop, `object-fit: cover`, subtle 1.02 scale on hover
-  (disabled under reduced motion). The crop is forced over each photo's own
+- Image: 4:5 crop, `object-fit: cover`, subtle 1.02 scale on hover (replaced by
+  a brightness cue under reduced motion). The crop is forced over each photo's
   intrinsic ratio so every card in a row is the same height.
-- Meta row, pinned to the bottom of the card:
-  - **Name** (left): display family (`--font-display`), bold, sentence case
-    — the card's single statement
-  - **Price** (right): muted foreground (`--color-muted-foreground`),
-    tabular figures, nowrap
+- Meta row, pinned to the bottom: **Name** (left, display family, bold) and
+  **Price** (right, muted foreground, tabular, nowrap).
 
-**No card shadows.** Shadows are an anti-pattern here (see Anti-Patterns:
-"avoid; use borders for separation") — separation comes from the crop,
-whitespace, and hover states (scale + underline), never a drop shadow.
-
-Whitespace between cards stays exaggerated (`--space-xl` rows). Rationale:
-1:1 square crops chop portrait product shots and read as squashed; 4:5 is
-the standard premium e-commerce ratio. Validated via
-`product-card-wireframes.html` (Variant B), then refined in implementation
-(meta on one row, name/price baseline-aligned, price right-aligned).
+**No card shadows** — separation comes from the crop, whitespace, and hover
+states, never a drop shadow. Whitespace between cards stays exaggerated.
 
 ---
 
-### Header (updated 2026-08-31)
+### Header (updated 2026-09-14)
 
-**Exaggerated Minimalism bar** — one ultra-minimal sticky bar, three zones
-(`grid-template-areas`, swapped at the 768px breakpoint):
+**70/20/10 bar** — one sticky bar, canvas background, 1px structure bottom
+rule, inner container `--container-max` (80rem), gutters `--space-md2` /
+`--space-lg2`. DOM order `[menu toggle] [brand] [desktop nav] [utilities]`,
+laid out with flex `space-between`:
 
-- **Desktop (≥ 768px):** `[logo] · [centered nav] · [search] [cart]` — logo at
-  the extreme left, primary navigation centered, search + cart icon controls at
-  the extreme right (search immediately left of cart).
-- **Mobile (< 768px):** `[list] · [centered logo] · [search] [cart]` — list
-  (menu) icon at the extreme left, logo centered, search + cart at the extreme
-  right.
-- **No account link** in the header (account stays reachable via `/account`).
-- **Icons:** Phosphor **thin** (ultra-thin) weight, 44px touch targets; all
-  header icon controls render at the predefined **md** size (24px):
-  `List` (mobile menu), `MagnifyingGlass` (search), `ShoppingCart` (cart).
-  The playful preset keeps bold icons.
-- **Cart:** the cart control renders `ShoppingCart` at all times (no state
-  swap); its weight is ultra-thin when the cart is empty and flips to the
-  Phosphor **fill** weight once items are in the cart; the count badge is a
-  circle in the primary token color with on-primary text (black circle, white
-  number in the minimal preset).
+- **Desktop (≥ 768px):** `[brand] · [centered nav] · [search] [account] [bag]`
+- **Mobile (< 768px):** `[list] · [brand] · [search] [account] [bag]` — the
+  account label collapses to an icon-only square below 640px.
+- **Brand:** 12px accent square (`--space-sm2`) + shop name in Space Mono
+  `--weight-black`, `--type-label-lg`, uppercase, `--tracking-label`; truncates
+  with an ellipsis when long. Hover → `--color-accent-strong`.
+- **Nav:** Space Mono `--type-label-sm` `--weight-bold`, uppercase, centered,
+  `--space-md` gaps; hover / current → `--color-accent-strong`.
+- **Utilities:** compact `sm` button primitive (32px) with 16px (`--icon-xs`)
+  Phosphor icons, thin weight in the minimal preset, bold in playful:
+  `List` (menu, mobile only), `MagnifyingGlass` (search), `User` (account),
+  `ShoppingCart` (bag). Account label hides below 640px so the control becomes
+  an icon-only square with identical padding to search.
+- **Bag:** `stark` button variant (structure fill, on-primary label) with the
+  `ShoppingCart` glyph and an accent count badge; the badge renders only when
+  the cart has items, as a two-digit number (`02`).
 - **Loading:** while the header data loads or the client hydrates, the WHOLE
-  header renders as a skeleton (logo row, nav row, search + cart icon blocks)
-  composed from the reusable `shared/ui` skeleton primitives — never an
-  isolated per-control skeleton. Icon blocks are 36px, skeleton rows 32px (all
-  vertically centered), and the desktop nav row spans ~50% of the header width.
+  header renders as a skeleton composed from the reusable `shared/ui` skeleton
+  primitives — never an isolated per-control skeleton.
 - Spec: OpenSpec change `openspec/changes/redesign-minimal-header/`.
 
 ### Icon size scale (predefined)
 
-| Token       | Value  | Usage                                    |
-| ----------- | ------ | ---------------------------------------- |
-| `--icon-sm` | `20px` | Dense / inline icon affordances          |
-| `--icon-md` | `24px` | Standard controls (header, drawer close) |
-| `--icon-lg` | `32px` | Statement / empty-state icons            |
+| Token       | Value  | Usage                               |
+| ----------- | ------ | ----------------------------------- |
+| `--icon-xs` | `16px` | Compact controls (header utilities) |
+| `--icon-sm` | `20px` | Dense / inline icon affordances     |
+| `--icon-md` | `24px` | Standard controls (drawer close)    |
+| `--icon-lg` | `32px` | Statement / empty-state icons       |
 
 Icons are sized from this scale — never ad-hoc literals. The scale is part of
 the config-driven token set (`design.icon` overrides apply without code edits).
 
-### Button (shared primitive, updated 2026-09-13)
+### Button (shared primitive, updated 2026-09-14)
 
 `shared/ui/button` — `Button` (button element) and `ButtonLink` (anchor) — is
-the storefront's only button. Every text call-to-action renders it; no screen
-styles its own button. `ButtonLink` renders a router `Link` for internal hrefs
-(client navigation + prefetch) and a plain anchor for external URLs.
+the storefront's only button. `ButtonLink` renders a router `Link` for internal
+hrefs (client navigation + prefetch) and a plain anchor for external URLs. Both
+take an `icon` prop plus `iconPosition: 'left' | 'right'`, so the glyph is
+passed from the call site rather than baked in.
 
-| Aspect   | Rule                                                                                                                                                      |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Surface  | Hollow — transparent fill, `1px` border in `currentColor`, no shadow in any state                                                                         |
-| Radius   | `--radius-button` — `4px` (minimal preset) / `0` (playful); a token, never a prop                                                                         |
-| Label    | Uppercase, `--type-label`, `--weight-bold`, `--tracking-label`                                                                                            |
-| Size     | One size app-wide — `min-height: 44px`, `padding: 8px 24px`                                                                                               |
-| Hover    | Inverts to a filled `--color-primary` block with `--color-on-primary` label (over media the inherited border/label color flips with it); 150ms transition |
-| Focus    | `2px` ring in `--color-ring`, `2px` offset (over the hero scrim the ring flips to `--color-on-primary`)                                                   |
-| Disabled | `opacity: 0.5`, `not-allowed` cursor, no fill on hover                                                                                                    |
+| Aspect   | Rule                                                                                                                                                                                                 |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variants | `solid` (accent fill, high-intent CTA), `outline` (transparent + structure border, default), `stark` (structure fill)                                                                                |
+| Radius   | `--radius-button` (0 across presets); a token, never a prop                                                                                                                                          |
+| Label    | Uppercase, `--font-mono`, `--weight-bold`, `--tracking-label`                                                                                                                                        |
+| Size     | Default CTA: `min-height: 44px`, `--space-sm`/`--space-md` padding, `--type-label`. `sm`: `min-height: 32px`, `--space-sm`/`--space-sm2` padding, `--type-label-sm` (`icon` adds a 44px-wide square) |
+| Icon     | `icon` + `iconPosition` props (`left` default); header utilities pass their Phosphor glyphs                                                                                                          |
+| Hover    | `solid` → structure fill + on-primary label; `outline`/`stark` → accent fill + on-accent label; 150ms transition                                                                                     |
+| Focus    | `2px` ring in `--color-ring`, `2px` offset                                                                                                                                                           |
+| Disabled | `opacity: 0.5`, `not-allowed` cursor, no fill on hover                                                                                                                                               |
 
-Because the border is `currentColor`, a button inherits an inverted color over
-photographic backgrounds (the hero CTA) with no variant prop. The playful
-preset may still compose its own hard offset shadow on the hero CTA — that is
-preset decoration, not part of the primitive. Icon-only controls (header
-menu/search/cart, drawer close) and product variant chips are not CTAs and keep
-their own treatment.
+Header utility controls use the `sm` size of the same primitive; the earlier
+"icon-only controls keep their own treatment" carve-out is retired.
 
 Spec history: `openspec/changes/standardize-button-component/` (its shimmer port
 was superseded by the shipped hollow surface above).
@@ -215,12 +216,13 @@ was superseded by the shipped hollow surface above).
 
 - ❌ Second accent color or multi-color palettes
 - ❌ Decorations: gradients, heavy shadows, ornate borders, patterns
+- ❌ Rounded corners or drop shadows (the 70/20/10 minimal preset is zero-radius, rule-separated)
 - ❌ Cluttered grids or dense data layouts (Exaggerated Minimalism is _not_ for dashboards)
-- ❌ Emojis as icons — SVG only (Phosphor per skill default)
+- ❌ Emojis as icons — SVG only (Phosphor)
 - ❌ Missing `cursor: pointer` on clickable elements
 - ❌ Layout-shifting hovers (scale transforms that shift layout)
-- ❌ Low-contrast text (< 4.5:1)
-- ❌ Instant state changes (always 150–300ms transitions)
+- ❌ Low-contrast text (< 4.5:1); accent text below 14px must use `--color-accent-strong`
+- ❌ Instant state changes (use 100–300ms transitions)
 - ❌ Invisible focus states (visible focus ring required)
 - ❌ Muted gray-on-gray body text
 
@@ -230,15 +232,16 @@ was superseded by the shipped hollow surface above).
 
 - [ ] Giant display type present on statement/hero sections
 - [ ] Extreme whitespace: nothing cramped, section padding ≥ 96px
-- [ ] Black/white dominant; exactly one accent color
-- [ ] Single accent only — verified across the view
+- [ ] 70/20/10 respected; exactly one accent color
+- [ ] Zero radius and no shadows in the minimal preset
+- [ ] Technical metadata set in Space Mono; everything else in Inter
 - [ ] Elements minimal; one statement per section
 - [ ] No emojis as icons (Phosphor SVGs)
 - [ ] `cursor-pointer` on all clickable elements
-- [ ] Hover states with smooth transitions (150–300ms)
-- [ ] Text contrast 4.5:1 minimum
+- [ ] Hover states with smooth transitions (100–300ms)
+- [ ] Text contrast 4.5:1 minimum (small accent text uses `--color-accent-strong`)
 - [ ] Focus states visible for keyboard nav
 - [ ] `prefers-reduced-motion` respected
-- [ ] Responsive: 375px, 768px, 1024px, 1440px
+- [ ] Responsive: 375px, 640px, 768px, 1024px, 1440px
 - [ ] No horizontal scroll on mobile
 - [ ] Product/price/forms remain legible and usable (e-commerce guardrail)

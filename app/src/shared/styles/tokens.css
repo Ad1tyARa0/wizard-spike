@@ -1,26 +1,26 @@
 /**
- * Design tokens — Exaggerated Minimalism.
+ * Design tokens — 70/20/10 (canvas / structure / accent).
  * Source of truth: design-system/e-commerce-website/MASTER.md
- * Mirror in TS: ./tokens.ts
+ * Runtime mirrors: app/src/entities/theme/presets/*.ts
  */
 :root {
   /* ---- Color: 70/20/10 (canvas / structure / accent) ---- */
-  --color-primary: #20242B;
-  --color-on-primary: #F1F2F4;
-  --color-background: #F1F2F4;
-  --color-foreground: #20242B;
-  --color-accent: #6C757D;
-  --color-accent-strong: #50585E;
-  --color-on-accent: #FFFFFF;
-  --color-secondary: #FFFFFF;
-  --color-on-secondary: #20242B;
-  --color-muted: #5F6773;
-  --color-muted-foreground: #5F6773;
-  --color-border: #20242B26;
-  --color-destructive: #DC2626;
-  --color-on-destructive: #FFFFFF;
-  --color-ring: #20242B;
-  --color-hero-accent: #6C757D;
+  --color-primary: #20242b;
+  --color-on-primary: #f1f2f4;
+  --color-background: #f1f2f4;
+  --color-foreground: #20242b;
+  --color-accent: #6c757d;
+  --color-accent-strong: #50585e;
+  --color-on-accent: #ffffff;
+  --color-secondary: #ffffff;
+  --color-on-secondary: #20242b;
+  --color-muted: #5f6773;
+  --color-muted-foreground: #5f6773;
+  --color-border: #20242b26;
+  --color-destructive: #dc2626;
+  --color-on-destructive: #ffffff;
+  --color-ring: #20242b;
+  --color-hero-accent: #6c757d;
 
   /* ---- Typography: Inter display + Space Mono technical metadata ---- */
   --font-display: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -36,6 +36,9 @@
   --type-body: 1rem;
   --type-body-lg: 1.125rem;
   --type-label: 0.8125rem;
+  --type-label-lg: 0.875rem;
+  --type-label-sm: 0.75rem;
+  --type-label-xs: 0.625rem;
 
   --weight-black: 900;
   --weight-bold: 700;
@@ -46,7 +49,20 @@
   --tracking-tight: -0.04em;
   --tracking-label: 0.12em;
 
-  /* ---- Spacing: extreme whitespace ---- */
+  /* ---- Spacing: 4px primitive scale + semantic aliases ---- */
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-11: 44px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 24px;
@@ -70,7 +86,8 @@
   --duration-base: 250ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* ---- Icon sizes: predefined scale (sm / md / lg) ---- */
+  /* ---- Icon sizes: predefined scale (xs / sm / md / lg) ---- */
+  --icon-xs: 16px;
   --icon-sm: 20px;
   --icon-md: 24px;
   --icon-lg: 32px;
@@ -80,7 +97,7 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1440px;
-  --container-max: 1440px;
+  --container-max: 80rem;
   --header-height: 64px;
 
   /* ---- Z-index scale ---- */

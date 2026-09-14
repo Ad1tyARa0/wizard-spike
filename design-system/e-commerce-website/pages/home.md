@@ -26,8 +26,8 @@
 | Media           | Optional full-bleed backdrop, viewport-wide and centered at every resolution (100vw breakout + `object-position: center`). Source: `content.hero.image` (your URL) → live shop `brand.coverImage` → none |
 | Scrim           | Primary-token gradient (stronger top + bottom where text sits) so on-primary text holds ≥ 4.5:1 over any photo                                                                                           |
 | Text on media   | Statement, lead, meta and index flip to `--color-on-primary`; playful preset hides the media layer and keeps its wash-band hero                                                                          |
-| Foot            | Lead (Cormorant italic) left, **single** hollow CTA right; stacks + full-width CTA below 768px                                                                                                           |
-| CTA             | **Hollow** — transparent background, one thin `1px` border in `currentColor`; hover inverts to a filled primary block                                                                                    |
+| Foot            | Lead (italic) left, **single** solid CTA right; stacks + full-width CTA below 768px                                                                                                                      |
+| CTA             | **Solid** accent fill (`variant="solid"`); hover fills with the structure color; full-width with a stacked foot below 768px                                                                              |
 | Section padding | `--space-2xl` vertical desktop / `--space-xl` mobile · `min-height: calc(100svh - header)`, centered                                                                                                     |
 | Separator       | Hairline bottom rule only when there is no photo (the image edge separates instead)                                                                                                                      |
 
@@ -60,14 +60,14 @@ collection has an image) **and now lists the collection's own first products**
 beneath it, so a heading never renders with nothing under it — even when the
 featured collection has no image.
 
-| Rule     | Value                                                                                                                                                          |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Split    | `2fr` image / `1fr` side column, `align-items: end`, gap `--space-xl` (whole split collapses to one column below 1100px)                                       |
-| Media    | 16:9 crop (`object-fit: cover`), 4:3 below 1100px; side + products render when the collection has no image (`--text-only`)                                     |
-| Side     | Kicker `02 — Featured Collection` (gold index) → display title (`--type-display`) → "View collection →" underline link with gold arrow (Phosphor, aria-hidden) |
-| Heading  | Title is an `h2` (`featured-collection-title`); the page keeps exactly one `h1` (hero statement)                                                               |
-| Products | First 4 products of the collection, in the same whitespace-separated editorial grid as New arrivals (single / two-up / four-up)                                |
-| Query    | `FEATURED_COLLECTION_QUERY` fetches `collection.products(first: 4)`; render falls back gracefully when empty                                                   |
+| Rule     | Value                                                                                                                                                              |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Split    | `2fr` image / `1fr` side column, `align-items: end`, gap `--space-xl` (whole split collapses to one column below 1100px)                                           |
+| Media    | 16:9 crop (`object-fit: cover`), 4:3 below 1100px; side + products render when the collection has no image (`--text-only`)                                         |
+| Side     | Kicker `02 — Featured Collection` (accent index) → display title (`--type-display`) → "View collection →" underline link with accent arrow (Phosphor, aria-hidden) |
+| Heading  | Title is an `h2` (`featured-collection-title`); the page keeps exactly one `h1` (hero statement)                                                                   |
+| Products | First 4 products of the collection, in the same whitespace-separated editorial grid as New arrivals (single / two-up / four-up)                                    |
+| Query    | `FEATURED_COLLECTION_QUERY` fetches `collection.products(first: 4)`; render falls back gracefully when empty                                                       |
 
 ### Recommended products — editorial section head + whitespace grid
 
@@ -84,16 +84,16 @@ featured collection has no image.
 ### Marquee (optional quiet band)
 
 Renders only when the section is ordered **and** items exist. Minimal = quiet
-editorial band: black bar, Montserrat small caps (`--type-label`, wide
+editorial band: structure bar, Inter small caps (`--type-label`, wide
 tracking), `|` separators — no glyphs, no oversized condensed type (the loud
-Anton ✦ band belongs to the playful preset).
+Anton band belongs to the playful preset).
 
 ## Guardrails (unchanged from MASTER)
 
-- Black/white dominant; gold `--color-accent` only for the single CTA and the
-  featured arrow; small accent text (index numerals) uses `--color-accent-strong`
-  (`#8A6D1F`, ≥ 4.5:1 on white), and focus rings use `--color-ring` (`#A87C0E`,
-  ≥ 3:1 on white and black). No second accent.
+- 70/20/10 dominant; accent `--color-accent` (`#6C757D`) only for the single
+  CTA and the featured arrow; small accent text uses `--color-accent-strong`
+  (`#50585E`, ≥ 4.5:1 on the canvas), and focus rings use `--color-ring`
+  (`#20242B`). No second accent.
 - Radius 0; separation by whitespace, never shadows or hairlines.
 - `prefers-reduced-motion` honored (global collapse; no entry animation added).
 - Contrast ≥ 4.5:1; visible `:focus-visible` ring from `--color-ring`.
@@ -106,8 +106,8 @@ are structural UI copy; merchant copy (hero statement/sub/CTA, marquee items)
 lives in `content.*` of `hydrogen.config.json`.
 
 **Colors and other visual values are config-driven tokens, never literals.**
-The "gold accent" above is simply the `minimal` preset's value for
-`--color-accent` (`#d4af37` in `presets/minimal.ts`); the wizard writes the
+The accent above is simply the `minimal` preset's value for
+`--color-accent` (`#6C757D` in `presets/minimal.ts`); the wizard writes the
 merchant's selection into `hydrogen.config.json → design.*`
 (`design.colors.accent`, `design.colors.ring`, `design.fonts.*`,
 `design.icon.*`, …). `resolveTokens` merges `defaults ⊕ preset ⊕ overrides`

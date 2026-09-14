@@ -28,15 +28,21 @@ describe('tokensToCssVars — resolved tokens as CSS custom properties', () => {
     // shared button primitive radius — zero curves
     expect(vars['--radius-button']).toBe('0');
     // icon-size scale
+    expect(vars['--icon-xs']).toBe('16px');
     expect(vars['--icon-sm']).toBe('20px');
     expect(vars['--icon-md']).toBe('24px');
     expect(vars['--icon-lg']).toBe('32px');
+    // compact control type + 4px space scale
+    expect(vars['--type-label-sm']).toBe('0.75rem');
+    expect(vars['--space-4']).toBe('16px');
+    expect(vars['--space-8']).toBe('32px');
+    expect(vars['--space-11']).toBe('44px');
     // motion + breakpoints + z + layout
     expect(vars['--duration-fast']).toBe('150ms');
     expect(vars['--ease-out']).toContain('cubic-bezier');
     expect(vars['--breakpoint-md']).toBe('768px');
     expect(vars['--z-drawer']).toBe('40');
-    expect(vars['--container-max']).toBe('1440px');
+    expect(vars['--container-max']).toBe('80rem');
     expect(vars['--header-height']).toBe('64px');
   });
 

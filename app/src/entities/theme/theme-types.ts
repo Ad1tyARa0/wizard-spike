@@ -54,6 +54,12 @@ export interface TypeTokens {
   body: string;
   bodyLg: string;
   label: string;
+  /** 0.875rem — brand wordmark, prominent labels */
+  labelLg: string;
+  /** 0.75rem — monospace nav + utility labels */
+  labelSm: string;
+  /** 0.625rem — badges */
+  labelXs: string;
 }
 
 export interface WeightTokens {
@@ -70,6 +76,21 @@ export interface TrackingTokens {
 }
 
 export interface SpaceTokens {
+  /** Primitive 4px scale (values are fixed across presets). */
+  '0-5': string;
+  '1': string;
+  '1-5': string;
+  '2': string;
+  '3': string;
+  '4': string;
+  '6': string;
+  '8': string;
+  '11': string;
+  '12': string;
+  '16': string;
+  '24': string;
+  '32': string;
+  /** Semantic aliases (presets may map these differently). */
   xs: string;
   sm: string;
   md: string;
@@ -94,8 +115,9 @@ export interface MotionTokens {
   easeOut: string;
 }
 
-/** Predefined icon-size scale — sm / md / lg. */
+/** Predefined icon-size scale — xs / sm / md / lg. */
 export interface IconSizeTokens {
+  xs: string;
   sm: string;
   md: string;
   lg: string;

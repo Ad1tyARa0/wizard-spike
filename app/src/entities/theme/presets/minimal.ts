@@ -41,6 +41,9 @@ export const MINIMAL_TOKENS: TokenSet = {
     body: '1rem',
     bodyLg: '1.125rem',
     label: '0.8125rem',
+    labelLg: '0.875rem',
+    labelSm: '0.75rem',
+    labelXs: '0.625rem',
   },
   weights: {
     black: 900,
@@ -54,6 +57,19 @@ export const MINIMAL_TOKENS: TokenSet = {
     label: '0.12em',
   },
   space: {
+    '0-5': '2px',
+    '1': '4px',
+    '1-5': '6px',
+    '2': '8px',
+    '3': '12px',
+    '4': '16px',
+    '6': '24px',
+    '8': '32px',
+    '11': '44px',
+    '12': '48px',
+    '16': '64px',
+    '24': '96px',
+    '32': '128px',
     xs: '4px',
     sm: '8px',
     md: '24px',
@@ -75,6 +91,7 @@ export const MINIMAL_TOKENS: TokenSet = {
     easeOut: 'cubic-bezier(0.16, 1, 0.3, 1)',
   },
   icon: {
+    xs: '16px',
     sm: '20px',
     md: '24px',
     lg: '32px',
@@ -93,7 +110,7 @@ export const MINIMAL_TOKENS: TokenSet = {
     modal: 100,
   },
   layout: {
-    containerMax: '1440px',
+    containerMax: '80rem',
     headerHeight: '64px',
   },
 };

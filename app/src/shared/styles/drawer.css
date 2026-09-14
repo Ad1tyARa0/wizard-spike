@@ -199,43 +199,9 @@
   transform: translateY(-1px);
 }
 
-/* ---- Header cart toggle ---- */
-.cart-toggle {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--color-primary);
-}
-
-.cart-toggle__count {
-  position: absolute;
-  top: 2px;
-  right: 0;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 var(--space-xs);
-  /* High-contrast badge: primary circle, on-primary text (black circle /
-     white number in the minimal preset). */
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: var(--weight-bold);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* ---- Accessibility: visible focus, reduced motion ---- */
 .drawer__close:focus-visible,
 .drawer__cta:focus-visible,
-.cart-toggle:focus-visible,
 .drawer__line-title:focus-visible {
   outline: 2px solid var(--color-ring);
   outline-offset: 2px;

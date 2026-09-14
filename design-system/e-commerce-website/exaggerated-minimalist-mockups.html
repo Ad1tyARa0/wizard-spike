@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rye Island — Exaggerated Minimalist E-Commerce Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#F1F2F4',      /* 70% Dominant Light Neutral Gray Canvas */
+                        stark: '#20242B',     /* 20% Secondary / Structure Dark Slate Blue */
+                        hairline: 'rgba(32, 36, 43, 0.2)', /* Muted Hairline Divider Border */
+                        subtle: '#5F6773',    /* Secondary Metadata Text */
+                        accent: '#6C757D',    /* 10% Subdued Slate Accent */
+                        'accent-dark': '#20242B',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Strict Exaggerated Minimalist Rules */
+        * {
+            border-radius: 0px !important; /* Absolute zero rounded corners */
+            box-shadow: none !important; /* No soft depth shadows */
+        }
+
+        body {
+            background-color: #F1F2F4;
+            color: #20242B;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 10% Slate Accent Primary Action Button */
+        .btn-accent {
+            background-color: #6C757D;
+            color: #FFFFFF;
+            transition: background-color 0.1s ease, color 0.1s ease;
+        }
+        .btn-accent:hover {
+            background-color: #20242B;
+            color: #F1F2F4;
+        }
+
+        /* Stark Invert Button Micro-interactions */
+        .btn-stark {
+            background-color: #20242B;
+            color: #F1F2F4;
+            transition: background-color 0.1s ease, color 0.1s ease;
+        }
+        .btn-stark:hover {
+            background-color: #6C757D;
+            color: #FFFFFF;
+        }
+
+        .btn-outline {
+            border: 1px solid #20242B;
+            color: #20242B;
+            background-color: transparent;
+            transition: background-color 0.1s ease, color 0.1s ease;
+        }
+        .btn-outline:hover {
+            background-color: #20242B;
+            color: #F1F2F4;
+        }
+
+        /* Drawers slide mechanics */
+        .drawer-overlay {
+            background-color: rgba(32, 36, 43, 0.6);
+            backdrop-filter: blur(2px);
+            transition: opacity 0.25s ease-in-out;
+        }
+        .drawer-content {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Custom minimal scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F2F4;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #20242B;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white relative overflow-x-hidden">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-base border-b border-stark px-4 md:px-8 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Left Branding -->
+            <div class="flex items-center space-x-3">
+                <span class="w-3 h-3 bg-accent inline-block"></span>
+                <a href="#" onclick="switchConcept('concept-a')" class="font-mono text-sm tracking-widest uppercase font-black text-stark hover:text-accent transition-colors">
+                    RYE ISLAND // ROASTERY
+                </a>
+            </div>
+
+            <!-- Middle Navigation / Search Bar -->
+            <div class="hidden md:flex items-center space-x-6 font-mono text-xs font-bold text-stark">
+                <button onclick="switchConcept('concept-a')" class="hover:text-accent uppercase">CULTIVARS</button>
+                <button onclick="switchConcept('concept-b')" class="hover:text-accent uppercase">EQUIPMENT</button>
+                <button onclick="switchConcept('concept-c')" class="hover:text-accent uppercase">MANIFEST</button>
+            </div>
+
+            <!-- Right Utilities (Search, Account Drawer Toggle, Cart Drawer Toggle) -->
+            <div class="flex items-center space-x-2 md:space-x-4 font-mono text-xs">
+                <!-- Search Button -->
+                <button onclick="toggleSearchModal()" class="border border-stark p-2 hover:bg-stark hover:text-base transition-colors" title="Search">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
+
+                <!-- Account Drawer Trigger -->
+                <button onclick="openDrawer('account-drawer')" class="border border-stark px-3 py-2 font-bold uppercase hover:bg-stark hover:text-base transition-colors flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <span class="hidden sm:inline">ACCOUNT</span>
+                </button>
+
+                <!-- Cart Drawer Trigger -->
+                <button onclick="openDrawer('cart-drawer')" class="btn-stark px-3 py-2 font-bold uppercase flex items-center space-x-2 border border-stark">
+                    <span>BAG</span>
+                    <span id="nav-cart-count" class="bg-accent text-white px-1.5 py-0.5 text-[10px] font-mono">02</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONCEPT VIEW SWITCHER BAR -->
+    <nav class="bg-base border-b border-stark px-4 md:px-8 py-2.5">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <span class="font-mono text-[10px] uppercase font-bold text-subtle tracking-wider">
+                VIEW CONCEPT MOCKUPS [ 70% CANVAS / 20% STRUCTURE / 10% ACCENT ]
+            </span>
+            <div class="flex flex-wrap gap-2 font-mono text-[11px]">
+                <button onclick="switchConcept('concept-a')" id="btn-concept-a" class="px-2.5 py-1 border border-stark bg-stark text-base font-bold uppercase transition-all">
+                    01. EDITORIAL FEED
+                </button>
+                <button onclick="switchConcept('concept-b')" id="btn-concept-b" class="px-2.5 py-1 border border-stark text-stark hover:bg-stark hover:text-base font-bold uppercase transition-all">
+                    02. PRODUCT PDP
+                </button>
+                <button onclick="switchConcept('concept-c')" id="btn-concept-c" class="px-2.5 py-1 border border-stark text-stark hover:bg-stark hover:text-base font-bold uppercase transition-all">
+                    03. CHECKOUT MANIFEST
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONCEPT A: EDITORIAL LIST FEED -->
+    <main id="concept-a" class="concept-view flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-10">
+        <!-- Hero Header -->
+        <div class="border-b-2 border-stark pb-6 mb-12 flex justify-between items-end">
+            <div>
+                <p class="font-mono text-xs tracking-widest text-subtle uppercase mb-1">// DIRECT TRADE COFFEE ROASTERY</p>
+                <h1 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter uppercase leading-none text-stark">
+                    CULTIVARS.
+                </h1>
+            </div>
+            <div class="font-mono text-xs text-right text-stark hidden sm:block">
+                <p>AVAILABILITY: [ 03 LOTS ]</p>
+                <p class="text-subtle">CURRENCY: EUR (€)</p>
+            </div>
+        </div>
+
+        <!-- Product Listing Stack -->
+        <div class="space-y-16">
+            <!-- Product Lot 001 -->
+            <article class="group border-b border-stark pb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-8">
+                        <div class="flex items-baseline space-x-3 mb-2">
+                            <span class="font-mono text-xs font-bold uppercase text-subtle">LOT #001</span>
+                            <!-- 10% Accent Badge -->
+                            <span class="font-mono text-[10px] tracking-widest uppercase bg-accent text-white font-bold px-2 py-0.5">
+                                NATURAL PROCESS
+                            </span>
+                        </div>
+                        <h2 onclick="switchConcept('concept-b')" class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter uppercase mb-4 text-stark hover:translate-x-2 transition-transform cursor-pointer">
+                            SHANTAWENE
+                        </h2>
+                        <p class="font-mono text-xs sm:text-sm tracking-wide text-stark uppercase mb-6 max-w-2xl">
+                            ETHIOPIA · BENTI NENKA · 1950M · FLAVOR: PEACH, HONEY, BERGAMOT
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-4 flex flex-col justify-between space-y-6">
+                        <!-- Cutout Isolated Product Container -->
+                        <div onclick="switchConcept('concept-b')" class="w-full h-64 bg-white border border-stark flex items-center justify-center p-6 relative cursor-pointer group-hover:bg-neutral-100 transition-colors">
+                            <span class="absolute top-2 left-2 font-mono text-[9px] text-subtle">FIG 1.0 — 250G</span>
+                            <div class="w-24 h-36 border-2 border-stark flex flex-col justify-between p-2 bg-base relative">
+                                <div class="border-b border-stark pb-1">
+                                    <div class="w-4 h-1 bg-accent"></div>
+                                </div>
+                                <span class="font-mono text-[8px] font-bold tracking-tighter text-stark">RYE/01</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-stark pt-4">
+                            <span class="font-mono text-2xl font-bold text-stark">24.00 €</span>
+                            <!-- 10% Accent CTA Focal Point -->
+                            <button onclick="addItemToCart('SHANTAWENE (ETHIOPIA)', 24.00)" class="btn-accent border border-stark px-6 py-3 font-mono text-xs font-bold uppercase tracking-wider">
+                                QUICK ADD +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Lot 002 -->
+            <article class="group border-b border-stark pb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-8">
+                        <div class="flex items-baseline space-x-3 mb-2">
+                            <span class="font-mono text-xs font-bold uppercase text-subtle">LOT #002</span>
+                            <span class="font-mono text-[10px] tracking-widest uppercase border border-stark text-stark px-2 py-0.5">
+                                THERMOLIC ANAEROBIC
+                            </span>
+                        </div>
+                        <h2 onclick="switchConcept('concept-b')" class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter uppercase mb-4 text-stark hover:translate-x-2 transition-transform cursor-pointer">
+                            GESHA THERMO
+                        </h2>
+                        <p class="font-mono text-xs sm:text-sm tracking-wide text-stark uppercase mb-6 max-w-2xl">
+                            PANAMA · BOQUETE · 1800M · FLAVOR: APRICOT, JASMINE, MANDARIN
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-4 flex flex-col justify-between space-y-6">
+                        <div onclick="switchConcept('concept-b')" class="w-full h-64 bg-white border border-stark flex items-center justify-center p-6 relative cursor-pointer group-hover:bg-neutral-100 transition-colors">
+                            <span class="absolute top-2 left-2 font-mono text-[9px] text-subtle">FIG 2.0 — 250G</span>
+                            <div class="w-24 h-36 border-2 border-stark flex flex-col justify-between p-2 bg-base relative">
+                                <div class="border-b border-stark pb-1">
+                                    <div class="w-4 h-1 bg-accent"></div>
+                                </div>
+                                <span class="font-mono text-[8px] font-bold tracking-tighter text-stark">RYE/02</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-stark pt-4">
+                            <span class="font-mono text-2xl font-bold text-stark">38.00 €</span>
+                            <!-- 10% Accent CTA Focal Point -->
+                            <button onclick="addItemToCart('GESHA THERMO (PANAMA)', 38.00)" class="btn-accent border border-stark px-6 py-3 font-mono text-xs font-bold uppercase tracking-wider">
+                                QUICK ADD +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Lot 003 -->
+            <article class="group border-b border-stark pb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-8">
+                        <div class="flex items-baseline space-x-3 mb-2">
+                            <span class="font-mono text-xs font-bold uppercase text-subtle">LOT #003</span>
+                            <span class="font-mono text-[10px] tracking-widest uppercase bg-stark text-base px-2 py-0.5">
+                                WASHED PROCESS
+                            </span>
+                        </div>
+                        <h2 onclick="switchConcept('concept-b')" class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter uppercase mb-4 text-stark hover:translate-x-2 transition-transform cursor-pointer">
+                            BLUE AYARZA
+                        </h2>
+                        <p class="font-mono text-xs sm:text-sm tracking-wide text-stark uppercase mb-6 max-w-2xl">
+                            GUATEMALA · SANTA ROSA · 1600M · FLAVOR: CRISP APPLE, CARAMEL, MILK CHOCOLATE
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-4 flex flex-col justify-between space-y-6">
+                        <div onclick="switchConcept('concept-b')" class="w-full h-64 bg-white border border-stark flex items-center justify-center p-6 relative cursor-pointer group-hover:bg-neutral-100 transition-colors">
+                            <span class="absolute top-2 left-2 font-mono text-[9px] text-subtle">FIG 3.0 — 250G</span>
+                            <div class="w-24 h-36 border-2 border-stark flex flex-col justify-between p-2 bg-base relative">
+                                <div class="border-b border-stark pb-1">
+                                    <div class="w-4 h-1 bg-accent"></div>
+                                </div>
+                                <span class="font-mono text-[8px] font-bold tracking-tighter text-stark">RYE/03</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-stark pt-4">
+                            <span class="font-mono text-2xl font-bold text-stark">18.50 €</span>
+                            <!-- 10% Accent CTA Focal Point -->
+                            <button onclick="addItemToCart('BLUE AYARZA (GUATEMALA)', 18.50)" class="btn-accent border border-stark px-6 py-3 font-mono text-xs font-bold uppercase tracking-wider">
+                                QUICK ADD +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- CONCEPT B: ASYMMETRIC SPLIT PRODUCT DETAIL PAGE (PDP) -->
+    <main id="concept-b" class="concept-view hidden flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-8">
+        <div class="mb-6 flex justify-between items-center">
+            <button onclick="switchConcept('concept-a')" class="font-mono text-xs font-bold uppercase text-subtle hover:text-stark flex items-center space-x-2">
+                <span>← BACK TO CULTIVARS FEED</span>
+            </button>
+            <span class="font-mono text-xs text-subtle">// SPECIFICATION VIEW</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <!-- Left Column: Oversized Cutout Hero Visual -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="w-full h-[450px] md:h-[600px] border border-stark bg-white flex flex-col justify-between p-8 relative">
+                    <div class="flex justify-between items-start font-mono text-xs text-stark">
+                        <span>ORIGIN: PANAMA</span>
+                        <span>ELEVATION: 1800M</span>
+                    </div>
+
+                    <!-- Cutout Bag Graphic with Accent Bar -->
+                    <div class="self-center my-auto flex flex-col items-center">
+                        <div class="w-56 h-80 border-4 border-stark bg-base flex flex-col justify-between p-5 relative">
+                            <div class="border-b-2 border-stark pb-2 flex justify-between items-center text-stark">
+                                <span class="font-mono text-xs font-bold">RYE ISLAND</span>
+                                <span class="font-mono text-[10px]">250G BAG</span>
+                            </div>
+                            
+                            <!-- 10% Subdued Accent Bar on Product Bag -->
+                            <div class="my-auto border-l-4 border-accent pl-3">
+                                <span class="font-black text-4xl tracking-tighter block leading-none text-stark">GESHA</span>
+                                <span class="font-mono text-[11px] tracking-widest uppercase block mt-1 text-stark">THERMOLIC</span>
+                            </div>
+
+                            <div class="font-mono text-[9px] border-t border-stark pt-1 flex justify-between items-center text-stark">
+                                <span>LOT #002 / SINGLE ORIGIN</span>
+                                <span class="w-2.5 h-2.5 bg-accent inline-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end font-mono text-xs text-stark">
+                        <span>BATCH REF: 2026-09</span>
+                        <span>ROAST PROFILE: LIGHT [1/5]</span>
+                    </div>
+                </div>
+
+                <!-- Minimalist Technical Specs Matrix Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-b border-stark py-4 font-mono text-xs">
+                    <div>
+                        <span class="text-subtle block uppercase text-[10px]">VARIETAL</span>
+                        <span class="font-bold text-stark">GREEN GESHA</span>
+                    </div>
+                    <div>
+                        <span class="text-subtle block uppercase text-[10px]">PRODUCER</span>
+                        <span class="font-bold text-stark">LAMASTUS ESTATE</span>
+                    </div>
+                    <div>
+                        <span class="text-subtle block uppercase text-[10px]">HARVEST</span>
+                        <span class="font-bold text-stark">MAY 2026</span>
+                    </div>
+                    <div>
+                        <span class="text-subtle block uppercase text-[10px]">CUP SCORE</span>
+                        <span class="font-bold text-stark bg-base px-1">92.5 PTS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Options & Conversion Column -->
+            <div class="lg:col-span-5 space-y-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="font-mono text-xs tracking-widest uppercase bg-accent text-white font-bold px-2 py-0.5">
+                            SPECIALTY LOT #002
+                        </span>
+                        <span class="font-mono text-xs uppercase text-subtle">IN STOCK</span>
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none mb-4 text-stark">
+                        GESHA THERMO
+                    </h1>
+                    <p id="pdp-price-display" class="font-mono text-3xl font-bold border-b border-stark pb-4 text-stark">
+                        38.00 €
+                    </p>
+                </div>
+
+                <p class="text-sm leading-relaxed text-stark">
+                    Sourced directly from the high-altitude slopes of Boquete, Panama. The Thermolic process controls fermentation temperature to yield unprecedented clarity, bursting with notes of white apricot, blooming jasmine, and crisp mandarin orange.
+                </p>
+
+                <!-- Product Form Controls -->
+                <form onsubmit="event.preventDefault(); addPdpToCart();" class="space-y-6 pt-2">
+                    <!-- Weight Selector -->
+                    <div>
+                        <label class="block font-mono text-xs uppercase font-bold mb-2 text-stark">01 / SELECT WEIGHT</label>
+                        <div class="grid grid-cols-2 gap-2 font-mono text-xs">
+                            <button type="button" onclick="selectPdpWeight(this, 38.00, '250G')" class="pdp-weight-opt border-2 border-stark bg-stark text-base py-3 font-bold uppercase">
+                                250 GRAMS
+                            </button>
+                            <button type="button" onclick="selectPdpWeight(this, 110.00, '1000G')" class="pdp-weight-opt border border-stark bg-base text-stark py-3 font-bold uppercase hover:border-stark">
+                                1000 GRAMS (+72.00€)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grind Selector -->
+                    <div>
+                        <label class="block font-mono text-xs uppercase font-bold mb-2 text-stark">02 / SELECT GRIND</label>
+                        <select id="pdp-grind-select" class="w-full bg-base border border-stark p-3 font-mono text-xs font-bold uppercase text-stark focus:outline-none focus:ring-1 focus:ring-stark">
+                            <option value="WHOLE BEAN">WHOLE BEAN (RECOMMENDED)</option>
+                            <option value="ESPRESSO">ESPRESSO (FINE)</option>
+                            <option value="FILTER / POUR OVER">FILTER / POUR OVER (MEDIUM)</option>
+                            <option value="FRENCH PRESS">FRENCH PRESS (COARSE)</option>
+                        </select>
+                    </div>
+
+                    <!-- Quantity Control -->
+                    <div>
+                        <label class="block font-mono text-xs uppercase font-bold mb-2 text-stark">03 / QUANTITY</label>
+                        <div class="flex items-center w-36 border border-stark bg-base font-mono">
+                            <button type="button" onclick="adjustPdpQty(-1)" class="w-12 h-10 flex items-center justify-center font-bold text-lg hover:bg-stark hover:text-base">-</button>
+                            <span id="pdp-qty-span" class="flex-1 text-center font-bold text-xs">01</span>
+                            <button type="button" onclick="adjustPdpQty(1)" class="w-12 h-10 flex items-center justify-center font-bold text-lg hover:bg-stark hover:text-base">+</button>
+                        </div>
+                    </div>
+
+                    <!-- 10% Accent High-Intent Conversion Button -->
+                    <button type="submit" class="w-full btn-accent font-mono text-sm font-bold uppercase py-5 tracking-wider border border-stark flex items-center justify-center space-x-2">
+                        <span>ADD TO BAG</span>
+                        <span>—</span>
+                        <span id="pdp-cta-price">38.00 €</span>
+                    </button>
+                </form>
+
+                <!-- Technical Details Accordion Mock -->
+                <div class="border-t border-stark pt-4 space-y-3 font-mono text-xs text-stark">
+                    <div class="flex justify-between items-center py-2 border-b border-hairline cursor-pointer hover:text-accent">
+                        <span class="font-bold">SHIPPING & DISPATCH TIMELINES</span>
+                        <span>[ + ]</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-hairline cursor-pointer hover:text-accent">
+                        <span class="font-bold">RECOMMENDED BREWING RECIPE</span>
+                        <span>[ + ]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- CONCEPT C: DIGITAL MANIFEST CHECKOUT -->
+    <main id="concept-c" class="concept-view hidden flex-1 max-w-5xl w-full mx-auto px-4 md:px-8 py-10">
+        <div class="border border-stark bg-white p-6 md:p-12 space-y-8">
+            
+            <!-- Manifest Header -->
+            <div class="border-b-2 border-stark pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                <div>
+                    <h1 class="font-mono text-3xl md:text-4xl font-black uppercase tracking-tight text-stark">ORDER MANIFEST</h1>
+                    <p class="font-mono text-xs text-subtle mt-1">// TRANSACTION REF: RYE-2026-99021</p>
+                </div>
+                <div class="font-mono text-xs text-right text-stark">
+                    <p>DATE: 2026-09-14</p>
+                    <p class="text-subtle uppercase">STATUS: <span class="text-stark font-bold">UNCONFIRMED</span></p>
+                </div>
+            </div>
+
+            <!-- Invoice Itemized Table -->
+            <div class="space-y-4">
+                <div class="hidden md:grid grid-cols-12 font-mono text-xs font-bold uppercase border-b border-stark pb-2 text-subtle">
+                    <span class="col-span-1">ITEM</span>
+                    <span class="col-span-6">DESCRIPTION</span>
+                    <span class="col-span-2 text-center">QTY</span>
+                    <span class="col-span-3 text-right">AMOUNT</span>
+                </div>
+
+                <!-- Table Rows rendered dynamically or static fallback -->
+                <div id="manifest-items-container" class="space-y-4">
+                    <!-- Item 1 -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-0 font-mono text-sm items-center border-b border-hairline pb-4 text-stark">
+                        <span class="col-span-1 font-bold text-xs text-subtle">01</span>
+                        <div class="col-span-6">
+                            <p class="font-bold uppercase">ETHIOPIA SHANTAWENE</p>
+                            <p class="text-xs text-subtle">250G / WHOLE BEAN</p>
+                        </div>
+                        <div class="col-span-2 flex items-center justify-start md:justify-center">
+                            <span class="font-bold text-xs border border-stark px-3 py-1">QTY: 01</span>
+                        </div>
+                        <div class="col-span-3 text-left md:text-right font-bold">
+                            24.00 €
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-0 font-mono text-sm items-center border-b border-hairline pb-4 text-stark">
+                        <span class="col-span-1 font-bold text-xs text-subtle">02</span>
+                        <div class="col-span-6">
+                            <p class="font-bold uppercase">PANAMA GESHA THERMO</p>
+                            <p class="text-xs text-subtle">250G / FILTER GRIND</p>
+                        </div>
+                        <div class="col-span-2 flex items-center justify-start md:justify-center">
+                            <span class="font-bold text-xs border border-stark px-3 py-1">QTY: 01</span>
+                        </div>
+                        <div class="col-span-3 text-left md:text-right font-bold">
+                            38.00 €
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discount Voucher Input Bar -->
+            <div class="pt-2 border-t border-hairline flex flex-col sm:flex-row gap-2 font-mono text-xs">
+                <input type="text" placeholder="PROMO / VOUCHER CODE" class="bg-base border border-stark p-3 text-stark placeholder-subtle uppercase flex-1 focus:outline-none">
+                <button onclick="triggerToast('PROMO CODE APPLIED: -10.00€')" class="btn-stark px-6 py-3 font-bold uppercase">APPLY</button>
+            </div>
+
+            <!-- Invoice Totals Calculation -->
+            <div class="border-t-2 border-stark pt-6 space-y-2 font-mono text-xs text-stark">
+                <div class="flex justify-between">
+                    <span class="uppercase text-subtle">SUBTOTAL</span>
+                    <span id="manifest-subtotal" class="font-bold">62.00 €</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="uppercase text-subtle">EXPRESS DISPATCH (EU)</span>
+                    <span class="font-bold">5.00 €</span>
+                </div>
+                <div class="flex justify-between border-t border-stark pt-4 text-base font-bold">
+                    <span class="uppercase">TOTAL DUE</span>
+                    <span id="manifest-total" class="text-stark text-xl font-black">67.00 €</span>
+                </div>
+            </div>
+
+            <!-- Dispatch Address & Payment Action -->
+            <div class="pt-6 border-t border-stark space-y-4">
+                <h2 class="font-mono text-xs font-bold uppercase tracking-wider text-stark">// DISPATCH ADDRESS</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+                    <input type="text" placeholder="FULL NAME" class="bg-base border border-stark p-3 text-stark placeholder-subtle focus:outline-none">
+                    <input type="email" placeholder="EMAIL ADDRESS" class="bg-base border border-stark p-3 text-stark placeholder-subtle focus:outline-none">
+                    <input type="text" placeholder="STREET ADDRESS" class="md:col-span-2 bg-base border border-stark p-3 text-stark placeholder-subtle focus:outline-none">
+                </div>
+                
+                <!-- 10% Accent High-Intent Checkout Button -->
+                <button onclick="triggerToast('ORDER EXECUTION INITIALIZED')" class="w-full btn-accent font-mono text-sm font-bold uppercase py-5 tracking-widest border border-stark">
+                    EXECUTE ORDER & PAY →
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- COMPONENT: CART DRAWER SLIDE-OUT -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 pointer-events-none">
+        <!-- Overlay -->
+        <div onclick="closeDrawer('cart-drawer')" id="cart-drawer-overlay" class="drawer-overlay absolute inset-0 opacity-0 pointer-events-auto"></div>
+
+        <!-- Drawer Content Container -->
+        <div id="cart-drawer-content" class="drawer-content absolute top-0 right-0 h-full w-full max-w-md bg-white border-l border-stark p-6 flex flex-col justify-between translate-x-full pointer-events-auto z-10">
+            
+            <!-- Header -->
+            <div>
+                <div class="flex justify-between items-center border-b-2 border-stark pb-4 mb-6">
+                    <div>
+                        <h2 class="font-mono text-lg font-black uppercase text-stark">YOUR BAG</h2>
+                        <span class="font-mono text-[10px] text-subtle">// ITEMS SELECTED</span>
+                    </div>
+                    <button onclick="closeDrawer('cart-drawer')" class="border border-stark p-2 hover:bg-stark hover:text-base font-mono text-xs font-bold">
+                        [ X ]
+                    </button>
+                </div>
+
+                <!-- Cart Items Scrollable List -->
+                <div id="cart-drawer-items" class="space-y-4 max-h-[55vh] overflow-y-auto pr-1">
+                    <!-- Dynamic rendering in JS or default state -->
+                </div>
+            </div>
+
+            <!-- Footer & Subtotal CTA -->
+            <div class="border-t-2 border-stark pt-4 space-y-4 font-mono text-xs bg-white">
+                <div class="space-y-1">
+                    <div class="flex justify-between text-subtle">
+                        <span>ESTIMATED SHIPPING</span>
+                        <span>CALCULATED AT CHECKOUT</span>
+                    </div>
+                    <div class="flex justify-between text-stark font-bold text-base border-t border-hairline pt-2">
+                        <span>BAG TOTAL</span>
+                        <span id="drawer-subtotal">62.00 €</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <button onclick="closeDrawer('cart-drawer'); switchConcept('concept-c');" class="w-full btn-accent py-4 text-xs font-bold uppercase tracking-wider border border-stark">
+                        PROCEED TO MANIFEST →
+                    </button>
+                    <button onclick="closeDrawer('cart-drawer')" class="w-full btn-outline py-2.5 text-xs font-bold uppercase">
+                        CONTINUE SHOPPING
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPONENT: SIGN IN / ACCOUNT DRAWER SLIDE-OUT -->
+    <div id="account-drawer" class="fixed inset-0 z-50 pointer-events-none">
+        <!-- Overlay -->
+        <div onclick="closeDrawer('account-drawer')" id="account-drawer-overlay" class="drawer-overlay absolute inset-0 opacity-0 pointer-events-auto"></div>
+
+        <!-- Drawer Content Container -->
+        <div id="account-drawer-content" class="drawer-content absolute top-0 right-0 h-full w-full max-w-md bg-white border-l border-stark p-6 flex flex-col justify-between translate-x-full pointer-events-auto z-10">
+            
+            <!-- Drawer Content Header -->
+            <div>
+                <div class="flex justify-between items-center border-b-2 border-stark pb-4 mb-6">
+                    <div>
+                        <h2 id="auth-title" class="font-mono text-lg font-black uppercase text-stark">ACCOUNT ACCESS</h2>
+                        <span class="font-mono text-[10px] text-subtle">// RYE ISLAND MEMBERSHIP</span>
+                    </div>
+                    <button onclick="closeDrawer('account-drawer')" class="border border-stark p-2 hover:bg-stark hover:text-base font-mono text-xs font-bold">
+                        [ X ]
+                    </button>
+                </div>
+
+                <!-- Sign In Form -->
+                <div id="auth-signin-form" class="space-y-4 font-mono text-xs">
+                    <div>
+                        <label class="block uppercase font-bold mb-1 text-stark">EMAIL ADDRESS</label>
+                        <input type="email" placeholder="NAME@DOMAIN.COM" class="w-full bg-base border border-stark p-3 text-stark placeholder-subtle focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block uppercase font-bold mb-1 text-stark">PASSWORD</label>
+                        <input type="password" placeholder="••••••••••••" class="w-full bg-base border border-stark p-3 text-stark placeholder-subtle focus:outline-none">
+                    </div>
+
+                    <div class="flex justify-between items-center text-[11px] pt-1">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" class="accent-stark rounded-none">
+                            <span>REMEMBER ME</span>
+                        </label>
+                        <a href="#" onclick="triggerToast('RESET LINK SENT TO EMAIL')" class="underline hover:text-accent">FORGOT?</a>
+                    </div>
+
+                    <button type="button" onclick="triggerToast('AUTHENTICATION SUCCESSFUL'); closeDrawer('account-drawer');" class="w-full btn-stark py-4 font-bold uppercase tracking-wider border border-stark mt-2">
+                        SIGN IN TO ACCOUNT
+                    </button>
+
+                    <!-- Magic Link Trigger -->
+                    <button type="button" onclick="triggerToast('MAGIC LINK SENT')" class="w-full btn-outline py-2.5 font-bold uppercase">
+                        SEND ONE-CLICK MAGIC LINK
+                    </button>
+                </div>
+
+                <!-- Toggle Form Link -->
+                <div class="mt-6 border-t border-hairline pt-4 font-mono text-xs text-center">
+                    <p class="text-subtle mb-2">NEW TO RYE ISLAND?</p>
+                    <button onclick="triggerToast('ACCOUNT REGISTRATION FORM ACTIVE')" class="font-bold text-stark underline uppercase hover:text-accent">
+                        CREATE AN ACCOUNT
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Guest Option -->
+            <div class="border-t border-stark pt-4 font-mono text-xs text-center text-subtle">
+                <p class="text-[10px]">DIRECT TRADE ROASTERY ACCESS</p>
+                <button onclick="closeDrawer('account-drawer'); switchConcept('concept-c');" class="text-stark font-bold underline uppercase text-xs mt-1 block w-full">
+                    GUEST CHECKOUT MANIFEST →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPONENT: SEARCH MODAL -->
+    <div id="search-modal" class="fixed inset-0 z-50 hidden bg-stark/80 backdrop-blur-sm p-4 md:p-12 flex items-start justify-center">
+        <div class="bg-base border-2 border-stark w-full max-w-3xl p-6 md:p-8 space-y-6">
+            <div class="flex justify-between items-center border-b border-stark pb-4">
+                <span class="font-mono text-xs font-bold uppercase tracking-widest text-stark">// DIRECTORY SEARCH</span>
+                <button onclick="toggleSearchModal()" class="font-mono text-xs font-bold border border-stark px-3 py-1 hover:bg-stark hover:text-base">CLOSE [ X ]</button>
+            </div>
+            <div>
+                <input type="text" placeholder="TYPE CULTIVAR, ORIGIN, OR PROCESS..." class="w-full bg-white border border-stark p-4 font-mono text-sm md:text-lg text-stark placeholder-subtle uppercase focus:outline-none">
+            </div>
+            <div class="font-mono text-xs space-y-2">
+                <span class="text-subtle uppercase block text-[10px]">SUGGESTED SEARCHES:</span>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="toggleSearchModal(); switchConcept('concept-b');" class="border border-stark px-3 py-1 hover:bg-stark hover:text-base">PANAMA GESHA</button>
+                    <button onclick="toggleSearchModal(); switchConcept('concept-a');" class="border border-stark px-3 py-1 hover:bg-stark hover:text-base">ETHIOPIA SHANTAWENE</button>
+                    <button onclick="toggleSearchModal(); switchConcept('concept-a');" class="border border-stark px-3 py-1 hover:bg-stark hover:text-base">ANAEROBIC PROCESS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTION TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-stark text-base border-2 border-stark px-6 py-4 font-mono text-xs uppercase font-bold transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center space-x-3">
+        <span class="w-2 h-2 bg-accent inline-block"></span>
+        <span id="toast-message">ACTION COMPLETED</span>
+    </div>
+
+    <!-- SITE FOOTER -->
+    <footer class="border-t border-stark bg-base mt-20 px-4 py-10 md:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-mono text-xs">
+            <div>
+                <p class="font-bold uppercase text-stark">RYE ISLAND ROASTERY</p>
+                <p class="text-subtle text-[10px]">70/20/10 EXAGGERATED MINIMALISM SYSTEM</p>
+            </div>
+            <div class="flex flex-wrap gap-6 text-subtle">
+                <a href="#" class="hover:text-stark uppercase">IMPRINT</a>
+                <a href="#" class="hover:text-stark uppercase">PRIVACY</a>
+                <a href="#" class="hover:text-stark uppercase">TERMS</a>
+                <a href="#" class="hover:text-stark uppercase">INSTAGRAM</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global Shopping Bag State
+        let cartItems = [
+            { id: 1, name: 'ETHIOPIA SHANTAWENE', spec: '250G / WHOLE BEAN', price: 24.00, qty: 1 },
+            { id: 2, name: 'PANAMA GESHA THERMO', spec: '250G / FILTER GRIND', price: 38.00, qty: 1 }
+        ];
+
+        let pdpSelectedWeight = '250G';
+        let pdpSelectedPrice = 38.00;
+        let pdpQty = 1;
+
+        // On Page Load Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCartUI();
+        });
+
+        // Switch View Concepts
+        function switchConcept(conceptId) {
+            const views = document.querySelectorAll('.concept-view');
+            views.forEach(v => v.classList.add('hidden'));
+
+            document.getElementById(conceptId).classList.remove('hidden');
+
+            const btnIds = ['concept-a', 'concept-b', 'concept-c'];
+            btnIds.forEach(id => {
+                const btn = document.getElementById(`btn-${id}`);
+                if (id === conceptId) {
+                    btn.className = "px-2.5 py-1 border border-stark bg-stark text-base font-bold uppercase transition-all";
+                } else {
+                    btn.className = "px-2.5 py-1 border border-stark text-stark hover:bg-stark hover:text-base font-bold uppercase transition-all";
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Drawer Mechanics (Cart & Account)
+        function openDrawer(drawerId) {
+            const drawer = document.getElementById(drawerId);
+            const overlay = document.getElementById(`${drawerId}-overlay`);
+            const content = document.getElementById(`${drawerId}-content`);
+
+            drawer.classList.remove('pointer-events-none');
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
+            content.classList.remove('translate-x-full');
+            content.classList.add('translate-x-0');
+        }
+
+        function closeDrawer(drawerId) {
+            const drawer = document.getElementById(drawerId);
+            const overlay = document.getElementById(`${drawerId}-overlay`);
+            const content = document.getElementById(`${drawerId}-content`);
+
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0');
+            content.classList.remove('translate-x-0');
+            content.classList.add('translate-x-full');
+
+            setTimeout(() => {
+                drawer.classList.add('pointer-events-none');
+            }, 300);
+        }
+
+        // Search Modal Toggle
+        function toggleSearchModal() {
+            const modal = document.getElementById('search-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Cart Actions & State Management
+        function addItemToCart(name, price) {
+            const existing = cartItems.find(item => item.name === name);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cartItems.push({
+                    id: Date.now(),
+                    name: name,
+                    spec: '250G / WHOLE BEAN',
+                    price: price,
+                    qty: 1
+                });
+            }
+            renderCartUI();
+            triggerToast(`ADDED: ${name}`);
+            openDrawer('cart-drawer');
+        }
+
+        function updateCartQty(id, delta) {
+            const item = cartItems.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cartItems = cartItems.filter(i => i.id !== id);
+                }
+            }
+            renderCartUI();
+        }
+
+        function renderCartUI() {
+            const countSpan = document.getElementById('nav-cart-count');
+            const totalItemsCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
+            countSpan.innerText = totalItemsCount < 10 ? `0${totalItemsCount}` : totalItemsCount;
+
+            const cartDrawerContainer = document.getElementById('cart-drawer-items');
+            const manifestContainer = document.getElementById('manifest-items-container');
+
+            let totalCost = 0;
+
+            if (cartItems.length === 0) {
+                cartDrawerContainer.innerHTML = `<p class="font-mono text-xs text-subtle py-8 text-center">// YOUR BAG IS EMPTY</p>`;
+                if (manifestContainer) {
+                    manifestContainer.innerHTML = `<p class="font-mono text-xs text-subtle py-4 text-center">// NO ITEMS IN MANIFEST</p>`;
+                }
+            } else {
+                // Render Drawer Items
+                cartDrawerContainer.innerHTML = cartItems.map(item => {
+                    const itemTotal = item.price * item.qty;
+                    totalCost += itemTotal;
+                    return `
+                        <div class="border border-stark p-4 space-y-2 font-mono text-xs bg-base">
+                            <div class="flex justify-between items-start font-bold">
+                                <span>${item.name}</span>
+                                <span>${itemTotal.toFixed(2)} €</span>
+                            </div>
+                            <p class="text-[10px] text-subtle">${item.spec}</p>
+                            <div class="flex justify-between items-center border-t border-hairline pt-2">
+                                <div class="flex items-center space-x-2 border border-stark bg-white px-2 py-0.5">
+                                    <button onclick="updateCartQty(${item.id}, -1)" class="font-bold hover:text-accent">-</button>
+                                    <span class="font-bold text-[11px]">${item.qty < 10 ? '0' + item.qty : item.qty}</span>
+                                    <button onclick="updateCartQty(${item.id}, 1)" class="font-bold hover:text-accent">+</button>
+                                </div>
+                                <button onclick="updateCartQty(${item.id}, -${item.qty})" class="text-[10px] text-subtle underline hover:text-stark uppercase">REMOVE</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Render Manifest Checkout Table
+                if (manifestContainer) {
+                    manifestContainer.innerHTML = cartItems.map((item, index) => {
+                        return `
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-0 font-mono text-sm items-center border-b border-hairline pb-4 text-stark">
+                                <span class="col-span-1 font-bold text-xs text-subtle">0${index + 1}</span>
+                                <div class="col-span-6">
+                                    <p class="font-bold uppercase">${item.name}</p>
+                                    <p class="text-xs text-subtle">${item.spec}</p>
+                                </div>
+                                <div class="col-span-2 flex items-center justify-start md:justify-center space-x-2">
+                                    <button onclick="updateCartQty(${item.id}, -1)" class="w-6 h-6 border border-stark flex items-center justify-center font-bold hover:bg-stark hover:text-base">-</button>
+                                    <span class="font-bold text-xs">${item.qty < 10 ? '0' + item.qty : item.qty}</span>
+                                    <button onclick="updateCartQty(${item.id}, 1)" class="w-6 h-6 border border-stark flex items-center justify-center font-bold hover:bg-stark hover:text-base">+</button>
+                                </div>
+                                <div class="col-span-3 text-left md:text-right font-bold">
+                                    ${(item.price * item.qty).toFixed(2)} €
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            document.getElementById('drawer-subtotal').innerText = `${totalCost.toFixed(2)} €`;
+            
+            const manifestSubtotal = document.getElementById('manifest-subtotal');
+            const manifestTotal = document.getElementById('manifest-total');
+            if (manifestSubtotal && manifestTotal) {
+                manifestSubtotal.innerText = `${totalCost.toFixed(2)} €`;
+                manifestTotal.innerText = `${(totalCost + (totalCost > 0 ? 5 : 0)).toFixed(2)} €`;
+            }
+        }
+
+        // PDP Weight & Quantity Selector
+        function selectPdpWeight(btn, price, weightLabel) {
+            const buttons = document.querySelectorAll('.pdp-weight-opt');
+            buttons.forEach(b => {
+                b.className = "pdp-weight-opt border border-stark bg-base text-stark py-3 font-bold uppercase hover:border-stark";
+            });
+            btn.className = "pdp-weight-opt border-2 border-stark bg-stark text-base py-3 font-bold uppercase";
+
+            pdpSelectedPrice = price;
+            pdpSelectedWeight = weightLabel;
+            updatePdpPriceDisplay();
+        }
+
+        function adjustPdpQty(delta) {
+            pdpQty = Math.max(1, pdpQty + delta);
+            document.getElementById('pdp-qty-span').innerText = pdpQty < 10 ? `0${pdpQty}` : pdpQty;
+            updatePdpPriceDisplay();
+        }
+
+        function updatePdpPriceDisplay() {
+            const total = (pdpSelectedPrice * pdpQty).toFixed(2);
+            document.getElementById('pdp-price-display').innerText = `${total} €`;
+            document.getElementById('pdp-cta-price').innerText = `${total} €`;
+        }
+
+        function addPdpToCart() {
+            const grind = document.getElementById('pdp-grind-select').value;
+            const name = `GESHA THERMO (${pdpSelectedWeight})`;
+            
+            cartItems.push({
+                id: Date.now(),
+                name: name,
+                spec: `${pdpSelectedWeight} / ${grind}`,
+                price: pdpSelectedPrice,
+                qty: pdpQty
+            });
+
+            renderCartUI();
+            triggerToast(`ADDED TO BAG: ${name}`);
+            openDrawer('cart-drawer');
+        }
+
+        // Toast Feedback System
+        function triggerToast(message) {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toast-message');
+            msgSpan.innerText = message;
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
