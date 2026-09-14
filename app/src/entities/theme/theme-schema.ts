@@ -18,6 +18,7 @@ import {
   CARD_ASPECT_RATIOS,
   GRID_DENSITIES,
   HEADER_STYLES,
+  ICON_WEIGHTS,
   MARQUEE_DIRECTIONS,
   MARQUEE_SPEEDS,
   THEME_PRESET_NAMES,
@@ -35,7 +36,16 @@ const designOverridesSchema = z
     space: z.record(z.string(), z.string()).optional(),
     radius: z.record(z.string(), z.string()).optional(),
     motion: z.record(z.string(), z.string()).optional(),
-    icon: z.record(z.string(), z.string()).optional(),
+    icon: z
+      .object({
+        xs: z.string().optional(),
+        sm: z.string().optional(),
+        md: z.string().optional(),
+        lg: z.string().optional(),
+        weight: z.enum(ICON_WEIGHTS).optional(),
+      })
+      .passthrough()
+      .optional(),
   })
   .passthrough();
 

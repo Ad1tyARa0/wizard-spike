@@ -2,25 +2,21 @@ import { NavLink } from 'react-router';
 import { ListIcon, MagnifyingGlassIcon, UserIcon, type IconWeight } from '@phosphor-icons/react';
 import { useSelector } from 'react-redux';
 import type { HeaderQuery } from 'storefrontapi.generated';
-import {
-  selectThemeContent,
-  selectThemeLayout,
-  selectThemePreset,
-  selectThemeTokens,
-} from '../../entities/theme';
+import { selectThemeContent, selectThemeLayout, selectThemeTokens } from '../../entities/theme';
 import { CartToggle } from '../../features/cart-drawer';
 import { Button, ButtonLink, useAside } from '../../shared/ui';
 
 interface HeaderProps {
   header: HeaderQuery;
   publicStoreDomain: string;
+  /** Bag count from the deferred root cart (0 until it resolves). */
+  cartCount: number;
 }
 
 type Viewport = 'desktop' | 'mobile';
 
-/** Icon size + weight resolved from the active theme, shared by the controls. */
+/** Icon stroke weight resolved from the active theme, shared by the controls. */
 interface HeaderIcon {
-  size: string;
   weight: IconWeight;
 }
 
@@ -35,16 +31,16 @@ interface HeaderIcon {
  * order reads logo → nav → actions on desktop and menu → logo → actions on
  * mobile; the mobile account label collapses to icon-only.
  */
-export function Header({ header, publicStoreDomain }: HeaderProps) {
+export function Header({ header, publicStoreDomain, cartCount }: HeaderProps) {
   const { shop, menu } = header;
-  const preset = useSelector(selectThemePreset);
   const tokens = useSelector(selectThemeTokens);
   const layout = useSelector(selectThemeLayout);
   const content = useSelector(selectThemeContent);
-  // Phosphor ultra-thin icons for the minimal preset; bold for playful.
+  // Icon stroke thickness comes from the resolved theme tokens (typed
+  // `IconWeightToken`), so presets/config pick it in one place. Sizes are set
+  // in CSS per control context (see `.btn svg` in app.css).
   const icon: HeaderIcon = {
-    size: tokens.icon.xs,
-    weight: preset === 'minimal' ? 'thin' : 'bold',
+    weight: tokens.icon.weight,
   };
   return (
     <header className="header" data-header-style={layout.headerStyle}>
@@ -61,7 +57,7 @@ export function Header({ header, publicStoreDomain }: HeaderProps) {
           publicStoreDomain={publicStoreDomain}
           navFallback={content.nav}
         />
-        <HeaderCtas icon={icon} />
+        <HeaderCtas icon={icon} cartCount={cartCount} />
       </div>
     </header>
   );
@@ -157,7 +153,7 @@ export function HeaderMenu({
   );
 }
 
-function HeaderCtas({ icon }: { icon: HeaderIcon }) {
+function HeaderCtas({ icon, cartCount }: { icon: HeaderIcon; cartCount: number }) {
   return (
     <nav className="header-ctas" role="navigation" aria-label="Header actions">
       <SearchToggle icon={icon} />
@@ -165,13 +161,13 @@ function HeaderCtas({ icon }: { icon: HeaderIcon }) {
         aria-label="Account"
         className="header-account btn--sm btn--collapse"
         href="/account"
-        icon={<UserIcon aria-hidden="true" size={icon.size} weight={icon.weight} />}
+        icon={<UserIcon aria-hidden="true" weight={icon.weight} />}
       >
         <span className="header-account__label">Account</span>
       </ButtonLink>
       {/* The whole header is client-gated (see PageLayout), so the bag control
           only renders after hydration — no per-control skeleton needed. */}
-      <CartToggle size={icon.size} weight={icon.weight} />
+      <CartToggle weight={icon.weight} cartCount={cartCount} />
     </nav>
   );
 }
@@ -182,7 +178,7 @@ function HeaderMenuMobileToggle({ icon }: { icon: HeaderIcon }) {
     <Button
       className="btn--icon btn--sm header-menu-mobile-toggle"
       aria-label="Open menu"
-      icon={<ListIcon aria-hidden="true" size={icon.size} weight={icon.weight} />}
+      icon={<ListIcon aria-hidden="true" weight={icon.weight} />}
       onClick={() => open('mobile')}
     />
   );
@@ -194,7 +190,7 @@ function SearchToggle({ icon }: { icon: HeaderIcon }) {
     <Button
       className="btn--icon btn--sm"
       aria-label="Search"
-      icon={<MagnifyingGlassIcon aria-hidden="true" size={icon.size} weight={icon.weight} />}
+      icon={<MagnifyingGlassIcon aria-hidden="true" weight={icon.weight} />}
       onClick={() => open('search')}
     />
   );

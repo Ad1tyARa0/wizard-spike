@@ -8,5 +8,6 @@ export { Aside, useAside } from './aside';
 export { Button, ButtonLink, type ButtonProps, type ButtonLinkProps } from './button';
 export { ClientOnly } from './client-only';
 export { ProductImage, ProductPrice } from './product';
+export { SectionHeader, type SectionHeaderProps, type SectionHeaderAction } from './section-header';
 export { Skeleton, SkeletonIcon, SkeletonRow } from './skeleton';
 export { StickerHover } from './sticker-hover';

@@ -136,7 +136,10 @@ function loadDeferredData({ context }: Route.LoaderArgs) {
       return null;
     });
   return {
-    cart: cart.get(),
+    // Deferred so first paint doesn't wait on the Storefront API; the catch
+    // keeps a cart failure from taking down the header/drawer (callers treat
+    // it as an empty cart).
+    cart: cart.get().catch(() => null),
     header,
     footer,
   };

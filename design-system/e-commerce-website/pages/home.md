@@ -62,28 +62,40 @@ time — never hard-coded — so reordering via config keeps the labels honest.
 The featured band keeps an editorial split (media + side header when the
 collection has an image) **and now lists the collection's own first products**
 beneath it, so a heading never renders with nothing under it — even when the
-featured collection has no image.
+featured collection has no image. When there is **no image**, the split is
+replaced by a structural section header (wireframe): `02 — Featured Collection`
+tag + display title on the left, `NN products` count + "View collection →" on
+the right, anchored by a 2px `--color-primary` rule; the header stacks on mobile
+and the count/link sit on a dashed-top row.
 
-| Rule     | Value                                                                                                                                                              |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Split    | `2fr` image / `1fr` side column, `align-items: end`, gap `--space-xl` (whole split collapses to one column below 1100px)                                           |
-| Media    | 16:9 crop (`object-fit: cover`), 4:3 below 1100px; side + products render when the collection has no image (`--text-only`)                                         |
-| Side     | Kicker `02 — Featured Collection` (accent index) → display title (`--type-display`) → "View collection →" underline link with accent arrow (Phosphor, aria-hidden) |
-| Heading  | Title is an `h2` (`featured-collection-title`); the page keeps exactly one `h1` (hero statement)                                                                   |
-| Products | First 4 products of the collection, in the same whitespace-separated editorial grid as New arrivals (single / two-up / four-up)                                    |
-| Query    | `FEATURED_COLLECTION_QUERY` fetches `collection.products(first: 4)`; render falls back gracefully when empty                                                       |
+The home body uses the **hero's gutters** (`--space-4` mobile → `--space-12`
+desktop) instead of the wider shared page padding, so the product bands span the
+width and the cards do not look squashed next to the full-bleed hero. The
+**text-only** featured band and the new-arrivals band share the `SectionHeader`
+primitive (`shared/ui/section-header`); the featured variant that has a
+collection image keeps its editorial split and reuses the same
+`.section-kicker` / `.section-title` / `.section-link` classes.
+
+| Rule     | Value                                                                                                                                                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Split    | `2fr` image / `1fr` side column, `align-items: end`, gap `--space-xl` (whole split collapses to one column below 1100px)                                            |
+| Media    | 16:9 crop (`object-fit: cover`), 4:3 below 1100px; side + products render when the collection has no image (`--text-only`)                                          |
+| Side     | Kicker `02 — Featured Collection` (accent index) → display title (`--type-display`) → "View collection →" Space Mono link with accent arrow (Phosphor, aria-hidden) |
+| Heading  | Title is an `h2` (`featured-collection-title`); the page keeps exactly one `h1` (hero statement)                                                                    |
+| Products | First 4 products of the collection, in the same whitespace-separated editorial grid as New arrivals (single / two-up / three-up / four-up)                          |
+| Query    | `FEATURED_COLLECTION_QUERY` fetches `collection.products(first: 4)`; render falls back gracefully when empty                                                        |
 
 ### Recommended products — editorial section head + whitespace grid
 
-| Rule            | Value                                                                                                        |
-| --------------- | ------------------------------------------------------------------------------------------------------------ |
-| Head            | `03 — New arrivals` + tabular `N items` count. Section separated by whitespace (no rule line)                |
-| Grid            | Single column < 768px · two-up 768–1439px · four-up ≥1440px                                                  |
-| Cell separators | Whitespace only — `--space-lg` column gap / `--space-xl` row gap; no hairlines                               |
-| Dedupe          | Excludes the featured collection's own products; falls back to the full list if that would empty the section |
-| Cards           | Shared product card (4:5 portrait, pinned meta row) — `shared/widgets` `ProductItem`                         |
-| Loading         | 4 skeleton cards (media 4:5 + meta rows) — no layout shift                                                   |
-| Empty/error     | Says what happened and links to the catalog — never a heading over blank space                               |
+| Rule            | Value                                                                                                                                                                       |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Head            | Shared `SectionHeader` (`shared/ui/section-header`): `03` kicker + display `New arrivals` title, `N items` count on the right; same 2px structure rule as the featured band |
+| Grid            | Single column < 768px · two-up ≥ 768px · three-up ≥ 1024px · four-up ≥ 1920px                                                                                               |
+| Cell separators | Whitespace only — `--space-lg` column gap / `--space-xl` row gap; no hairlines                                                                                              |
+| Dedupe          | Excludes the featured collection's own products; falls back to the full list if that would empty the section                                                                |
+| Cards           | Shared product card (4:5 portrait, pinned meta row) — `shared/widgets` `ProductItem`                                                                                        |
+| Loading         | 4 skeleton cards (media 4:5 + meta rows) — no layout shift                                                                                                                  |
+| Empty/error     | Says what happened and links to the catalog — never a heading over blank space                                                                                              |
 
 ### Marquee (optional quiet band)
 

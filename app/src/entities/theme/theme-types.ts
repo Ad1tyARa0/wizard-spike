@@ -122,12 +122,17 @@ export interface MotionTokens {
   easeOut: string;
 }
 
-/** Predefined icon-size scale — xs / sm / md / lg. */
-export interface IconSizeTokens {
+/** Icon stroke thicknesses — the Phosphor `IconWeight` subset the theme allows. */
+export const ICON_WEIGHTS = ['thin', 'light', 'regular', 'bold', 'fill'] as const;
+export type IconWeightToken = (typeof ICON_WEIGHTS)[number];
+
+/** Predefined icon scale — sizes xs / sm / md / lg plus the stroke thickness. */
+export interface IconTokens {
   xs: string;
   sm: string;
   md: string;
   lg: string;
+  weight: IconWeightToken;
 }
 
 export interface BreakpointTokens {
@@ -135,6 +140,7 @@ export interface BreakpointTokens {
   md: string;
   lg: string;
   xl: string;
+  '2xl': string;
 }
 
 export interface ZIndexTokens {
@@ -160,7 +166,7 @@ export interface TokenSet {
   space: SpaceTokens;
   radius: RadiusTokens;
   motion: MotionTokens;
-  icon: IconSizeTokens;
+  icon: IconTokens;
   breakpoints: BreakpointTokens;
   zIndex: ZIndexTokens;
   layout: LayoutTokens;
@@ -176,7 +182,7 @@ export type DesignOverrides = {
   space?: Partial<SpaceTokens>;
   radius?: Partial<RadiusTokens>;
   motion?: Partial<MotionTokens>;
-  icon?: Partial<IconSizeTokens>;
+  icon?: Partial<IconTokens>;
 };
 
 export const HEADER_STYLES = ['slim', 'chunky'] as const;

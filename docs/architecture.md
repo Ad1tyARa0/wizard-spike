@@ -76,7 +76,7 @@ boundaries are clear, changes stay local.
 ### Rules (enforced by `scripts/check-fsd.mjs` — `bun run lint:fsd`)
 
 1. **Layers import only downward** — `app → pages → widgets → features →
-   entities → shared`. `shared` imports nothing from other layers (external
+entities → shared`. `shared` imports nothing from other layers (external
    packages only); `entities` never imports `features`.
 2. **No cross-slice imports on the same layer** — `features/*` and
    `entities/*` slices are isolated from each other. Cross-feature behavior
@@ -129,7 +129,10 @@ Enforced by `scripts/check-filenames.mjs` (`bun run lint:filenames`).
 - **Redux** holds the resolved **theme** (`entities/theme` — seeded once per
   request in `entry.server.tsx`), plus ephemeral client state: the cart
   view-model (`entities/cart/cartSlice`) and drawer UI
-  (`features/cart-drawer/model`).
+  (`features/cart-drawer/model`). The cart drawer and the header bag badge
+  render the root-loader cart through `useOptimisticCart` + `CartForm` server
+  actions; the Redux cart view-model and listener middleware remain per the
+  `cart` / `architecture` capability specs.
 - **Side effects** run in `app/listenerMiddleware.ts`
   (`createListenerMiddleware`): currently cart-id persistence to localStorage;
   server-cart reconciliation is the next step (change
@@ -168,19 +171,19 @@ bun run check:specs    # OpenSpec spec format QA
 
 **oxlint** (`.oxlintrc.json`) enforces the agreed rules:
 
-| Requirement                                                                | Enforcement                                                                                                                                                          |
-| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Import braces spaced (`import { X }`)                                      | Prettier `bracketSpacing: true`                                                                                                                                      |
-| Import order (kept stable by convention; sorted on request — see `.prettierrc.json` history) | manual (no auto-sort plugin)                                                                                                                                    |
-| No nested ternary                                                          | `eslint/no-nested-ternary` (error)                                                                                                                                   |
-| 2-space indent                                                             | Prettier `tabWidth: 2`                                                                                                                                               |
-| No circular dependencies                                                   | `import/no-cycle` (warn) **+ madge** (`lint:circular`)                                                                                                               |
-| FSD boundaries (layer direction, cross-slice isolation, public API)        | `scripts/check-fsd.mjs` (`lint:fsd`) — imports must target `<slice>/index.ts`                                                                                         |
-| Kebab-case file/directory names (route modules & `index.ts` exempt)        | `scripts/check-filenames.mjs` (`lint:filenames`)                                                                                                                      |
-| React rules (exhaustive deps, rules of hooks)                              | `react-hooks/*`                                                                                                                                                      |
-| TypeScript rules (no `any`, type-only imports, no `ts-ignore`)             | `typescript/no-explicit-any`, `consistent-type-imports`, `ban-ts-comment`                                                                                            |
-| Prefer named exports                                                       | `import/no-default-export` (error) — **exempted** for `app/routes/**`, `app/root.tsx`, entry files, and config files, where React Router/CLI require default exports |
-| Record types include `\| undefined`                                        | `tsconfig` `noUncheckedIndexedAccess: true` (indexing a record/array yields `T \| undefined`)                                                                        |
+| Requirement                                                                                  | Enforcement                                                                                                                                                          |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Import braces spaced (`import { X }`)                                                        | Prettier `bracketSpacing: true`                                                                                                                                      |
+| Import order (kept stable by convention; sorted on request — see `.prettierrc.json` history) | manual (no auto-sort plugin)                                                                                                                                         |
+| No nested ternary                                                                            | `eslint/no-nested-ternary` (error)                                                                                                                                   |
+| 2-space indent                                                                               | Prettier `tabWidth: 2`                                                                                                                                               |
+| No circular dependencies                                                                     | `import/no-cycle` (warn) **+ madge** (`lint:circular`)                                                                                                               |
+| FSD boundaries (layer direction, cross-slice isolation, public API)                          | `scripts/check-fsd.mjs` (`lint:fsd`) — imports must target `<slice>/index.ts`                                                                                        |
+| Kebab-case file/directory names (route modules & `index.ts` exempt)                          | `scripts/check-filenames.mjs` (`lint:filenames`)                                                                                                                     |
+| React rules (exhaustive deps, rules of hooks)                                                | `react-hooks/*`                                                                                                                                                      |
+| TypeScript rules (no `any`, type-only imports, no `ts-ignore`)                               | `typescript/no-explicit-any`, `consistent-type-imports`, `ban-ts-comment`                                                                                            |
+| Prefer named exports                                                                         | `import/no-default-export` (error) — **exempted** for `app/routes/**`, `app/root.tsx`, entry files, and config files, where React Router/CLI require default exports |
+| Record types include `\| undefined`                                                          | `tsconfig` `noUncheckedIndexedAccess: true` (indexing a record/array yields `T \| undefined`)                                                                        |
 
 Disabled rules (with reasons):
 

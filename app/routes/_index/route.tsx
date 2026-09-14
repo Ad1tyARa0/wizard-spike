@@ -2,7 +2,7 @@ import { Fragment, Suspense } from 'react';
 import { Await, Link, useLoaderData, useRouteLoaderData } from 'react-router';
 import { useSelector } from 'react-redux';
 import { Image } from '@shopify/hydrogen';
-import { ArrowRightIcon } from '@phosphor-icons/react';
+import { ArrowRightIcon, type IconWeight } from '@phosphor-icons/react';
 import type {
   FeaturedCollectionFragment,
   FeaturedCollectionQuery,
@@ -11,7 +11,7 @@ import type {
 import type { Route } from './+types/route';
 import { resolveHeroContent, selectTheme } from '~/src/entities/theme';
 import type { HeroContent } from '~/src/entities/theme';
-import { ButtonLink, Skeleton, SkeletonRow } from '~/src/shared/ui';
+import { ButtonLink, SectionHeader, Skeleton, SkeletonRow } from '~/src/shared/ui';
 import { Marquee, MockShopNotice, ProductItem } from '~/src/widgets';
 
 export const meta: Route.MetaFunction = ({ data }) => {
@@ -116,7 +116,7 @@ export default function Homepage() {
           <HeroSection
             content={hero}
             highlightTitle={data.featuredCollection?.title}
-            iconSize={theme.tokens.icon.sm}
+            iconWeight={theme.tokens.icon.weight}
             index={statementIndex(id)}
           />
         );
@@ -127,7 +127,7 @@ export default function Homepage() {
           <FeaturedCollection
             index={statementIndex(id)}
             collection={data.featuredCollection}
-            iconSize={theme.tokens.icon.sm}
+            iconWeight={theme.tokens.icon.weight}
           />
         ) : null;
       case 'recommendedProducts':
@@ -156,14 +156,14 @@ export default function Homepage() {
 function HeroSection({
   content,
   highlightTitle,
-  iconSize,
+  iconWeight,
   index,
 }: {
   content: HeroContent;
   /** Featured collection title shown in the media badge when present. */
   highlightTitle?: string;
-  /** Icon-size token for the CTA arrow. */
-  iconSize: string;
+  /** Icon-weight token (stroke thickness) for the CTA arrow. */
+  iconWeight: IconWeight;
   index: string;
 }) {
   // The numeral always renders so the section sequence stays honest; the
@@ -205,7 +205,7 @@ function HeroSection({
           <ButtonLink
             className="hero-cta"
             href={content.ctaHref}
-            icon={<ArrowRightIcon aria-hidden="true" size={iconSize} weight="bold" />}
+            icon={<ArrowRightIcon aria-hidden="true" weight={iconWeight} />}
             iconPosition="right"
             variant="solid"
           >
@@ -220,12 +220,12 @@ function HeroSection({
 function FeaturedCollection({
   collection,
   index,
-  iconSize,
+  iconWeight,
 }: {
   collection: FeaturedCollectionFragment;
   index: string;
-  /** Icon-size token from the resolved theme scale (e.g. `theme.tokens.icon.sm`). */
-  iconSize: string;
+  /** Icon-weight token (stroke thickness) from the resolved theme scale. */
+  iconWeight: IconWeight;
 }) {
   if (!collection) {
     return null;
@@ -235,10 +235,14 @@ function FeaturedCollection({
   const collectionClass = image
     ? 'featured-collection'
     : 'featured-collection featured-collection--text-only';
+  const countLabel =
+    products.length > 0
+      ? `${String(products.length).padStart(2, '0')} ${products.length === 1 ? 'product' : 'products'}`
+      : undefined;
   return (
     <section className={collectionClass} aria-labelledby="featured-collection-title">
-      <div className="featured-collection-split">
-        {image && (
+      {image ? (
+        <div className="featured-collection-split">
           <Link
             className="featured-collection-image"
             prefetch="intent"
@@ -250,29 +254,39 @@ function FeaturedCollection({
               alt={image.altText || collection.title}
             />
           </Link>
-        )}
-        <div className="featured-collection-side">
-          <p className="featured-collection-kicker">
-            <span className="featured-collection-index" aria-hidden="true">
-              {index}
-            </span>
-            Featured Collection
-          </p>
-          <h2 className="featured-collection-title" id="featured-collection-title">
-            {collection.title}
-          </h2>
-          <Link
-            className="featured-collection-cta"
-            prefetch="intent"
-            to={`/collections/${collection.handle}`}
-          >
-            <span>View collection</span>
-            <ArrowRightIcon aria-hidden="true" size={iconSize} weight="bold" />
-          </Link>
+          <div className="featured-collection-side">
+            <p className="section-kicker">
+              <span className="section-index" aria-hidden="true">
+                {index}
+              </span>
+              Featured Collection
+            </p>
+            <h2 className="section-title" id="featured-collection-title">
+              {collection.title}
+            </h2>
+            <Link
+              className="section-link"
+              prefetch="intent"
+              to={`/collections/${collection.handle}`}
+            >
+              <span>View collection</span>
+              <ArrowRightIcon aria-hidden="true" weight={iconWeight} />
+            </Link>
+          </div>
         </div>
-      </div>
+      ) : (
+        <SectionHeader
+          id="featured-collection-title"
+          index={index}
+          eyebrow="Featured Collection"
+          title={collection.title}
+          count={countLabel}
+          action={{ label: 'View collection', to: `/collections/${collection.handle}` }}
+          iconWeight={iconWeight}
+        />
+      )}
       {products.length > 0 && (
-        <div className="featured-products" aria-labelledby="featured-collection-title">
+        <div className="featured-products">
           <div className="featured-products-grid">
             {products.map((product) => (
               <ProductItem key={product.id} product={product} />
@@ -300,14 +314,11 @@ function RecommendedProducts({
 
   return (
     <section className="recommended-products" aria-labelledby="recommended-products-title">
-      <div className="recommended-products-head">
-        <h2 className="recommended-products-title" id="recommended-products-title">
-          <span className="recommended-products-index" aria-hidden="true">
-            {index}
-          </span>
-          New arrivals
-        </h2>
-        <span className="recommended-products-count">
+      <SectionHeader
+        id="recommended-products-title"
+        index={index}
+        title="New arrivals"
+        count={
           <Suspense fallback={null}>
             <Await resolve={products}>
               {(response) => {
@@ -319,8 +330,8 @@ function RecommendedProducts({
               }}
             </Await>
           </Suspense>
-        </span>
-      </div>
+        }
+      />
       <Suspense fallback={<RecommendedSkeleton />}>
         <Await resolve={products}>
           {(response) => {

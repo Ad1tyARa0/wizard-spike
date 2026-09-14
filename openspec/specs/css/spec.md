@@ -88,7 +88,7 @@ Typography sizes MUST use `rem` (or `clamp()` for fluid type); pixel values are 
 
 ### Requirement: mobile-first-responsive
 
-Media queries MUST be authored mobile-first using `min-width`, collapsing to a single column at narrow widths before adding columns. Breakpoints MUST correspond to the tokens in the responsive scale (375, 640, 768, 1024, 1440), and layouts MUST be verified with no horizontal overflow at each.
+Media queries MUST be authored mobile-first using `min-width`, collapsing to a single column at narrow widths before adding columns. Breakpoints MUST correspond to the tokens in the responsive scale (375, 640, 768, 1024, 1440, 1920), and layouts MUST be verified with no horizontal overflow at each.
 
 #### Scenario: min-width-media-query
 
@@ -97,7 +97,7 @@ Media queries MUST be authored mobile-first using `min-width`, collapsing to a s
 
 #### Scenario: no-horizontal-overflow
 
-- **WHEN** a page is rendered at 375, 768, 1024, and 1440px
+- **WHEN** a page is rendered at 375, 768, 1024, 1440, and 1920px
 - **THEN** no element causes horizontal scroll
 
 ### Requirement: stylesheet-organization

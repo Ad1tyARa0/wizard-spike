@@ -1,7 +1,7 @@
 import { Suspense, useId } from 'react';
 import { Await, Link } from 'react-router';
 import { useSelector } from 'react-redux';
-import type { FooterQuery, HeaderQuery } from 'storefrontapi.generated';
+import type { CartApiQueryFragment, FooterQuery, HeaderQuery } from 'storefrontapi.generated';
 import { selectThemeLayout } from '../../entities/theme';
 import { CartDrawer } from '../../features/cart-drawer';
 import {
@@ -14,6 +14,7 @@ import { Footer } from '../footer';
 import { Header, HeaderMenu, HeaderSkeleton } from '../header';
 
 interface PageLayoutProps {
+  cart: Promise<CartApiQueryFragment | null>;
   footer: Promise<FooterQuery | null>;
   header: Promise<HeaderQuery | null>;
   publicStoreDomain: string;
@@ -21,6 +22,7 @@ interface PageLayoutProps {
 }
 
 export function PageLayout({
+  cart,
   children = null,
   footer,
   header,
@@ -33,30 +35,38 @@ export function PageLayout({
       {/* The header is deferred and client-gated: until the data resolves AND
           the client hydrates, the WHOLE header renders as a skeleton (logo
           row, nav row, search + cart icon blocks) — never an isolated
-          per-control skeleton. Same 64px height, so no layout shift. */}
+          per-control skeleton. Same 64px height, so no layout shift. The bag
+          count comes from the same deferred cart the drawer uses. */}
       <ClientOnly fallback={<HeaderSkeleton />}>
         <Suspense fallback={<HeaderSkeleton />}>
-          <Await resolve={header}>
-            {(header) => (
-              <>
-                {header && (
-                  <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
+          <Await resolve={cart}>
+            {(resolvedCart) => (
+              <Await resolve={header}>
+                {(header) => (
+                  <>
+                    {header && (
+                      <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
+                    )}
+                    {header && (
+                      <Header
+                        header={header}
+                        publicStoreDomain={publicStoreDomain}
+                        cartCount={resolvedCart?.totalQuantity ?? 0}
+                      />
+                    )}
+                  </>
                 )}
-                {header && (
-                  <Header header={header} publicStoreDomain={publicStoreDomain} />
-                )}
-              </>
+              </Await>
             )}
           </Await>
         </Suspense>
       </ClientOnly>
       <ClientOnly>
-        <CartDrawer />
+        <Suspense fallback={null}>
+          <Await resolve={cart}>{(resolvedCart) => <CartDrawer cart={resolvedCart} />}</Await>
+        </Suspense>
       </ClientOnly>
-      <main
-        data-grid-density={layout.gridDensity}
-        data-card-aspect={layout.cardAspectRatio}
-      >
+      <main data-grid-density={layout.gridDensity} data-card-aspect={layout.cardAspectRatio}>
         {children}
       </main>
       <Footer footer={footer} header={header} publicStoreDomain={publicStoreDomain} />

@@ -148,15 +148,23 @@ cover` forces the crop over each photo's intrinsic ratio so every card in a
 - Quick add: a full-width accent bar pinned to the canvas bottom — visible on
   mobile, slides up on hover / `:focus-within` from 48em. Single-variant add via
   `AddToCartButton`.
-- Details: **name** (left, display family, bold, uppercase) and **price**
-  (right, mono, tabular, nowrap) on a flex row; `productType` as flavour notes;
-  vendor + variant title as dashed-rule meta tags.
+- Details: **name** (full width, display family, bold, uppercase), then
+  `productType` flavour notes; a dashed-rule meta footer pins vendor + variant
+  title to the left with the **price** (mono, tabular, nowrap) pushed to the
+  bottom-right corner.
 - Hover: the border shifts to `--color-primary` and the quick-add reveals — no
   layout-shifting transform.
 
 **No card shadows** — separation comes from the crop, hairlines, whitespace,
 and hover states, never a drop shadow. Whitespace between cards stays
 exaggerated. Full card spec: `pages/products.md`.
+
+### Cart drawer (updated 2026-09-14)
+
+The bag opens a right-side drawer that renders the **live Hydrogen cart**: a
+manifest header, line items with hairline quantity steppers and remove, and a
+cost summary (subtotal / estimated shipping / total) with a single accent
+checkout CTA. Full drawer spec: `pages/cart.md`.
 
 ---
 
@@ -190,15 +198,21 @@ laid out with flex `space-between`:
 
 ### Icon size scale (predefined)
 
-| Token       | Value  | Usage                               |
-| ----------- | ------ | ----------------------------------- |
-| `--icon-xs` | `16px` | Compact controls (header utilities) |
-| `--icon-sm` | `20px` | Dense / inline icon affordances     |
-| `--icon-md` | `24px` | Standard controls (drawer close)    |
-| `--icon-lg` | `32px` | Statement / empty-state icons       |
+| Token           | Value  | Usage                                |
+| --------------- | ------ | ------------------------------------ |
+| `--icon-xs`     | `16px` | Compact controls (header utilities)  |
+| `--icon-sm`     | `20px` | Dense / inline icon affordances      |
+| `--icon-md`     | `24px` | Standard controls (drawer close)     |
+| `--icon-lg`     | `32px` | Statement / empty-state icons        |
+| `--icon-weight` | `bold` | Stroke thickness (`IconWeightToken`) |
 
-Icons are sized from this scale — never ad-hoc literals. The scale is part of
-the config-driven token set (`design.icon` overrides apply without code edits).
+Icons are sized from this scale — never ad-hoc literals. The scale and the
+stroke thickness are part of the config-driven token set (`design.icon`
+overrides apply without code edits); `weight` is typed as `IconWeightToken`
+(`thin` / `light` / `regular` / `bold` / `fill`), so a bad thickness fails at
+type-check and schema validation rather than at runtime. Sizes are applied by
+CSS per control context (`.btn svg`, `.section-link svg`,
+`.cart-drawer-checkout svg`, …) so components never pass a `size` prop.
 
 ### Button (shared primitive, updated 2026-09-14)
 
@@ -214,7 +228,7 @@ passed from the call site rather than baked in.
 | Radius   | `--radius-button` (0 across presets); a token, never a prop                                                                                                                                          |
 | Label    | Uppercase, `--font-mono`, `--weight-bold`, `--tracking-label`                                                                                                                                        |
 | Size     | Default CTA: `min-height: 44px`, `--space-sm`/`--space-md` padding, `--type-label`. `sm`: `min-height: 32px`, `--space-sm`/`--space-sm2` padding, `--type-label-sm` (`icon` adds a 44px-wide square) |
-| Icon     | `icon` + `iconPosition` props (`left` default); header utilities pass their Phosphor glyphs                                                                                                          |
+| Icon     | `icon` + `iconPosition` props (`left` default). Icon **size** is standardized in CSS, never per call site: a labelled `.btn` icon uses `--icon-xs`, an icon-only `.btn--icon` uses `--icon-md`, and a compact `.btn--sm.btn--icon` stays `--icon-xs`; arrow links (`.section-link`, `.collection-card-arrow`, `.cart-drawer-checkout`) also use `--icon-xs`, and `.cart-drawer-close` uses `--icon-md` |
 | Hover    | `solid` → structure fill + on-primary label; `outline`/`stark` → accent fill + on-accent label; 150ms transition                                                                                     |
 | Focus    | `2px` ring in `--color-ring`, `2px` offset                                                                                                                                                           |
 | Disabled | `opacity: 0.5`, `not-allowed` cursor, no fill on hover                                                                                                                                               |

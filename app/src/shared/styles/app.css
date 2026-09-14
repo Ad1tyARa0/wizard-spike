@@ -133,12 +133,6 @@ a {
   text-transform: uppercase;
 }
 
-.section-title {
-  font-size: var(--type-display);
-  text-transform: uppercase;
-  margin-bottom: var(--space-xl);
-}
-
 /* ============================================================
  * Layout shells
  * ============================================================ */
@@ -149,7 +143,7 @@ main {
   overflow-x: clip;
 }
 
-.home,
+/* Shared page shells: a centered container with roomy padding. */
 .collection,
 .collections,
 .product,
@@ -171,8 +165,13 @@ main {
   margin: 0 auto;
 }
 
+/* The home body is full-width with the hero's gutters, so its product bands
+   span the viewport instead of sitting inside the narrower page container. */
+.home {
+  padding: var(--space-xl) var(--space-4);
+}
+
 @media (min-width: 48em) {
-  .home,
   .collection,
   .collections,
   .product,
@@ -190,6 +189,10 @@ main {
   .policy,
   .page {
     padding: var(--space-2xl) var(--space-2xl);
+  }
+
+  .home {
+    padding: var(--space-2xl) var(--space-12);
   }
 }
 
@@ -645,6 +648,24 @@ input[type='submit'] {
   width: auto;
 }
 
+/* Icon sizing is standardized here (not per call site): a labelled control's
+   icon uses --icon-xs, an icon-only control uses --icon-md, and a compact
+   icon-only control stays --icon-xs. */
+.btn svg {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+
+.btn--icon svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.btn--sm.btn--icon svg {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+
 /* Collapses to an icon-only square below the small breakpoint when the call
    site hides its label — identical padding to `.btn--icon`. */
 @media (max-width: 39.99em) {
@@ -846,13 +867,6 @@ main[data-card-aspect='wide'] .product-media-canvas {
   padding: var(--space-4);
 }
 
-.product-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
 .product-card-title {
   margin: 0;
   font-family: var(--font-display);
@@ -861,6 +875,7 @@ main[data-card-aspect='wide'] .product-media-canvas {
   letter-spacing: -0.01em;
   line-height: 1.15;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .product-card-title a {
@@ -875,6 +890,7 @@ main[data-card-aspect='wide'] .product-media-canvas {
   font-weight: var(--weight-bold);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  margin-inline-start: auto;
 }
 
 .product-flavor-notes {
@@ -888,18 +904,22 @@ main[data-card-aspect='wide'] .product-media-canvas {
 
 .product-meta-footer {
   display: flex;
-  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
   margin-top: var(--space-1);
   padding-top: var(--space-2);
   border-top: var(--border-width) dashed var(--color-border);
 }
 
 .meta-tag {
+  min-width: 0;
   color: var(--color-muted);
   font-family: var(--font-mono);
   font-size: var(--type-label-xs);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 48em) {
@@ -1047,6 +1067,11 @@ main[data-card-aspect='wide'] .product-media-canvas {
   display: inline-flex;
   color: var(--color-accent);
   transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.collection-card-arrow svg {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
 }
 
 .collection-card-footer:hover {
@@ -1233,6 +1258,110 @@ main[data-card-aspect='wide'] .product-media-canvas {
   }
 }
 
+/* ---- Section header: shared by the home product bands (SectionHeader) ----
+ * Index kicker + display title left, count + link right, anchored by the 2px
+ * structure rule. Stacks on mobile, moving the meta to a dashed-top row. */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-8);
+  border-bottom: var(--border-width-strong) solid var(--color-primary);
+}
+
+.section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-top: var(--space-3);
+  border-top: var(--border-width) dashed var(--color-border);
+}
+
+.section-count {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.section-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--type-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+.section-index {
+  color: var(--color-accent-strong);
+  font-weight: var(--weight-black);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-title {
+  font-size: var(--type-display);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.section-link svg {
+  color: var(--color-accent);
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+
+.section-link:hover {
+  color: var(--color-accent);
+}
+
+@media (min-width: 48em) {
+  .section-header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-8);
+    padding-bottom: var(--space-5);
+    margin-bottom: var(--space-10);
+  }
+
+  .section-actions {
+    border-top: none;
+    padding-top: 0;
+    gap: var(--space-8);
+  }
+}
+
 /* ---- Featured collection: editorial header + products band ---- */
 .featured-collection {
   padding: var(--space-2xl) 0;
@@ -1246,9 +1375,10 @@ main[data-card-aspect='wide'] .product-media-canvas {
   gap: var(--space-xl);
 }
 
-/* No media on the collection: side column takes the full row */
-.featured-collection--text-only .featured-collection-split {
-  grid-template-columns: minmax(0, 1fr);
+/* No media on the collection: the header bar anchors the grid itself. */
+.featured-collection--text-only .featured-products {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .featured-collection-image {
@@ -1267,59 +1397,11 @@ main[data-card-aspect='wide'] .product-media-canvas {
 }
 
 .featured-collection-side {
-  padding-bottom: var(--space-sm);
-}
-
-.featured-collection-kicker {
   display: flex;
-  align-items: baseline;
-  gap: var(--space-md);
-  margin: 0 0 var(--space-lg);
-  font-family: var(--font-body);
-  font-size: var(--type-label);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--color-muted-foreground);
-}
-
-.featured-collection-index {
-  color: var(--color-accent-strong);
-  font-weight: var(--weight-black);
-  font-variant-numeric: tabular-nums;
-}
-
-.featured-collection-title {
-  font-size: var(--type-display);
-  text-transform: uppercase;
-  margin: 0 0 var(--space-lg);
-}
-
-.featured-collection-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-  font-family: var(--font-body);
-  font-size: var(--type-label);
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--color-primary);
-  text-decoration: none;
-  border-bottom: var(--border-width) solid var(--color-primary);
-  padding-bottom: var(--space-xs);
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    gap var(--duration-fast) var(--ease-out);
-}
-
-.featured-collection-cta svg {
-  color: var(--color-accent);
-}
-
-.featured-collection-cta:hover {
-  border-color: var(--color-accent);
-  gap: var(--space-md);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+  padding-bottom: var(--space-sm);
 }
 
 /* Featured split collapses to a stacked single column below 1100px, with a
@@ -1343,53 +1425,10 @@ main[data-card-aspect='wide'] .product-media-canvas {
   padding-top: var(--space-xl);
 }
 
-/* ---- Recommended products: editorial section head + hairline grid ---- */
+/* ---- Recommended products: shared section header + hairline grid ---- */
 .recommended-products {
-  margin-top: var(--space-2xl);
-  padding-top: var(--space-xl);
-}
-
-.recommended-products-head {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-md);
-  margin-bottom: var(--space-2xl);
-}
-
-.recommended-products-count {
-  margin-left: auto;
-}
-
-.recommended-products-title {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--space-md);
-  font-family: var(--font-body);
-  font-size: var(--type-label);
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  margin: 0;
-}
-
-.recommended-products-index {
-  color: var(--color-accent-strong);
-  font-weight: var(--weight-black);
-  font-variant-numeric: tabular-nums;
-}
-
-.recommended-products-count {
-  font-family: var(--font-body);
-  font-size: var(--type-label);
-  font-weight: var(--weight-medium);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--color-muted-foreground);
-  white-space: nowrap;
-  /* Reserve the width while the deferred count resolves (no CLS). */
-  min-width: 8ch;
-  text-align: right;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /* Variant A product grid — generous columns, whitespace-separated cells at
@@ -1404,16 +1443,24 @@ main[data-card-aspect='wide'] .product-media-canvas {
   margin-bottom: 0;
 }
 
-/* Two-up at 768–1439px. */
-@media (min-width: 48em) and (max-width: 89.99em) {
+/* Two-up from 768px. */
+@media (min-width: 48em) {
   .recommended-products-grid,
   .featured-products-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Four-up at ≥1440px. */
-@media (min-width: 90em) {
+/* Three-up from 1024px. */
+@media (min-width: 64em) {
+  .recommended-products-grid,
+  .featured-products-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Four-up on very large displays (1920px+). */
+@media (min-width: 120em) {
   .recommended-products-grid,
   .featured-products-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1929,8 +1976,7 @@ main[data-grid-density='compact'] .blog-grid {
   border-bottom: 0;
 }
 
-[data-theme='playful'] .featured-collection-index,
-[data-theme='playful'] .recommended-products-index {
+[data-theme='playful'] .section-index {
   display: none;
 }
 
@@ -1943,10 +1989,6 @@ main[data-grid-density='compact'] .blog-grid {
 
 [data-theme='playful'] .featured-collection-split {
   display: block;
-}
-
-[data-theme='playful'] .featured-collection-title {
-  font-size: var(--type-display);
 }
 
 [data-theme='playful'] .featured-collection-side {
@@ -1979,12 +2021,7 @@ main[data-grid-density='compact'] .blog-grid {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-item-width)), 1fr));
 }
 
-[data-theme='playful'] .recommended-products-title {
-  font-size: var(--type-display);
-  text-transform: uppercase;
-}
-
-[data-theme='playful'] .recommended-products-head {
+[data-theme='playful'] .section-header {
   margin-bottom: var(--space-xl);
 }
 

@@ -62,26 +62,22 @@ export function ProductItem({
         ) : null}
       </div>
       <div className="product-details">
-        <div className="product-header">
-          <h4 className="product-card-title">
-            <Link prefetch="intent" to={variantUrl}>
-              {product.title}
-            </Link>
-          </h4>
+        <h4 className="product-card-title">
+          <Link prefetch="intent" to={variantUrl}>
+            {product.title}
+          </Link>
+        </h4>
+        {product.productType ? <p className="product-flavor-notes">{product.productType}</p> : null}
+        <div className="product-meta-footer">
+          {metaTags.map((tag) => (
+            <span className="meta-tag" key={tag}>
+              {tag}
+            </span>
+          ))}
           <span className="product-card-price">
             <Money data={product.priceRange.minVariantPrice} />
           </span>
         </div>
-        {product.productType ? <p className="product-flavor-notes">{product.productType}</p> : null}
-        {metaTags.length > 0 ? (
-          <div className="product-meta-footer">
-            {metaTags.map((tag) => (
-              <span className="meta-tag" key={tag}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
       </div>
     </article>
   );

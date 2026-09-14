@@ -107,12 +107,14 @@ export const PLAYFUL_TOKENS: TokenSet = {
     sm: '20px',
     md: '24px',
     lg: '32px',
+    weight: 'fill',
   },
   breakpoints: {
     sm: '375px',
     md: '768px',
     lg: '1024px',
     xl: '1440px',
+    '2xl': '1920px',
   },
   zIndex: {
     base: 0,
