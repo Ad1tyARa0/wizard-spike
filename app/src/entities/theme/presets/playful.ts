@@ -38,6 +38,7 @@ export const PLAYFUL_TOKENS: TokenSet = {
     heading: "'Fredoka Variable', system-ui, sans-serif",
     condensed: "'Anton', system-ui, sans-serif",
     body: "'Manrope Variable', system-ui, sans-serif",
+    mono: "'Space Mono', 'Courier New', monospace",
   },
   type: {
     giant: 'clamp(2.5rem, 8vw, 7rem)',

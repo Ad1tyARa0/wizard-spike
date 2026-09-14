@@ -1,3 +1,13 @@
+/* Minimal theme (70/20/10): strict geometry — zero curves, no shadows.
+   Scoped to the minimal preset so the playful preset keeps its own
+   rounded/hard-shadow language. */
+[data-theme='minimal'] *,
+[data-theme='minimal'] *::before,
+[data-theme='minimal'] *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 body {
   font-family:
     system-ui,

@@ -17,8 +17,8 @@ describe('resolveTokens — defaults ⊕ preset ⊕ overrides', () => {
     const resolved = resolveTokens(MINIMAL_TOKENS, PLAYFUL_TOKENS, {
       colors: { accent: '#00ff00' },
     });
-    // defaults accent (minimal gold) → preset accent (magenta) → override
-    expect(MINIMAL_TOKENS.colors.accent).toBe('#d4af37');
+    // defaults accent (minimal steel) → preset accent (magenta) → override
+    expect(MINIMAL_TOKENS.colors.accent).toBe('#6C757D');
     expect(PLAYFUL_TOKENS.colors.accent).toBe('#be008b');
     expect(resolved.colors.accent).toBe('#00ff00');
     // non-overridden preset value comes from the preset, not defaults

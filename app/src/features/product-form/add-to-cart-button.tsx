@@ -20,7 +20,12 @@ export function AddToCartButton({
       {(fetcher: FetcherWithComponents<unknown>) => (
         <>
           <input name="analytics" type="hidden" value={JSON.stringify(analytics)} />
-          <Button type="submit" onClick={onClick} disabled={disabled ?? fetcher.state !== 'idle'}>
+          <Button
+            type="submit"
+            variant="solid"
+            onClick={onClick}
+            disabled={disabled ?? fetcher.state !== 'idle'}
+          >
             {children}
           </Button>
         </>

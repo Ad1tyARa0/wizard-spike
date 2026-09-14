@@ -43,6 +43,8 @@ export interface FontTokens {
   heading: string;
   condensed: string;
   body: string;
+  /** Monospaced face for technical metadata, item IDs, badges, and prices. */
+  mono: string;
 }
 
 export interface TypeTokens {

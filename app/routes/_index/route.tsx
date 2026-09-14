@@ -177,7 +177,7 @@ function HeroSection({ content, index }: { content: HeroContent; index: string }
       </h1>
       <div className="home__hero-foot">
         {content.sub && <p className="home__hero-sub">{content.sub}</p>}
-        <ButtonLink className="home__hero-cta" href={content.ctaHref}>
+        <ButtonLink className="home__hero-cta" variant="solid" href={content.ctaHref}>
           {content.cta}
         </ButtonLink>
       </div>

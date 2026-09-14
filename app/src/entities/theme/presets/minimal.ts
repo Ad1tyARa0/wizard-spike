@@ -1,38 +1,38 @@
 /**
  * Theme preset #1 — `minimal` (Exaggerated Minimalism).
  *
- * The original hard-coded design language (design-system/e-commerce-website/
- * MASTER.md, tokens.css / tokens.ts). Every value below mirrors the previous
- * static tokens so `theme: "minimal"` renders visually identical to the
- * pre-config storefront.
+ * 70/20/10 "Rye Island" system: 70% canvas (#F1F2F4), 20% structure
+ * (#20242B), 10% accent (#6C757D). Zero corner radius, no shadows, 1px
+ * structure borders, Inter display + Space Mono technical metadata.
  */
 import type { LayoutFlags, ThemeContent, ThemePresetName, TokenSet } from '../theme-types';
 
 export const MINIMAL_TOKENS: TokenSet = {
   colors: {
-    primary: '#000000',
-    onPrimary: '#ffffff',
-    background: '#ffffff',
-    foreground: '#000000',
-    accent: '#d4af37',
-    accentStrong: '#8a6d1f',
-    onAccent: '#000000',
-    secondary: '#f5f5f4',
-    onSecondary: '#000000',
-    muted: '#a8a29e',
-    mutedForeground: '#57534e',
-    border: '#000000',
-    destructive: '#dc2626',
-    onDestructive: '#ffffff',
-    ring: '#a87c0e',
-    heroAccent: '#d4af37',
+    primary: '#20242B',
+    onPrimary: '#F1F2F4',
+    background: '#F1F2F4',
+    foreground: '#20242B',
+    accent: '#6C757D',
+    accentStrong: '#50585E',
+    onAccent: '#FFFFFF',
+    secondary: '#FFFFFF',
+    onSecondary: '#20242B',
+    muted: '#5F6773',
+    mutedForeground: '#5F6773',
+    border: '#20242B26',
+    destructive: '#DC2626',
+    onDestructive: '#FFFFFF',
+    ring: '#20242B',
+    heroAccent: '#6C757D',
   },
   fonts: {
-    display: "'Montserrat Variable', system-ui, sans-serif",
-    editorial: "'Cormorant Variable', Georgia, serif",
-    heading: "'Montserrat Variable', system-ui, sans-serif",
-    condensed: "'Montserrat Variable', system-ui, sans-serif",
-    body: "'Montserrat Variable', system-ui, sans-serif",
+    display: "'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif",
+    editorial: "'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif",
+    heading: "'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif",
+    condensed: "'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif",
+    body: "'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif",
+    mono: "'Space Mono', 'Courier New', monospace",
   },
   type: {
     giant: 'clamp(3rem, 10vw, 12rem)',
@@ -50,8 +50,8 @@ export const MINIMAL_TOKENS: TokenSet = {
     light: 300,
   },
   tracking: {
-    tight: '-0.05em',
-    label: '0.08em',
+    tight: '-0.04em',
+    label: '0.12em',
   },
   space: {
     xs: '4px',
@@ -64,10 +64,10 @@ export const MINIMAL_TOKENS: TokenSet = {
   },
   radius: {
     none: '0',
-    sm: '2px',
-    button: '4px',
+    sm: '0',
+    button: '0',
     card: '0',
-    pill: '999px',
+    pill: '0',
   },
   motion: {
     durationFast: '150ms',

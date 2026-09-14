@@ -9,23 +9,24 @@ describe('tokensToCssVars — resolved tokens as CSS custom properties', () => {
     const vars = tokensToCssVars(MINIMAL_PRESET.tokens);
 
     // colors
-    expect(vars['--color-primary']).toBe('#000000');
-    expect(vars['--color-on-primary']).toBe('#ffffff');
-    expect(vars['--color-muted-foreground']).toBe('#57534e');
-    expect(vars['--color-hero-accent']).toBe('#d4af37');
+    expect(vars['--color-primary']).toBe('#20242B');
+    expect(vars['--color-on-primary']).toBe('#F1F2F4');
+    expect(vars['--color-muted-foreground']).toBe('#5F6773');
+    expect(vars['--color-hero-accent']).toBe('#6C757D');
     // fonts
-    expect(vars['--font-display']).toContain('Montserrat');
-    expect(vars['--font-heading']).toContain('Montserrat');
-    expect(vars['--font-condensed']).toContain('Montserrat');
+    expect(vars['--font-display']).toContain('Inter');
+    expect(vars['--font-heading']).toContain('Inter');
+    expect(vars['--font-condensed']).toContain('Inter');
+    expect(vars['--font-mono']).toContain('Space Mono');
     // type / weights / tracking / space / radius
     expect(vars['--type-body-lg']).toBe('1.125rem');
     expect(vars['--weight-black']).toBe('900');
-    expect(vars['--tracking-tight']).toBe('-0.05em');
+    expect(vars['--tracking-tight']).toBe('-0.04em');
     expect(vars['--space-2xl']).toBe('128px');
     expect(vars['--radius-card']).toBe('0');
-    expect(vars['--radius-pill']).toBe('999px');
-    // shared button primitive radius — 4px, the app's single CTA corner radius
-    expect(vars['--radius-button']).toBe('4px');
+    expect(vars['--radius-pill']).toBe('0');
+    // shared button primitive radius — zero curves
+    expect(vars['--radius-button']).toBe('0');
     // icon-size scale
     expect(vars['--icon-sm']).toBe('20px');
     expect(vars['--icon-md']).toBe('24px');

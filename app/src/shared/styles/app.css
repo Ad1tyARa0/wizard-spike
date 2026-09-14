@@ -5,8 +5,8 @@
  */
 @import './tokens.css';
 @import './drawer.css';
-@import '@fontsource-variable/montserrat';
-@import '@fontsource-variable/cormorant';
+@import '@fontsource-variable/inter';
+@import '@fontsource/space-mono';
 /* Playful DTC preset fonts — all Google Fonts (redistributable). */
 @import '@fontsource/archivo-black';
 @import '@fontsource/anton';
@@ -579,20 +579,21 @@ input[type='submit'] {
   cursor: pointer;
 }
 
-/* Shared button primitive (shared/ui/button) — hollow surface, token radius,
-   no shadow. Hover inverts to a filled primary block; focus ring from the
-   ring token. */
+/* Shared button primitive (shared/ui/button) — 70/20/10 geometry: zero
+   radius, no shadow, uppercase mono label. Two variants: `solid` (accent
+   fill, high-intent CTA) and `outline` (transparent + structure border). */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-sm);
   min-height: 44px;
   padding: var(--space-sm) var(--space-md);
-  border: var(--border-width) solid currentColor;
+  border: var(--border-width) solid var(--color-primary);
   border-radius: var(--radius-button);
   background-color: transparent;
   color: var(--color-primary);
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: var(--type-label);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-label);
@@ -604,7 +605,18 @@ input[type='submit'] {
     color var(--duration-fast) var(--ease-out);
 }
 
-.btn:hover:not(:disabled):not([aria-disabled='true']) {
+.btn--solid {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.btn--solid:hover:not(:disabled):not([aria-disabled='true']) {
+  background-color: var(--color-accent-strong);
+  color: var(--color-on-accent);
+}
+
+.btn--outline:hover:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
 }

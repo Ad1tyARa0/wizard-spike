@@ -4,30 +4,31 @@
  * Mirror in TS: ./tokens.ts
  */
 :root {
-  /* ---- Color: black/white dominant + single accent ---- */
-  --color-primary: #000000;
-  --color-on-primary: #ffffff;
-  --color-background: #ffffff;
-  --color-foreground: #000000;
-  --color-accent: #d4af37;
-  --color-accent-strong: #8a6d1f;
-  --color-on-accent: #000000;
-  --color-secondary: #f5f5f4;
-  --color-on-secondary: #000000;
-  --color-muted: #a8a29e;
-  --color-muted-foreground: #57534e;
-  --color-border: #000000;
-  --color-destructive: #dc2626;
-  --color-on-destructive: #ffffff;
-  --color-ring: #a87c0e;
-  --color-hero-accent: #d4af37;
+  /* ---- Color: 70/20/10 (canvas / structure / accent) ---- */
+  --color-primary: #20242B;
+  --color-on-primary: #F1F2F4;
+  --color-background: #F1F2F4;
+  --color-foreground: #20242B;
+  --color-accent: #6C757D;
+  --color-accent-strong: #50585E;
+  --color-on-accent: #FFFFFF;
+  --color-secondary: #FFFFFF;
+  --color-on-secondary: #20242B;
+  --color-muted: #5F6773;
+  --color-muted-foreground: #5F6773;
+  --color-border: #20242B26;
+  --color-destructive: #DC2626;
+  --color-on-destructive: #FFFFFF;
+  --color-ring: #20242B;
+  --color-hero-accent: #6C757D;
 
-  /* ---- Typography: oversized display, editorial serif, readable body ---- */
-  --font-display: 'Montserrat Variable', system-ui, sans-serif;
-  --font-editorial: 'Cormorant Variable', Georgia, serif;
-  --font-heading: 'Montserrat Variable', system-ui, sans-serif;
-  --font-condensed: 'Montserrat Variable', system-ui, sans-serif;
-  --font-body: 'Montserrat Variable', system-ui, sans-serif;
+  /* ---- Typography: Inter display + Space Mono technical metadata ---- */
+  --font-display: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-editorial: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-condensed: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
 
   --type-giant: clamp(3rem, 10vw, 12rem);
   --type-display: clamp(2.25rem, 5vw, 4.5rem);
@@ -42,8 +43,8 @@
   --weight-regular: 400;
   --weight-light: 300;
 
-  --tracking-tight: -0.05em;
-  --tracking-label: 0.08em;
+  --tracking-tight: -0.04em;
+  --tracking-label: 0.12em;
 
   /* ---- Spacing: extreme whitespace ---- */
   --space-xs: 4px;
@@ -54,12 +55,12 @@
   --space-2xl: 128px;
   --space-huge: 8rem;
 
-  /* ---- Radii: sharp by default ---- */
+  /* ---- Radii: strict zero curves ---- */
   --radius-none: 0;
-  --radius-sm: 2px;
-  --radius-button: 4px;
+  --radius-sm: 0;
+  --radius-button: 0;
   --radius-card: 0;
-  --radius-pill: 999px;
+  --radius-pill: 0;
 
   /* ---- Borders: line-based separation ---- */
   --border-width: 1px;
