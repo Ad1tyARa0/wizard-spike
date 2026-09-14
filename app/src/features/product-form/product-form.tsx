@@ -21,9 +21,7 @@ export function ProductForm({
 
   const quantityAvailable = selectedVariant?.quantityAvailable ?? null;
   const isLowStock =
-    quantityAvailable !== null &&
-    quantityAvailable > 0 &&
-    quantityAvailable <= LOW_STOCK_THRESHOLD;
+    quantityAvailable !== null && quantityAvailable > 0 && quantityAvailable <= LOW_STOCK_THRESHOLD;
 
   return (
     <div className="product-form">
@@ -57,15 +55,13 @@ export function ProductForm({
                   return (
                     <Link
                       className="product-options-item"
+                      data-available={available}
+                      data-selected={selected}
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
                       replace
                       to={`/products/${handle}?${variantUriQuery}`}
-                      style={{
-                        border: selected ? '1px solid black' : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
                     >
                       <ProductOptionSwatch swatch={swatch} name={name} />
                     </Link>
@@ -80,11 +76,9 @@ export function ProductForm({
                     <button
                       type="button"
                       className={`product-options-item${exists && !selected ? ' link' : ''}`}
+                      data-available={available}
+                      data-selected={selected}
                       key={option.name + name}
-                      style={{
-                        border: selected ? '1px solid black' : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
                       disabled={!exists}
                       onClick={() => {
                         if (!selected) {

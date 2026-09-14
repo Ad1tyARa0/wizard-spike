@@ -74,7 +74,8 @@ borders, and `stark` buttons. Small accent text (12–14px) uses
 
 | Token              | Value                         | Usage                     |
 | ------------------ | ----------------------------- | ------------------------- |
-| `--type-giant`     | `clamp(3rem, 10vw, 12rem)`    | Hero statements           |
+| `--type-giant`     | `clamp(3rem, 10vw, 12rem)`    | Giant statements          |
+| `--type-hero`      | `clamp(2.375rem, 8vw, 6rem)`  | Home hero headline        |
 | `--type-display`   | `clamp(2.25rem, 5vw, 4.5rem)` | Section headlines         |
 | `--type-heading`   | `clamp(1.5rem, 2.5vw, 2rem)`  | Product titles            |
 | `--type-body`      | `1rem`                        | Body copy                 |

@@ -31,6 +31,7 @@
   --font-mono: 'Space Mono', 'Courier New', monospace;
 
   --type-giant: clamp(3rem, 10vw, 12rem);
+  --type-hero: clamp(2.375rem, 8vw, 6rem);
   --type-display: clamp(2.25rem, 5vw, 4.5rem);
   --type-heading: clamp(1.5rem, 2.5vw, 2rem);
   --type-body: 1rem;
@@ -58,9 +59,12 @@
   --space-4: 16px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
   --space-11: 44px;
   --space-12: 48px;
   --space-16: 64px;
+  --space-20: 80px;
   --space-24: 96px;
   --space-32: 128px;
   --space-xs: 4px;

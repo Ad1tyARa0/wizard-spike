@@ -112,7 +112,14 @@ export default function Homepage() {
   const sectionFor = (id: string): React.ReactNode => {
     switch (id) {
       case 'hero':
-        return <HeroSection index={statementIndex(id)} content={hero} />;
+        return (
+          <HeroSection
+            content={hero}
+            highlightTitle={data.featuredCollection?.title}
+            iconSize={theme.tokens.icon.sm}
+            index={statementIndex(id)}
+          />
+        );
       case 'marquee':
         return <Marquee content={theme.content.marquee} />;
       case 'featuredCollection':
@@ -146,40 +153,65 @@ export default function Homepage() {
   );
 }
 
-function HeroSection({ content, index }: { content: HeroContent; index: string }) {
-  const heroClass = content.image ? 'home__hero home__hero--media' : 'home__hero';
+function HeroSection({
+  content,
+  highlightTitle,
+  iconSize,
+  index,
+}: {
+  content: HeroContent;
+  /** Featured collection title shown in the media badge when present. */
+  highlightTitle?: string;
+  /** Icon-size token for the CTA arrow. */
+  iconSize: string;
+  index: string;
+}) {
+  // The numeral always renders so the section sequence stays honest; the
+  // eyebrow is optional merchant copy.
+  const metadata = content.eyebrow ? `${index} / ${content.eyebrow}` : index;
+  // An image gets the floating badge; without one the placeholder label names
+  // the same highlight instead (never both).
+  const placeholderLabel = highlightTitle ?? content.eyebrow;
+  const showBadge = Boolean(content.image && highlightTitle);
+  let media: React.ReactNode = null;
+  if (content.image) {
+    media = (
+      <Image
+        alt=""
+        className="hero-media-image"
+        data={{ altText: '', url: content.image }}
+        decoding="async"
+        fetchPriority="high"
+        loading="eager"
+        sizes="100vw"
+      />
+    );
+  } else if (placeholderLabel) {
+    media = <span className="hero-media-label">{placeholderLabel}</span>;
+  }
   return (
-    <section className={heroClass} aria-labelledby="home-statement">
-      {content.image && (
-        <div className="home__hero-media" role="presentation">
-          <Image
-            alt=""
-            data={{ altText: '', url: content.image }}
-            decoding="async"
-            fetchPriority="high"
-            loading="eager"
-            sizes="100vw"
-          />
-        </div>
-      )}
-      {/* The numeral always renders so the section sequence stays honest;
-          the eyebrow is optional merchant copy. */}
-      <p className="home__hero-meta">
-        <span className="home__hero-index" aria-hidden="true">
-          {index}
-        </span>
-        {content.eyebrow ? <span className="eyebrow">{content.eyebrow}</span> : null}
-      </p>
-      {/* The statement is the page's accessible h1 and the hero's giant
-          display headline, with or without media. */}
-      <h1 className="home__hero-statement" id="home-statement">
+    <section className="hero-unit" aria-labelledby="home-statement">
+      <span className="hero-metadata">{metadata}</span>
+      <h1 className="hero-headline" id="home-statement">
         {content.statement}
       </h1>
-      <div className="home__hero-foot">
-        {content.sub && <p className="home__hero-sub">{content.sub}</p>}
-        <ButtonLink className="home__hero-cta" variant="solid" href={content.ctaHref}>
-          {content.cta}
-        </ButtonLink>
+      <div className="hero-grid">
+        <div className="hero-media-canvas">
+          {media}
+          {showBadge ? <p className="hero-badge">Featured lot: {highlightTitle}</p> : null}
+        </div>
+        <div className="hero-action-block">
+          {content.sub ? <p className="hero-description">{content.sub}</p> : null}
+          <ButtonLink
+            className="hero-cta"
+            href={content.ctaHref}
+            icon={<ArrowRightIcon aria-hidden="true" size={iconSize} weight="bold" />}
+            iconPosition="right"
+            variant="solid"
+          >
+            {content.cta}
+          </ButtonLink>
+        </div>
       </div>
     </section>
   );

@@ -49,6 +49,8 @@ export interface FontTokens {
 
 export interface TypeTokens {
   giant: string;
+  /** Hero headline — fluid between display and giant. */
+  hero: string;
   display: string;
   heading: string;
   body: string;
@@ -85,9 +87,12 @@ export interface SpaceTokens {
   '4': string;
   '6': string;
   '8': string;
+  '9': string;
+  '10': string;
   '11': string;
   '12': string;
   '16': string;
+  '20': string;
   '24': string;
   '32': string;
   /** Semantic aliases (presets may map these differently). */

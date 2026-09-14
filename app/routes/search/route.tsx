@@ -56,7 +56,7 @@ export default function SearchPage() {
           </>
         )}
       </SearchForm>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="search-error">{error}</p>}
       {!term || !result?.total ? (
         <SearchResults.Empty />
       ) : (

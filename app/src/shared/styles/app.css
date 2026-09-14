@@ -539,7 +539,7 @@ button.reset:hover:not(:has(> *)) {
   justify-content: center;
   display: flex;
   flex-wrap: wrap;
-  grid-gap: 1rem;
+  gap: var(--space-4);
   padding: 0;
 }
 
@@ -736,7 +736,7 @@ textarea:focus {
 
 .order-search-inputs {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
   margin: 0.25rem 0 1rem;
   grid-template-columns: 1fr;
 }
@@ -749,7 +749,7 @@ textarea:focus {
 
 .order-search-buttons {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
@@ -829,7 +829,7 @@ main[data-card-aspect='wide'] .product-item img {
 .blogs-grid,
 .blog-grid {
   display: grid;
-  grid-gap: var(--space-xl) var(--space-lg);
+  gap: var(--space-xl) var(--space-lg);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-item-width)), 1fr));
   margin-bottom: 2rem;
 }
@@ -848,181 +848,168 @@ main[data-card-aspect='wide'] .product-item img {
 }
 
 /* ============================================================
- * Home body — Editorial Statement (minimal preset)
- * One giant statement per view, hairline rules, gold only on the
- * single CTA. Source: MASTER.md + design-system/e-commerce-website/
- * home-body-wireframes.html (Variant A).
+ * Home body — 70/20/10 (canvas / structure / accent).
+ * Hero unit + editorial sections. Source: MASTER.md and
+ * design-system/e-commerce-website/exaggerated-minimalist-mockups.html.
  * ============================================================ */
 .home {
   padding-top: 0;
 }
 
-/* ---- Hero: optional full-bleed media / meta row / lead + hollow CTA ---- */
-.home__hero {
+/* ---- Hero unit: metadata / headline / media + action grid ----
+ * Full-bleed: breaks out of the page container to the viewport edges so the
+ * media scales on large screens, then stacks (mobile) or splits 1fr / 320px
+ * (desktop) per the responsive wireframe. */
+.hero-unit {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding: var(--space-10) var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.hero-metadata {
+  display: block;
+  margin: 0 0 var(--space-3);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.hero-headline {
+  margin: 0 0 var(--space-6);
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: var(--type-hero);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+  line-height: 0.92;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.hero-grid {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  /* vh fallback first, then svh where supported (mobile URL bars) */
-  min-height: calc(100vh - var(--header-height));
-  min-height: calc(100svh - var(--header-height));
-  padding: var(--space-2xl) 0;
-  border-bottom: var(--border-width) solid var(--color-border);
+  gap: var(--space-6);
+}
+
+.hero-media-canvas {
   position: relative;
-  isolation: isolate;
-}
-
-/* Backdrop: config `hero.image` or the live shop cover image. The hero box
-   stays inside the centred container so text keeps its alignment, while this
-   layer breaks out to the full viewport width at every resolution (100vw,
-   centred with a translate) instead of being inset by the container padding.
-   Decorative: `role="presentation"`, empty alt; the scrim below guarantees
-   text contrast over any photo. */
-.home__hero-media {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
-  z-index: -2;
-  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 18.75rem;
   overflow: hidden;
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-background));
+  border: var(--border-width) solid var(--color-border);
 }
 
-.home__hero-media img {
-  display: block;
+.hero-media-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Center the crop so the subject stays centred at every aspect ratio
-     (panorama on desktop, tall/portrait on mobile). */
-  object-position: center center;
+  object-position: center;
 }
 
-/* Scrim: darkens the photo so on-primary text keeps ≥ 4.5:1 contrast over any
-   image. Holds ≥ 55% through the band where text sits (worst case: white
-   photo), deeper at the top and bottom edges. Derived from the primary
-   token — no hard-coded color. */
-.home__hero-media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--color-primary) 62%, transparent) 0%,
-    color-mix(in srgb, var(--color-primary) 55%, transparent) 50%,
-    color-mix(in srgb, var(--color-primary) 88%, transparent) 100%
-  );
-}
-
-/* The photo spans the viewport, so the hero drops its container-wide hairline
-   (the image edge is the separator) and pulls its own gutters back in. */
-.home__hero--media {
-  border-bottom: 0;
-}
-
-/* Text flips to on-primary over the photo (white-on-black scrim), including
-   the statement and its index numeral. */
-.home__hero--media .home__hero-sub,
-.home__hero--media .home__hero-statement,
-.home__hero--media .home__hero-meta,
-.home__hero--media .home__hero-meta .eyebrow,
-.home__hero--media .home__hero-index {
-  color: var(--color-on-primary);
-}
-
-.home__hero-meta {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-md);
-  margin: 0 0 var(--space-xl);
-}
-
-.home__hero-meta .eyebrow {
-  margin: 0;
-  color: var(--color-muted-foreground);
-}
-
-.home__hero-index {
-  color: var(--color-accent-strong);
-  font-family: var(--font-body);
-  font-size: var(--type-label);
-  font-weight: var(--weight-black);
-  font-variant-numeric: tabular-nums;
+.hero-media-label {
+  padding-inline: var(--space-4);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
   letter-spacing: var(--tracking-label);
-}
-
-/* Visible statement for the no-media hero (media heroes keep the sr-only h1
-   and let the photo lead). At full giant scale — the design language's
-   signature move — with the wireframe's tight display leading. */
-.home__hero-statement {
-  font-family: var(--font-display);
-  font-size: var(--type-giant);
-  font-weight: var(--weight-black);
-  line-height: 0.88;
-  letter-spacing: var(--tracking-tight);
+  text-align: center;
   text-transform: uppercase;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
+}
+
+/* Floating highlight badge — names the featured lot over the media. It caps
+   its width to the canvas (which clips at its own edge) so a long title wraps
+   instead of being cut off. */
+.hero-badge {
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--space-4);
+  max-width: calc(100% - 2 * var(--space-4));
   margin: 0;
-  max-width: 12ch;
-}
-
-.home__hero-foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--space-2xl);
-  margin-top: var(--space-2xl);
-  flex-wrap: wrap;
-}
-
-.home__hero-sub {
-  font-family: var(--font-editorial);
-  font-size: var(--type-body-lg);
-  font-style: italic;
-  max-width: 42ch;
-  margin: 0;
-}
-
-/* Lead line gets a little more presence where it is the hero message. */
-.home__hero--media .home__hero-sub {
-  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
-  text-shadow: 0 2px 24px color-mix(in srgb, var(--color-primary) 35%, transparent);
-}
-
-/* Hero CTA renders the shared button primitive (`ButtonLink`); the page only
- * sets the color it inherits, and the hollow surface follows it. Focus rings
- * flip to on-primary so they stay visible over the dark scrim. */
-.home__hero--media .home__hero-cta {
+  padding: var(--space-1-5) var(--space-3);
+  background: var(--color-primary);
   color: var(--color-on-primary);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-xs);
+  letter-spacing: var(--tracking-label);
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
 }
 
-.home__hero--media .home__hero-cta:focus-visible {
-  outline-color: var(--color-on-primary);
+.hero-action-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
-/* Mobile: tighter vertical rhythm, stacked foot, full-width hollow CTA. */
-@media (max-width: 47.99em) {
-  .home__hero {
-    min-height: calc(92vh - var(--header-height));
-    min-height: calc(92svh - var(--header-height));
-    padding: var(--space-xl) 0;
+/* The lead paragraph is visually hidden on mobile — kept in the accessibility
+   tree rather than removed — and shown above the CTA on desktop. */
+.hero-description {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hero-cta {
+  width: 100%;
+  padding-block: var(--space-4);
+  font-size: var(--type-label-sm);
+}
+
+@media (min-width: 48em) {
+  .hero-unit {
+    padding: var(--space-20) var(--space-12);
   }
 
-  .home__hero-foot {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-lg);
-    margin-top: var(--space-xl);
+  .hero-headline {
+    margin-bottom: var(--space-9);
   }
 
-  .home__hero-sub {
-    max-width: none;
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: var(--space-8);
+    align-items: end;
   }
 
-  .home__hero-cta {
-    width: 100%;
+  .hero-media-canvas {
+    height: 31.25rem;
+  }
+
+  .hero-action-block {
+    justify-content: flex-end;
+    height: 100%;
+  }
+
+  .hero-description {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding-top: var(--space-4);
+    border-top: var(--border-width) solid var(--color-border);
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: var(--type-label-sm);
+    line-height: 1.6;
   }
 }
 
@@ -1267,7 +1254,7 @@ main[data-card-aspect='wide'] .product-item img {
   display: grid;
   @media (min-width: 45em) {
     grid-template-columns: 1fr 1fr;
-    grid-gap: 4rem;
+    gap: var(--space-16);
   }
 }
 
@@ -1305,7 +1292,7 @@ main[data-card-aspect='wide'] .product-item img {
 
 .product-price-on-sale {
   display: flex;
-  grid-gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .product-price-on-sale s {
@@ -1328,7 +1315,7 @@ main[data-card-aspect='wide'] .product-item img {
 .product-options-grid {
   display: flex;
   flex-wrap: wrap;
-  grid-gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .product-options-item,
@@ -1343,6 +1330,14 @@ main[data-card-aspect='wide'] .product-item img {
 
 .product-options-item:hover:not(:disabled) {
   border-color: var(--color-primary);
+}
+
+.product-options-item[data-selected='true'] {
+  border-color: var(--color-primary);
+}
+
+.product-options-item[data-available='false'] {
+  opacity: 0.3;
 }
 
 .product-option-label-swatch {
@@ -1467,6 +1462,10 @@ main[data-card-aspect='wide'] .product-item img {
   margin-bottom: 1.5rem;
 }
 
+.search-error {
+  color: var(--color-destructive);
+}
+
 .search-results-item {
   margin-bottom: 0.5rem;
 }
@@ -1475,7 +1474,7 @@ main[data-card-aspect='wide'] .product-item img {
   display: flex;
   flex: row;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 /* ============================================================
@@ -1697,7 +1696,7 @@ main[data-grid-density='compact'] .featured-products-grid,
 main[data-grid-density='compact'] .blogs-grid,
 main[data-grid-density='compact'] .blog-grid {
   --grid-item-width: 260px;
-  grid-gap: var(--space-lg) var(--space-md);
+  gap: var(--space-lg) var(--space-md);
 }
 
 /* Banded full-bleed home sections — zero vertical section spacing */
@@ -1707,43 +1706,12 @@ main[data-grid-density='compact'] .blog-grid {
   margin: 0;
 }
 
-[data-theme='playful'] .home__hero {
+[data-theme='playful'] .hero-unit {
   background: var(--color-secondary);
-  min-height: 60dvh;
   padding: var(--space-huge) var(--space-lg);
-  margin: 0;
   border-bottom: 0;
 }
 
-[data-theme='playful'] .home__hero-foot {
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* Playful hero is a color band (not photo): hide the media layer (image +
-   scrim live inside it) and restore foreground text color when a config
-   hero image is present. */
-[data-theme='playful'] .home__hero-media {
-  display: none;
-}
-
-[data-theme='playful'] .home__hero--media .home__hero-sub,
-[data-theme='playful'] .home__hero--media .home__hero-meta,
-[data-theme='playful'] .home__hero--media .home__hero-meta .eyebrow {
-  color: var(--color-foreground);
-}
-
-[data-theme='playful'] .home__hero--media .home__hero-sub {
-  font-size: var(--type-body-lg);
-  text-shadow: none;
-}
-
-[data-theme='playful'] .home__hero--media .home__hero-cta,
-[data-theme='playful'] .home__hero--media .home__hero-cta:hover {
-  color: var(--color-foreground);
-}
-
-[data-theme='playful'] .home__hero-index,
 [data-theme='playful'] .featured-collection-index,
 [data-theme='playful'] .recommended-products-index {
   display: none;
@@ -1803,12 +1771,12 @@ main[data-grid-density='compact'] .blog-grid {
   margin-bottom: var(--space-xl);
 }
 
-[data-theme='playful'] .home__hero-cta {
+[data-theme='playful'] .hero-cta {
   box-shadow: 6px 6px 0 var(--color-primary);
   transform: rotate(-1.5deg);
 }
 
-[data-theme='playful'] .home__hero-cta:hover {
+[data-theme='playful'] .hero-cta:hover {
   box-shadow: 10px 10px 0 var(--color-primary);
   transform: rotate(-1.5deg) translateY(-2px);
 }

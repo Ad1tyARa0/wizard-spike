@@ -17,19 +17,23 @@
 
 ## Rules (override MASTER for home body)
 
-### Hero — image-led, optional full-bleed media
+### Hero — HeroUnit (metadata / headline / media + action grid)
 
-| Rule            | Value                                                                                                                                                                                                    |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Meta row        | `01 — New Collection`: index + eyebrow grouped left (small caps). The numeral always renders; the eyebrow only when `content.hero.eyebrow` is set                                                        |
-| Statement       | The page's accessible `h1` and the hero's giant display headline in both media and text heroes (falls back to the shop name when config copy is empty)                                                   |
-| Media           | Optional full-bleed backdrop, viewport-wide and centered at every resolution (100vw breakout + `object-position: center`). Source: `content.hero.image` (your URL) → live shop `brand.coverImage` → none |
-| Scrim           | Primary-token gradient (stronger top + bottom where text sits) so on-primary text holds ≥ 4.5:1 over any photo                                                                                           |
-| Text on media   | Statement, lead, meta and index flip to `--color-on-primary`; playful preset hides the media layer and keeps its wash-band hero                                                                          |
-| Foot            | Lead (italic) left, **single** solid CTA right; stacks + full-width CTA below 768px                                                                                                                      |
-| CTA             | **Solid** accent fill (`variant="solid"`); hover fills with the structure color; full-width with a stacked foot below 768px                                                                              |
-| Section padding | `--space-2xl` vertical desktop / `--space-xl` mobile · `min-height: calc(100svh - header)`, centered                                                                                                     |
-| Separator       | Hairline bottom rule only when there is no photo (the image edge separates instead)                                                                                                                      |
+A full-bleed `hero-unit` section on the canvas: a metadata tag, a display
+headline, then a responsive grid that stacks on mobile and splits into
+`1fr / 320px` (media / action) on desktop.
+
+| Rule            | Value                                                                                                                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Section         | Full-bleed (`100vw`), canvas, `--space-10 --space-4` padding mobile → `--space-20 --space-12` desktop, 1px hairline bottom rule (`--color-border`)                                                                |
+| Metadata tag    | `01 / New Collection` in Space Mono (`--type-label-sm`, `--tracking-label`, `--color-muted`): `{index} / {content.hero.eyebrow}`. The numeral always renders; the eyebrow only when set                           |
+| Headline        | The page's accessible `h1`, rendered as display type: `--type-hero` (`clamp(2.375rem, 8vw, 6rem)`), `--weight-black`, `--tracking-tight`, uppercase, `line-height: 0.92`                                          |
+| Grid            | Mobile: stacked flex column, `--space-6` gap. Desktop (≥768px): `grid-template-columns: minmax(0, 1fr) 20rem`, `--space-8` gap, `align-items: end`                                                                |
+| Media canvas    | `height: 18.75rem` mobile → `31.25rem` desktop; 1px hairline border. Source: `content.hero.image` → live shop `brand.coverImage` → placeholder label (`object-fit: cover`, centered)                              |
+| Highlight badge | Floating badge bottom-left over the media (`--color-primary` fill, on-primary text, `--type-label-xs`): `Featured lot: <featured collection title>`. Renders only when a featured collection exists over an image |
+| Action block    | Description + CTA, right column on desktop (`justify-content: flex-end`, full height)                                                                                                                             |
+| Description     | `content.hero.sub` in Space Mono (`--type-label-sm`, `--color-muted`), top hairline, `--space-4` padding. Visually hidden on mobile but **kept in the accessibility tree** (not `display: none`)                  |
+| CTA             | **Solid** accent fill (`variant="solid"`) with a right arrow (`Button` `icon`/`iconPosition`, `--type-label-sm` label), `width: 100%`, `padding-block: --space-4`                                                 |
 
 #### Adding your own hero image
 

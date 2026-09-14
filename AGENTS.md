@@ -11,3 +11,7 @@ Product decisions — features/scope, pricing, positioning, GTM, or architecture
 ## Frontend architecture
 
 Follow the Feature-Sliced Design conventions in [`docs/architecture.md`](docs/architecture.md). In particular, every module in `widgets/` and `shared/ui/` lives in its own kebab-case folder with a public `index.ts` — e.g. `widgets/header/` holds `header.tsx` + `header-skeleton.tsx`, `widgets/cart/` holds the cart widgets, `shared/ui/skeleton/` holds the skeleton primitives — and imports resolve through the layer's top-level public API (`~/src/widgets`, `~/src/shared/ui`).
+
+## CSS & styling
+
+Follow the CSS capability spec in [`openspec/specs/css/spec.md`](openspec/specs/css/spec.md) (adapted from the `css` skill): lowercase kebab-case class names, design tokens only (no hard-coded colors/fonts/spacing/radii), single-class specificity with no `!important` outside the documented reset exceptions, `gap`-based Flexbox/Grid layouts, `rem`/`clamp()` type, mobile-first `min-width` media queries, and presentational styles in stylesheets rather than inline `style` attributes. Visuals follow the 70/20/10 design system in [`design-system/e-commerce-website/MASTER.md`](design-system/e-commerce-website/MASTER.md).

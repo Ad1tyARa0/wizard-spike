@@ -19,6 +19,7 @@ describe('tokensToCssVars — resolved tokens as CSS custom properties', () => {
     expect(vars['--font-condensed']).toContain('Inter');
     expect(vars['--font-mono']).toContain('Space Mono');
     // type / weights / tracking / space / radius
+    expect(vars['--type-hero']).toBe('clamp(2.375rem, 8vw, 6rem)');
     expect(vars['--type-body-lg']).toBe('1.125rem');
     expect(vars['--weight-black']).toBe('900');
     expect(vars['--tracking-tight']).toBe('-0.04em');
